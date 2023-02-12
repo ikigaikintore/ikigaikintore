@@ -1,0 +1,309 @@
+openapi: 3.0.3
+info:
+  title: Users
+  description: Users endpoint
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:{port}/v1/
+
+paths:
+  /crossfit/token:
+    get:
+      summary: Get URI token
+      operationId: GetCrossfitToken
+      tags:
+        - crossfit
+      responses:
+        '200':
+          $ref: ''
+    post:
+      summary: Set token
+      operationId: SetCrossfitToken
+      tags:
+        - crossfit
+      responses:
+        '201':
+          $ref: ''
+  /crossfit/start:
+    post:
+      summary: Start booking
+      operationId: StartBookingCrossfit
+      tags:
+        - crossfit
+      responses:
+        '204':
+          description: 'OK'
+  /crossfit/status:
+    get:
+      summary: Get status process booking
+      tags:
+        - crossfit
+      responses:
+        '200':
+          $ref: ''
+
+  /login:
+    post:
+      summary: Login to page
+      operationId: Login
+      tags:
+        - login
+      requestBody:
+        $ref: '#/components/re/Login'
+      responses:
+        '200':
+          $ref: '#/components/responses/Logged'
+        '404':
+          $ref: '#/components/responses/Error'
+        '400':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+
+  /signin:
+    post:
+      summary: Sign in
+      operationId: SignIn
+      tags:
+        - signin
+      requestBody:
+        $ref: '#/components/requestBodies/SignIn'
+      responses:
+        '204':
+          description: Sign in success
+        '404':
+          $ref: '#/components/responses/Error'
+        '400':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+
+  /users:
+    get:
+      operationId: GetUsers
+      tags:
+        - users
+      summary: Returns all users
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '500':
+          $ref: '#/components/responses/Error'
+    post:
+      operationId: FilterUsers
+      tags:
+        - users
+      summary: Search users using filters
+      requestBody:
+        $ref: '#/components/schemas/UserFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '400':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+
+  /user:
+    post:
+      operationId: CreateUser
+      tags:
+        - users
+      summary: Create new user
+      responses:
+        '201':
+          $ref: '#/components/responses/User'
+        '400':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+
+  /user/{id}:
+    parameters:
+      - name: id
+        description: ID of the user
+        in: path
+        example: 1
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: GetUser
+      tags:
+        - users
+      summary: Get an user by its id
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '404':
+          $ref: '#/components/responses/Error'
+        '400':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+    put:
+      operationId: UpdateUser
+      tags:
+        - users
+      summary: Update an user by its id
+      requestBody:
+        $ref: '#/components/responses/User'
+      responses:
+        '204':
+          description: User updated
+        '404':
+          $ref: '#/components/responses/Error'
+        '400':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+    delete:
+      operationId: DeleteUser
+      tags:
+        - users
+      summary: Delete user
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          $ref: '#/components/responses/Error'
+        '400':
+          $ref: '#/components/responses/Error'
+        '500':
+          $ref: '#/components/responses/Error'
+
+components:
+
+  responses:
+
+    Error:
+      description: Error object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 200
+              message:
+                type: string
+                example: login error
+              time:
+                type: number
+                example: 15679999
+              traceId:
+                type: string
+                example: 23520asdfasdfasd0f00f888
+    
+    Users:
+      description: Users
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/responses/User'
+
+    User:
+      description: User object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: 'John'
+              birthday:
+                type: string
+                example: '2000-09-12'
+            required:
+              - id
+              - name
+              - birthday
+
+    Logged:
+      description: Logged user object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 9879u90u90-uy9uafjsd-fausod-fuaosdi
+              email:
+                type: string
+                example: example@example.com
+              isAdmin:
+                type: boolean
+                example: false
+              role:
+                type: string
+                example: director
+              allowActions:
+                type: string
+              token:
+                type: string
+                example: ey9ua9jdjfajsdojfa.faosdhfoahsdhfohaso.e9owhfohaohsdofhjaoshdjflha
+            required:
+              - token
+              - id
+              - email
+              - isAdmin
+              - role
+
+  requestBodies:
+    Login:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: johndoe190
+              password:
+                type: string
+                example: abAD87_87
+
+    UserFilter:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: 'John'
+              birthday:
+                type: string
+                example: '2000-09-12'
+            required:
+              - name
+              - birthday
+
+    SignIn:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: joe@example.com
+              password:
+                type: string
+                example: A8j_9mNn
+              email:
+                type: string
+                example: joe@example.com
+            required:
+              - email
+              - password
+              - username

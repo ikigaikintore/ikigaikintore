@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="Go" enabled="true" />
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/api/schemas/v1/hsperfdata_root" />
+      <excludeFolder url="file://$MODULE_DIR$/gen" />
+      <excludeFolder url="file://$MODULE_DIR$/front/.yarn/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/back/tmp" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

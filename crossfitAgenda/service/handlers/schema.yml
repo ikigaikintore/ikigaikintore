@@ -1,0 +1,131 @@
+openapi: "3.0.3"
+info:
+  title: Crossfit Agenda
+  version: 1.0.0
+paths:
+  /start:
+    post:
+      summary: Start process to fill our calendar
+      operationId: startCrossfitAgenda
+      responses:
+        204:
+          description: 'ok'
+        500:
+          $ref: '#/components/responses/Error'
+  /status:
+    get:
+      summary: Status process
+      operationId: status
+      responses:
+        200:
+          $ref: '#/components/responses/ProcessStatus'
+
+  /credentials/google:
+    get:
+      summary: Get link to auth in Google
+      operationId: credentialsGoogle
+      responses:
+        200:
+          $ref: '#/components/responses/GoogleCredentials'
+
+    post:
+      summary: Set token
+      operationId: setTokenGoogle
+      requestBody:
+        $ref: '#/components/requestBodies/GoogleToken'
+      responses:
+        204:
+          description: successful operation
+        400:
+          $ref: '#/components/responses/Error'
+        500:
+          $ref: '#/components/responses/Error'
+
+
+components:
+  schemas:
+    ProcessStatuses:
+      type: string
+      description: Process Status
+      enum:
+        - working
+        - finished
+        - failed
+
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-api-key
+
+  requestBodies:
+
+    GoogleToken:
+      required: true
+      description: Token to authenticate
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+            required:
+              - token
+
+  responses:
+
+    Error:
+      description: Error message
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                format: uint32
+              message:
+                type: string
+              date:
+                type: string
+            required:
+              - status
+              - message
+              - date
+
+    GoogleCredentials:
+      description: Google credentials message
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              link:
+                type: string
+            required:
+              - link
+
+    ProcessStatus:
+      description: Process status
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              date:
+                type: integer
+                format: uint64
+              detail:
+                type: string
+              id:
+                $ref: '#/components/schemas/ProcessStatuses'
+              complete:
+                type: boolean
+                default: false
+            required:
+              - id
+              - date
+              - detail
+              - status
+              - complete

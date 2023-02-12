@@ -1,0 +1,9 @@
+*
+!go.mod
+!go.sum
+!mock
+!pkg
+!endpoints
+!common
+!api
+!cmd/main.go
