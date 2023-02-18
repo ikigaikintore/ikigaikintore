@@ -2,11 +2,11 @@ package usecases
 
 import (
 	"context"
+	"github.com/ervitis/crossfitAgenda/adapters/domain"
 	"github.com/ervitis/crossfitAgenda/calendar"
 	"github.com/ervitis/crossfitAgenda/credentials"
 	"github.com/ervitis/crossfitAgenda/ocr"
 	"github.com/ervitis/crossfitAgenda/ports"
-	"github.com/ervitis/crossfitAgenda/service/domain"
 	"sync"
 	"time"
 )

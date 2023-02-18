@@ -30,7 +30,7 @@ func NewServer(handler CrossfitAgendaSvc) *CrossfitServer {
 		grpcLib.ConnectionTimeout(50*time.Second),
 	)
 
-	RegisterDefaultServiceServer(srv, handler)
+	RegisterCrossfitAgendaServiceServer(srv, handler)
 
 	return &CrossfitServer{
 		ls:  ls,

@@ -3,14 +3,14 @@ package grpc
 import (
 	"context"
 	"errors"
+	"github.com/ervitis/crossfitAgenda/adapters/domain"
+	"github.com/ervitis/crossfitAgenda/adapters/handlers/models"
+	"github.com/ervitis/crossfitAgenda/adapters/usecases"
 	"github.com/ervitis/crossfitAgenda/ports"
-	"github.com/ervitis/crossfitAgenda/service/domain"
-	"github.com/ervitis/crossfitAgenda/service/handlers/models"
-	"github.com/ervitis/crossfitAgenda/service/usecases"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-type CrossfitAgendaSvc DefaultServiceServer
+type CrossfitAgendaSvc CrossfitAgendaServiceServer
 
 type handler struct {
 	svc usecases.AgendaCrossfit

@@ -5,7 +5,7 @@ help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-20s\033[93m %s\n", $$1, $$2}'
 
 
-CROSSFIT_AGENDA_PB_FOLDER = $(PWD)/../crossfitAgenda/service/handlers/grpc/
+CROSSFIT_AGENDA_PB_FOLDER = $(PWD)/../crossfitAgenda/adapters/handlers/grpc/
 
 
 generate-grpc-v1: ## Generate the server and client from proto file

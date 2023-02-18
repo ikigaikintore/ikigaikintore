@@ -2,7 +2,13 @@
 <module type="WEB_MODULE" version="4">
   <component name="Go" enabled="true" />
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/control-panel/api/schemas/v1/hsperfdata_root" />
+      <excludeFolder url="file://$MODULE_DIR$/control-panel/back/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/control-panel/front/.yarn/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/control-panel/gen" />
+      <excludeFolder url="file://$MODULE_DIR$/crossfitAgenda/env" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

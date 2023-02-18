@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/ervitis/crossfitAgenda/service/handlers/grpc"
+	"github.com/ervitis/crossfitAgenda/adapters/handlers/grpc"
 	"log"
 	"os"
 	"os/signal"
@@ -10,9 +10,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/ervitis/crossfitAgenda/adapters/handlers/http"
+	"github.com/ervitis/crossfitAgenda/adapters/usecases"
 	"github.com/ervitis/crossfitAgenda/credentials"
-	"github.com/ervitis/crossfitAgenda/service/handlers/http"
-	"github.com/ervitis/crossfitAgenda/service/usecases"
 	"github.com/ervitis/crossfitAgenda/source_data"
 )
 

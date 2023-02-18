@@ -1,6 +1,6 @@
 package grpc
 
-import "github.com/ervitis/crossfitAgenda/service/domain"
+import "github.com/ervitis/crossfitAgenda/adapters/domain"
 
 func Into(st domain.Status) Status200Response_IdEnum {
 	switch st {

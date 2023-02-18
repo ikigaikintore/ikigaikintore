@@ -35,7 +35,7 @@ message StartCrossfitAgenda500Response {
 }
 message Status200Response {
 
-  int32 date = 3076014;
+  uint64 date = 3076014;
 
   string detail = 261482417;
 

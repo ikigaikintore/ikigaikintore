@@ -2,9 +2,9 @@ package http
 
 import (
 	"errors"
-	"github.com/ervitis/crossfitAgenda/service/domain"
-	"github.com/ervitis/crossfitAgenda/service/handlers/models"
-	"github.com/ervitis/crossfitAgenda/service/usecases"
+	"github.com/ervitis/crossfitAgenda/adapters/domain"
+	"github.com/ervitis/crossfitAgenda/adapters/handlers/models"
+	"github.com/ervitis/crossfitAgenda/adapters/usecases"
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
