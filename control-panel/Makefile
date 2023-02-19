@@ -1,7 +1,7 @@
 .PHONY: front-api-generate-v1 front-dev-start
 
 OPENAPICLI_VERSION = 6.2.1
-OAPICODEGEN_VERSION = 1.11.0
+OAPICODEGEN_VERSION = 1.12.4
 AIR_VERSION = 1.40.4
 
 help: ## Show this help
@@ -35,21 +35,11 @@ back-api-generate-v1: ## Generate API V1 for backend
 	declare -A APIV1FILES=( ["schema"]="schema.yaml" )\
 	; for apitype in "$${!APIV1FILES[@]}" ; do \
 		filename=$${APIV1FILES[$${apitype}]}; \
-		echo "Cleaning API v1 old files for "$${filename} && \
-		rm -rf ./back/api/v1/$${apitype} && \
 		echo "Creating API v1 for "$${filename} && \
-		mkdir -p ./api/schemas/v1/apigen && \
-		bash runtime_container.sh run -v ./api/schemas/v1/:/tmp  docker.io/ervitis/oapi-codegen:v$(OAPICODEGEN_VERSION) oapi-codegen --config /tmp/oapiconfig.yaml /tmp/$${filename} > ./api/schemas/v1/apigen/server$${apitype}.gen.go && \
-		mkdir -p ./back/api/v1 && \
-		echo "Moving file "$${filename}" from ./api/schemas/v1/apigen/server"$${apitype}".gen.go to ./back/api/v1/server"$${apitype}".gen.go" && \
-		mv -f ./api/schemas/v1/apigen/server$${apitype}.gen.go ./back/api/v1/server$${apitype}.gen.go && \
+		bash runtime_container.sh run -v ./api/schemas/v1/:/tmp/schema  docker.io/ervitis/oapi-codegen:v$(OAPICODEGEN_VERSION) oapi-codegen --config /tmp/schema/oapiconfig.yaml /tmp/schema/$${filename} > ./back/endpoints/http/v1/server$${apitype}.gen.go && \
 		sleep 2; \
 	done ; \
-	rm -rf ./api/schemas/v1/apigen && \
 	rm -rf ./api/schemas/v1/hsperfdata_root
-
-copy-grpc-v1:
-
 
 back-dev-start: ## Start server with live reloading
 	bash runtime_container.sh build -t control-panel:latest ./back && \

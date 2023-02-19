@@ -1,9 +1,7 @@
-package: apigen
+package: v1
 output-options:
   skip-prune: true
 generate:
   echo-server: true
   models: true
-  types: true
-  server: true
   embedded-spec: true
