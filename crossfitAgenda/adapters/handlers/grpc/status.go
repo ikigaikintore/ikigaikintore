@@ -2,13 +2,13 @@ package grpc
 
 import "github.com/ervitis/crossfitAgenda/adapters/domain"
 
-func Into(st domain.Status) Status200Response_IdEnum {
+func Into(st domain.Status) ProcessStatuses {
 	switch st {
 	case domain.Finished:
-		return Status200Response_IdEnum_FINISHED
+		return ProcessStatuses_ProcessStatuses_FINISHED
 	case domain.Working:
-		return Status200Response_IdEnum_WORKING
+		return ProcessStatuses_ProcessStatuses_WORKING
 	default:
-		return Status200Response_IdEnum_FAILED
+		return ProcessStatuses_ProcessStatuses_FAILED
 	}
 }

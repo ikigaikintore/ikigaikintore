@@ -1,6 +1,6 @@
 package mock
 
-import "github.com/ervitis/control-panel/pkg/domain"
+import "github.com/ikigaikintore/ikigaikintore/control-panel/back/pkg/domain"
 
 var (
 	Users []domain.User

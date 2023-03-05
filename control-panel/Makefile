@@ -36,11 +36,11 @@ back-api-generate-v1: ## Generate API V1 for backend
 	; for apitype in "$${!APIV1FILES[@]}" ; do \
 		filename=$${APIV1FILES[$${apitype}]}; \
 		echo "Creating API v1 for "$${filename} && \
-		bash runtime_container.sh run -v ./api/schemas/v1/:/tmp/schema  docker.io/ervitis/oapi-codegen:v$(OAPICODEGEN_VERSION) oapi-codegen --config /tmp/schema/oapiconfig.yaml /tmp/schema/$${filename} > ./back/endpoints/http/v1/server$${apitype}.gen.go && \
+		bash runtime_container.sh run -v ./api/schemas/v1/:/tmp/schema  docker.io/ervitis/oapi-codegen:v$(OAPICODEGEN_VERSION) oapi-codegen --config /tmp/schema/oapiconfig.yaml /tmp/schema/$${filename} > ./back/pkg/adapters/http/server$${apitype}.gen.go && \
 		sleep 2; \
 	done ; \
 	rm -rf ./api/schemas/v1/hsperfdata_root
 
 back-dev-start: ## Start server with live reloading
 	bash runtime_container.sh build -t control-panel:latest ./back && \
-	bash runtime_container.sh run --rm -v ./back:/go/src/github.com/ervitis/control-panel -p 8080:8080 control-panel:latest
+	bash runtime_container.sh run --rm -v $(PWD)/back:/go/src/github.com/ikigaikintore/ikigaikintore/control-panel/back -p 8308:8308 -p 8309:8309 control-panel:latest

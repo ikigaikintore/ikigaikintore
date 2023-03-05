@@ -24,184 +24,524 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
- * @interface Logged
+ * @interface CrossfitStatusGet200Response
  */
-export interface Logged {
+export interface CrossfitStatusGet200Response {
+    /**
+     * 
+     * @type {number}
+     * @memberof CrossfitStatusGet200Response
+     */
+    'date': number;
     /**
      * 
      * @type {string}
-     * @memberof Logged
+     * @memberof CrossfitStatusGet200Response
+     */
+    'detail': string;
+    /**
+     * 
+     * @type {ProcessStatuses}
+     * @memberof CrossfitStatusGet200Response
+     */
+    'id': ProcessStatuses;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CrossfitStatusGet200Response
+     */
+    'complete': boolean;
+}
+/**
+ * 
+ * @export
+ * @interface FilterUsersRequest
+ */
+export interface FilterUsersRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof FilterUsersRequest
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FilterUsersRequest
+     */
+    'birthday': string;
+}
+/**
+ * 
+ * @export
+ * @interface GetCrossfitToken200Response
+ */
+export interface GetCrossfitToken200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetCrossfitToken200Response
+     */
+    'link': string;
+}
+/**
+ * 
+ * @export
+ * @interface Login200Response
+ */
+export interface Login200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof Login200Response
      */
     'id': string;
     /**
      * 
      * @type {string}
-     * @memberof Logged
+     * @memberof Login200Response
      */
     'email': string;
     /**
      * 
      * @type {boolean}
-     * @memberof Logged
+     * @memberof Login200Response
      */
     'isAdmin': boolean;
     /**
      * 
      * @type {string}
-     * @memberof Logged
+     * @memberof Login200Response
      */
     'role': string;
     /**
      * 
      * @type {string}
-     * @memberof Logged
+     * @memberof Login200Response
      */
     'allowActions'?: string;
     /**
      * 
      * @type {string}
-     * @memberof Logged
+     * @memberof Login200Response
      */
     'token': string;
 }
 /**
  * 
  * @export
- * @interface Login
+ * @interface LoginRequest
  */
-export interface Login {
+export interface LoginRequest {
     /**
      * 
      * @type {string}
-     * @memberof Login
+     * @memberof LoginRequest
      */
     'username'?: string;
     /**
      * 
      * @type {string}
-     * @memberof Login
+     * @memberof LoginRequest
      */
     'password'?: string;
 }
 /**
+ * Process Status
+ * @export
+ * @enum {string}
+ */
+
+export const ProcessStatuses = {
+    Working: 'working',
+    Finished: 'finished',
+    Failed: 'failed'
+} as const;
+
+export type ProcessStatuses = typeof ProcessStatuses[keyof typeof ProcessStatuses];
+
+
+/**
  * 
  * @export
- * @interface ModelError
+ * @interface SetCrossfitToken400Response
  */
-export interface ModelError {
+export interface SetCrossfitToken400Response {
     /**
      * 
      * @type {number}
-     * @memberof ModelError
+     * @memberof SetCrossfitToken400Response
      */
-    'code'?: number;
+    'code': number;
     /**
      * 
      * @type {string}
-     * @memberof ModelError
+     * @memberof SetCrossfitToken400Response
      */
-    'message'?: string;
+    'message': string;
     /**
      * 
      * @type {number}
-     * @memberof ModelError
+     * @memberof SetCrossfitToken400Response
      */
-    'time'?: number;
+    'time': number;
     /**
      * 
      * @type {string}
-     * @memberof ModelError
+     * @memberof SetCrossfitToken400Response
      */
-    'traceId'?: string;
+    'traceId': string;
 }
 /**
  * 
  * @export
- * @interface SignIn
+ * @interface SetCrossfitTokenRequest
  */
-export interface SignIn {
+export interface SetCrossfitTokenRequest {
     /**
      * 
      * @type {string}
-     * @memberof SignIn
+     * @memberof SetCrossfitTokenRequest
+     */
+    'token': string;
+}
+/**
+ * 
+ * @export
+ * @interface SignInRequest
+ */
+export interface SignInRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof SignInRequest
      */
     'username': string;
     /**
      * 
      * @type {string}
-     * @memberof SignIn
+     * @memberof SignInRequest
      */
     'password': string;
     /**
      * 
      * @type {string}
-     * @memberof SignIn
+     * @memberof SignInRequest
      */
     'email': string;
 }
 /**
- * 
+ * User object
  * @export
- * @interface SignedUser
+ * @interface UserSchema
  */
-export interface SignedUser {
-    /**
-     * 
-     * @type {string}
-     * @memberof SignedUser
-     */
-    'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SignedUser
-     */
-    'id': string;
-}
-/**
- * 
- * @export
- * @interface User
- */
-export interface User {
+export interface UserSchema {
     /**
      * 
      * @type {number}
-     * @memberof User
+     * @memberof UserSchema
      */
     'id': number;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof UserSchema
      */
     'name': string;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof UserSchema
      */
     'birthday': string;
 }
+
 /**
- * 
+ * CrossfitApi - axios parameter creator
  * @export
- * @interface UserFilter
  */
-export interface UserFilter {
+export const CrossfitApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Get status process booking
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        crossfitStatusGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/crossfit/status`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get URI token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCrossfitToken: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/crossfit/token`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Set token
+         * @param {SetCrossfitTokenRequest} setCrossfitTokenRequest Token to authenticate
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setCrossfitToken: async (setCrossfitTokenRequest: SetCrossfitTokenRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'setCrossfitTokenRequest' is not null or undefined
+            assertParamExists('setCrossfitToken', 'setCrossfitTokenRequest', setCrossfitTokenRequest)
+            const localVarPath = `/crossfit/token`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(setCrossfitTokenRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Start booking
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        startBookingCrossfit: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/crossfit/start`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * CrossfitApi - functional programming interface
+ * @export
+ */
+export const CrossfitApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = CrossfitApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Get status process booking
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async crossfitStatusGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CrossfitStatusGet200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.crossfitStatusGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get URI token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCrossfitToken(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetCrossfitToken200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCrossfitToken(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Set token
+         * @param {SetCrossfitTokenRequest} setCrossfitTokenRequest Token to authenticate
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async setCrossfitToken(setCrossfitTokenRequest: SetCrossfitTokenRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.setCrossfitToken(setCrossfitTokenRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Start booking
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async startBookingCrossfit(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.startBookingCrossfit(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * CrossfitApi - factory interface
+ * @export
+ */
+export const CrossfitApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = CrossfitApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Get status process booking
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        crossfitStatusGet(options?: any): AxiosPromise<CrossfitStatusGet200Response> {
+            return localVarFp.crossfitStatusGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get URI token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCrossfitToken(options?: any): AxiosPromise<GetCrossfitToken200Response> {
+            return localVarFp.getCrossfitToken(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Set token
+         * @param {SetCrossfitTokenRequest} setCrossfitTokenRequest Token to authenticate
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setCrossfitToken(setCrossfitTokenRequest: SetCrossfitTokenRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.setCrossfitToken(setCrossfitTokenRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Start booking
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        startBookingCrossfit(options?: any): AxiosPromise<void> {
+            return localVarFp.startBookingCrossfit(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * CrossfitApi - object-oriented interface
+ * @export
+ * @class CrossfitApi
+ * @extends {BaseAPI}
+ */
+export class CrossfitApi extends BaseAPI {
     /**
      * 
-     * @type {string}
-     * @memberof UserFilter
+     * @summary Get status process booking
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CrossfitApi
      */
-    'name': string;
+    public crossfitStatusGet(options?: AxiosRequestConfig) {
+        return CrossfitApiFp(this.configuration).crossfitStatusGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
-     * @type {string}
-     * @memberof UserFilter
+     * @summary Get URI token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CrossfitApi
      */
-    'birthday': string;
+    public getCrossfitToken(options?: AxiosRequestConfig) {
+        return CrossfitApiFp(this.configuration).getCrossfitToken(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Set token
+     * @param {SetCrossfitTokenRequest} setCrossfitTokenRequest Token to authenticate
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CrossfitApi
+     */
+    public setCrossfitToken(setCrossfitTokenRequest: SetCrossfitTokenRequest, options?: AxiosRequestConfig) {
+        return CrossfitApiFp(this.configuration).setCrossfitToken(setCrossfitTokenRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Start booking
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CrossfitApi
+     */
+    public startBookingCrossfit(options?: AxiosRequestConfig) {
+        return CrossfitApiFp(this.configuration).startBookingCrossfit(options).then((request) => request(this.axios, this.basePath));
+    }
 }
+
 
 /**
  * LoginApi - axios parameter creator
@@ -212,11 +552,11 @@ export const LoginApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Login to page
-         * @param {Login} [login] 
+         * @param {LoginRequest} [loginRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        login: async (login?: Login, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        login: async (loginRequest?: LoginRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/login`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -236,7 +576,7 @@ export const LoginApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(login, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(loginRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -256,12 +596,12 @@ export const LoginApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Login to page
-         * @param {Login} [login] 
+         * @param {LoginRequest} [loginRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async login(login?: Login, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Logged>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.login(login, options);
+        async login(loginRequest?: LoginRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Login200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.login(loginRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -277,12 +617,12 @@ export const LoginApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Login to page
-         * @param {Login} [login] 
+         * @param {LoginRequest} [loginRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        login(login?: Login, options?: any): AxiosPromise<Logged> {
-            return localVarFp.login(login, options).then((request) => request(axios, basePath));
+        login(loginRequest?: LoginRequest, options?: any): AxiosPromise<Login200Response> {
+            return localVarFp.login(loginRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -297,13 +637,13 @@ export class LoginApi extends BaseAPI {
     /**
      * 
      * @summary Login to page
-     * @param {Login} [login] 
+     * @param {LoginRequest} [loginRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LoginApi
      */
-    public login(login?: Login, options?: AxiosRequestConfig) {
-        return LoginApiFp(this.configuration).login(login, options).then((request) => request(this.axios, this.basePath));
+    public login(loginRequest?: LoginRequest, options?: AxiosRequestConfig) {
+        return LoginApiFp(this.configuration).login(loginRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -317,11 +657,11 @@ export const SigninApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Sign in
-         * @param {SignIn} [signIn] 
+         * @param {SignInRequest} [signInRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        signIn: async (signIn?: SignIn, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        signIn: async (signInRequest?: SignInRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/signin`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -341,7 +681,7 @@ export const SigninApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(signIn, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(signInRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -361,12 +701,12 @@ export const SigninApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Sign in
-         * @param {SignIn} [signIn] 
+         * @param {SignInRequest} [signInRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async signIn(signIn?: SignIn, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.signIn(signIn, options);
+        async signIn(signInRequest?: SignInRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.signIn(signInRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -382,12 +722,12 @@ export const SigninApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Sign in
-         * @param {SignIn} [signIn] 
+         * @param {SignInRequest} [signInRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        signIn(signIn?: SignIn, options?: any): AxiosPromise<void> {
-            return localVarFp.signIn(signIn, options).then((request) => request(axios, basePath));
+        signIn(signInRequest?: SignInRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.signIn(signInRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -402,13 +742,13 @@ export class SigninApi extends BaseAPI {
     /**
      * 
      * @summary Sign in
-     * @param {SignIn} [signIn] 
+     * @param {SignInRequest} [signInRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SigninApi
      */
-    public signIn(signIn?: SignIn, options?: AxiosRequestConfig) {
-        return SigninApiFp(this.configuration).signIn(signIn, options).then((request) => request(this.axios, this.basePath));
+    public signIn(signInRequest?: SignInRequest, options?: AxiosRequestConfig) {
+        return SigninApiFp(this.configuration).signIn(signInRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -422,10 +762,11 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Create new user
+         * @param {UserSchema} [userSchema] User object
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUser: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createUser: async (userSchema?: UserSchema, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -440,9 +781,12 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(userSchema, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -486,13 +830,11 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Search users using filters
-         * @param {UserFilter} userFilter Filter users
+         * @param {FilterUsersRequest} [filterUsersRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        filterUsers: async (userFilter: UserFilter, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userFilter' is not null or undefined
-            assertParamExists('filterUsers', 'userFilter', userFilter)
+        filterUsers: async (filterUsersRequest?: FilterUsersRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -512,7 +854,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userFilter, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(filterUsersRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -587,11 +929,11 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
          * 
          * @summary Update an user by its id
          * @param {number} id ID of the user
-         * @param {User} [user] 
+         * @param {UserSchema} [userSchema] User object
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUser: async (id: number, user?: User, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateUser: async (id: number, userSchema?: UserSchema, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('updateUser', 'id', id)
             const localVarPath = `/user/{id}`
@@ -614,7 +956,7 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(userSchema, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -634,11 +976,12 @@ export const UsersApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Create new user
+         * @param {UserSchema} [userSchema] User object
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createUser(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUser(options);
+        async createUser(userSchema?: UserSchema, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSchema>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createUser(userSchema, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -655,12 +998,12 @@ export const UsersApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Search users using filters
-         * @param {UserFilter} userFilter Filter users
+         * @param {FilterUsersRequest} [filterUsersRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async filterUsers(userFilter: UserFilter, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.filterUsers(userFilter, options);
+        async filterUsers(filterUsersRequest?: FilterUsersRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSchema>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.filterUsers(filterUsersRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -670,7 +1013,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUser(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+        async getUser(id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSchema>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUser(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -680,7 +1023,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUsers(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+        async getUsers(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserSchema>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUsers(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -688,12 +1031,12 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * 
          * @summary Update an user by its id
          * @param {number} id ID of the user
-         * @param {User} [user] 
+         * @param {UserSchema} [userSchema] User object
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateUser(id: number, user?: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(id, user, options);
+        async updateUser(id: number, userSchema?: UserSchema, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(id, userSchema, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -709,11 +1052,12 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Create new user
+         * @param {UserSchema} [userSchema] User object
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUser(options?: any): AxiosPromise<User> {
-            return localVarFp.createUser(options).then((request) => request(axios, basePath));
+        createUser(userSchema?: UserSchema, options?: any): AxiosPromise<UserSchema> {
+            return localVarFp.createUser(userSchema, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -728,12 +1072,12 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @summary Search users using filters
-         * @param {UserFilter} userFilter Filter users
+         * @param {FilterUsersRequest} [filterUsersRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        filterUsers(userFilter: UserFilter, options?: any): AxiosPromise<Array<User>> {
-            return localVarFp.filterUsers(userFilter, options).then((request) => request(axios, basePath));
+        filterUsers(filterUsersRequest?: FilterUsersRequest, options?: any): AxiosPromise<UserSchema> {
+            return localVarFp.filterUsers(filterUsersRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -742,7 +1086,7 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUser(id: number, options?: any): AxiosPromise<User> {
+        getUser(id: number, options?: any): AxiosPromise<UserSchema> {
             return localVarFp.getUser(id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -751,19 +1095,19 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUsers(options?: any): AxiosPromise<Array<User>> {
+        getUsers(options?: any): AxiosPromise<Array<UserSchema>> {
             return localVarFp.getUsers(options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Update an user by its id
          * @param {number} id ID of the user
-         * @param {User} [user] 
+         * @param {UserSchema} [userSchema] User object
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUser(id: number, user?: User, options?: any): AxiosPromise<void> {
-            return localVarFp.updateUser(id, user, options).then((request) => request(axios, basePath));
+        updateUser(id: number, userSchema?: UserSchema, options?: any): AxiosPromise<void> {
+            return localVarFp.updateUser(id, userSchema, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -778,12 +1122,13 @@ export class UsersApi extends BaseAPI {
     /**
      * 
      * @summary Create new user
+     * @param {UserSchema} [userSchema] User object
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public createUser(options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).createUser(options).then((request) => request(this.axios, this.basePath));
+    public createUser(userSchema?: UserSchema, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).createUser(userSchema, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -801,13 +1146,13 @@ export class UsersApi extends BaseAPI {
     /**
      * 
      * @summary Search users using filters
-     * @param {UserFilter} userFilter Filter users
+     * @param {FilterUsersRequest} [filterUsersRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public filterUsers(userFilter: UserFilter, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).filterUsers(userFilter, options).then((request) => request(this.axios, this.basePath));
+    public filterUsers(filterUsersRequest?: FilterUsersRequest, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).filterUsers(filterUsersRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -837,13 +1182,13 @@ export class UsersApi extends BaseAPI {
      * 
      * @summary Update an user by its id
      * @param {number} id ID of the user
-     * @param {User} [user] 
+     * @param {UserSchema} [userSchema] User object
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public updateUser(id: number, user?: User, options?: AxiosRequestConfig) {
-        return UsersApiFp(this.configuration).updateUser(id, user, options).then((request) => request(this.axios, this.basePath));
+    public updateUser(id: number, userSchema?: UserSchema, options?: AxiosRequestConfig) {
+        return UsersApiFp(this.configuration).updateUser(id, userSchema, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

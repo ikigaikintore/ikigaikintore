@@ -16,14 +16,14 @@ paths:
         - crossfit
       responses:
         '200':
-          $ref: '#/components/responses/GoogleCredentials'
+          $ref: '#/components/responses/GetGoogleCredentials'
     post:
       summary: Set token
       operationId: SetCrossfitToken
       tags:
         - crossfit
       requestBody:
-        $ref: '#/components/requestBodies/GoogleToken'
+        $ref: '#/components/requestBodies/ReqGoogleToken'
       responses:
         204:
           description: successful operation
@@ -47,7 +47,7 @@ paths:
         - crossfit
       responses:
         '200':
-          $ref: '#/components/responses/ProcessStatus'
+          $ref: '#/components/responses/GetProcessStatus'
 
   /login:
     post:
@@ -56,10 +56,10 @@ paths:
       tags:
         - login
       requestBody:
-        $ref: '#/components/requestBodies/Login'
+        $ref: '#/components/requestBodies/ReqLogin'
       responses:
         '200':
-          $ref: '#/components/responses/Logged'
+          $ref: '#/components/responses/GetLogged'
         '404':
           $ref: '#/components/responses/Error'
         '400':
@@ -74,7 +74,7 @@ paths:
       tags:
         - signin
       requestBody:
-        $ref: '#/components/requestBodies/SignIn'
+        $ref: '#/components/requestBodies/ReqSignIn'
       responses:
         '204':
           description: Sign in success
@@ -93,7 +93,7 @@ paths:
       summary: Returns all users
       responses:
         '200':
-          $ref: '#/components/responses/Users'
+          $ref: '#/components/responses/GetUsers'
         '500':
           $ref: '#/components/responses/Error'
     post:
@@ -102,10 +102,10 @@ paths:
         - users
       summary: Search users using filters
       requestBody:
-        $ref: '#/components/requestBodies/UserFilter'
+        $ref: '#/components/requestBodies/ReqUserFilter'
       responses:
         '200':
-          $ref: '#/components/responses/User'
+          $ref: '#/components/responses/GetUser'
         '400':
           $ref: '#/components/responses/Error'
         '500':
@@ -118,10 +118,10 @@ paths:
         - users
       summary: Create new user
       requestBody:
-        $ref: '#/components/requestBodies/User'
+        $ref: '#/components/requestBodies/ReqUser'
       responses:
         '201':
-          $ref: '#/components/responses/User'
+          $ref: '#/components/responses/GetUser'
         '400':
           $ref: '#/components/responses/Error'
         '500':
@@ -143,7 +143,7 @@ paths:
       summary: Get an user by its id
       responses:
         '200':
-          $ref: '#/components/responses/User'
+          $ref: '#/components/responses/GetUser'
         '404':
           $ref: '#/components/responses/Error'
         '400':
@@ -156,7 +156,7 @@ paths:
         - users
       summary: Update an user by its id
       requestBody:
-        $ref: '#/components/requestBodies/User'
+        $ref: '#/components/requestBodies/ReqUser'
       responses:
         '204':
           description: User updated
@@ -239,7 +239,7 @@ components:
               - time
               - code
     
-    Users:
+    GetUsers:
       description: Users
       content:
         application/json:
@@ -248,14 +248,14 @@ components:
             items:
               $ref: '#/components/schemas/UserSchema'
 
-    User:
+    GetUser:
       description: User object
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/UserSchema'
 
-    Logged:
+    GetLogged:
       description: Logged user object
       content:
         application/json:
@@ -286,7 +286,7 @@ components:
               - isAdmin
               - role
 
-    GoogleCredentials:
+    GetGoogleCredentials:
       description: Google credentials message
       content:
         application/json:
@@ -298,7 +298,7 @@ components:
             required:
               - link
 
-    ProcessStatus:
+    GetProcessStatus:
       description: Process status
       content:
         application/json:
@@ -323,7 +323,7 @@ components:
               - complete
 
   requestBodies:
-    Login:
+    ReqLogin:
       content:
         application/json:
           schema:
@@ -336,14 +336,14 @@ components:
                 type: string
                 example: abAD87_87
 
-    User:
+    ReqUser:
       description: User object
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/UserSchema'
 
-    UserFilter:
+    ReqUserFilter:
       content:
         application/json:
           schema:
@@ -359,7 +359,7 @@ components:
               - name
               - birthday
 
-    SignIn:
+    ReqSignIn:
       content:
         application/json:
           schema:
@@ -379,7 +379,7 @@ components:
               - password
               - username
 
-    GoogleToken:
+    ReqGoogleToken:
       required: true
       description: Token to authenticate
       content:

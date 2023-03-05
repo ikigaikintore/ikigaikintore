@@ -3,7 +3,7 @@
 !go.sum
 !mock
 !pkg
-!endpoints
+!pkg/endpoints
 !common
 !api
 !cmd/main.go
