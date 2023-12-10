@@ -1,4 +1,4 @@
-FROM golang:1.21
+FROM golang:1.21 as backend
 
 ARG PROTOCGEN_VERSION="1.31.0"
 ARG PROTOCGENTWIRP_VERSION="8.1.3"
@@ -12,3 +12,13 @@ RUN apt update && \
 WORKDIR /app
 
 CMD find . -name "*.proto" -exec protoc --go_out=:./proto --go_opt=paths=source_relative --twirp_out=:. {} \;
+
+FROM node:21.4 as frontend
+
+WORKDIR /app
+
+RUN apt update && \
+    apt install -y protobuf-compiler && \
+    npm install typescript
+
+CMD find . -name "*.proto" -exec npx twirpscript {} \;
