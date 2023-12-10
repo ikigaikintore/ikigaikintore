@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package endpoints.v1;
+
+service Weather {
+  rpc GetWeather(WeatherRequest) returns (WeatherReply);
+}
+
+message WeatherFilter {
+  string location = 1;
+}
+
+message WeatherRequest {
+  WeatherFilter weatherFilter = 1;
+}
+
+enum WeatherType {
+  UNKNOWN = 0;
+  THUNDERSTORM = 1;
+  DRIZZLE = 2;
+  RAIN = 3;
+  SNOW = 4;
+  MIST = 5;
+  SMOKE = 6;
+  HAZE = 7;
+  DUST = 8;
+  FOG = 9;
+  SAND = 10;
+  ASH = 11;
+  SQUALL = 12;
+  TORNADO = 13;
+  CLEAR = 14;
+  CLOUDS = 15;
+}
+
+message WeatherCurrent {
+  float temperature = 1;
+  float windSpeed = 2;
+  uint64 timestamp = 3;
+  float humidity = 4;
+  WeatherType weather = 5;
+}
+
+message TemperatureRange {
+  float max = 1;
+  float min = 2;
+}
+
+message WeatherDailyPoint {
+  uint64 timestamp = 1;
+  float temperature = 2;
+  float humidity = 3;
+  TemperatureRange temperatureRange = 4;
+  WeatherType weather = 5;
+}
+
+message WeatherReply {
+  repeated WeatherDailyPoint weatherPoint = 1;
+  WeatherCurrent weatherCurrent = 2;
+}
