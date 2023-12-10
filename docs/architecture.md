@@ -8,3 +8,5 @@ Frontend: NextJS or not...
 DDD with hexagonal layered
 
 Cache, Database: TBD
+
+Communicate with telegram
