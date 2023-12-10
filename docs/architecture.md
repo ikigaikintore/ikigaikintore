@@ -11,4 +11,6 @@ Cache, Database: TBD
 
 Communicate with telegram!
 
+Use IaC for managing the infrastructure
+
 ![poc](./assets/poc_view.png)
