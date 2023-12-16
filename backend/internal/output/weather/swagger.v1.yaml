@@ -1,0 +1,166 @@
+openapi: 3.0.3
+info:
+  title: OpenWeatherMap Hourly Forecast API (Pro)
+  version: 1.0.0
+  description: API for retrieving hourly weather forecasts for specific locations.
+servers:
+  - url: https://pro.openweathermap.org
+    description: OpenWeatherMap Pro API server
+paths:
+  # Hourly forecast by latitude and longitude
+  /data/2.5/forecast/hourly:
+    get:
+      summary: Get hourly weather forecast by latitude and longitude
+      parameters:
+        - in: query
+          name: lat
+          required: true
+          schema:
+            type: number
+            format: double
+          description: Latitude of the location
+        - in: query
+          name: lon
+          required: true
+          schema:
+            type: number
+            format: double
+          description: Longitude of the location
+        - in: query
+          name: appid
+          required: true
+          schema:
+            type: string
+          description: OpenWeatherMap API key
+        - in: query
+          name: mode
+          schema:
+            default: json
+            type: string
+            enum: [json, xml]
+          description: Response format (optional)
+        - in: query
+          name: cnt
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 96
+          description: Number of forecast hours to return (max 96)
+        - in: query
+          name: lang
+          schema:
+            type: string
+          description: Language code for response text (omit in documentation)
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    dt:
+                      type: integer
+                      description: Unix timestamp representing the time of the forecast
+                    main:
+                      $ref: '#/components/schemas/MainProperties'
+                    weather:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/WeatherDescription'
+                    clouds:
+                      $ref: '#/components/schemas/CloudProperties'
+                    wind:
+                      $ref: '#/components/schemas/WindProperties'
+                    visibility:
+                      type: integer
+                      description: Average visibility in meters
+                    pop:
+                      type: number
+                      description: Probability of precipitation (0-1)
+                    rain:
+                      type: object
+                      description: Rain volume for last hour (mm) (present only for last hour)
+                      properties:
+                        '1h':
+                          type: number
+                    sys:
+                      $ref: '#/components/schemas/SysProperties'
+                    dt_txt:
+                      type: string
+                      format: date-time
+                      description: Date and time of the forecast in ISO 8601 format
+
+components:
+  schemas:
+    MainProperties:
+      type: object
+      properties:
+        temp:
+          type: number
+          description: Temperature in Kelvin
+        feels_like:
+          type: number
+          description: Perceived temperature in Kelvin
+        temp_min:
+          type: number
+          description: Minimum temperature in Kelvin
+        temp_max:
+          type: number
+          description: Maximum temperature in Kelvin
+        pressure:
+          type: integer
+          description: Atmospheric pressure in hPa
+        sea_level:
+          type: integer
+          description: Sea level pressure in hPa
+        grnd_level:
+          type: integer
+          description: Ground level pressure in hPa
+        humidity:
+          type: integer
+          description: Relative humidity (%)
+        temp_kf:
+          type: number
+          description: Temperature difference between maximum and minimum in Kelvin
+    WeatherDescription:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Weather condition ID
+        main:
+          type: string
+          description: Group of weather conditions (e.g., Rain, Clouds)
+        description:
+          type: string
+          description: Weather condition description
+        icon:
+          type: string
+          description: Weather condition icon code
+    CloudProperties:
+      type: object
+      properties:
+        all:
+          type: integer
+          description: Cloudiness percentage (0-100)
+    WindProperties:
+      type: object
+      properties:
+        speed:
+          type: number
+          description: Wind speed in meters per second
+        deg:
+          type: integer
+          description: Wind direction in degrees (0° is north)
+        gust:
+          type: number
+          description: Wind gust speed in meters per second
+    SysProperties:
+      type: object
+      properties:
+        pod:
+          type: string
+          description: Day or night ('d' or 'n')

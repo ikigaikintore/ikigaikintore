@@ -1,0 +1,7 @@
+package: weather
+output-options:
+  skip-prune: true
+output: ./client.gen.go
+generate:
+  client: true
+  models: true

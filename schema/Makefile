@@ -7,8 +7,8 @@ help: ## Show this help
 generate: ## Generate automated code
 	docker build --target backend -t backend-twirp-compiler:latest . && \
 	docker run -v `pwd`:/app backend-twirp-compiler:latest && \
-	rm -rf ../backend/pkg/input/proto && \
-	mv proto ../backend/pkg/input/ && \
+	rm -rf ../backend/pkg/proto && \
+	mv proto ../backend/pkg/ && \
 	docker build --target frontend -t frontend-twirp-compiler:latest . && \
 	docker run -v `pwd`:/app frontend-twirp-compiler:latest && \
 	rm -rf ../frontend/src/api/* && \
