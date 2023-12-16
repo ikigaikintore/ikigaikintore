@@ -92,9 +92,54 @@ paths:
                       type: string
                       format: date-time
                       description: Date and time of the forecast in ISO 8601 format
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        429:
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        cod:
+          type: number
+          description: Code error
+        message:
+          type: string
+        parameters:
+          type: array
+          items:
+            type: string
+      required:
+        - cod
+        - message
     MainProperties:
       type: object
       properties:

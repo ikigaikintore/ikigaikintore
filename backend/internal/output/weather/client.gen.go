@@ -28,6 +28,14 @@ type CloudProperties struct {
 	All *int `json:"all,omitempty"`
 }
 
+// ErrorResponse defines model for ErrorResponse.
+type ErrorResponse struct {
+	// Cod Code error
+	Cod        float32   `json:"cod"`
+	Message    string    `json:"message"`
+	Parameters *[]string `json:"parameters,omitempty"`
+}
+
 // MainProperties defines model for MainProperties.
 type MainProperties struct {
 	// FeelsLike Perceived temperature in Kelvin
@@ -395,6 +403,11 @@ type GetData25ForecastHourlyResponse struct {
 		Weather    *[]WeatherDescription `json:"weather,omitempty"`
 		Wind       *WindProperties       `json:"wind,omitempty"`
 	}
+	JSON400 *ErrorResponse
+	JSON401 *ErrorResponse
+	JSON404 *ErrorResponse
+	JSON429 *ErrorResponse
+	JSON5XX *ErrorResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -465,6 +478,41 @@ func ParseGetData25ForecastHourlyResponse(rsp *http.Response) (*GetData25Forecas
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode/100 == 5:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON5XX = &dest
 
 	}
 
