@@ -4,12 +4,147 @@ info:
   version: 1.0.0
   description: API for retrieving hourly weather forecasts for specific locations.
 servers:
-  - url: https://pro.openweathermap.org
+  - url: https://api.openweathermap.org
     description: OpenWeatherMap Pro API server
 paths:
-  # Hourly forecast by latitude and longitude
-  /data/2.5/forecast/hourly:
+  # Geolocation API
+  /geo/1.0/direct:
     get:
+      operationId: GetLocationByName
+      summary: Get location by name of place
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+        - in: query
+          required: true
+          name: appid
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Geocoding'
+        4XX:
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # 3-hour forecast
+  /data/2.5/forecast:
+    get:
+      operationId: Get-Forecast-3-Hour
+      summary: Forecast for 3 hours
+      parameters:
+        - in: query
+          name: lat
+          required: true
+          schema:
+            type: number
+            format: double
+          description: Latitude of the location
+        - in: query
+          name: lon
+          required: true
+          schema:
+            type: number
+            format: double
+          description: Longitude of the location
+        - in: query
+          name: cnt
+          required: true
+          schema:
+            type: integer
+          description: Count
+        - in: query
+          name: appid
+          required: true
+          schema:
+            type: string
+          description: OpenWeatherMap API key
+        - in: query
+          name: mode
+          description: Type of mode
+          schema:
+            type: string
+            enum: [ xml, html, json ]
+            default: json
+        - in: query
+          name: lang
+          schema:
+            type: string
+          description: Language code for response text (omit in documentation)
+        - in: query
+          name: units
+          description: Type of metrics
+          schema:
+            type: string
+            enum: [ standard, metric, imperial ]
+            default: metric
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherResponsePrediction'
+
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        429:
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        5XX:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+  # Current forecast by latitude and longitude
+  /data/2.5/weather:
+    get:
+      operationId: Get-Current
       summary: Get hourly weather forecast by latitude and longitude
       parameters:
         - in: query
@@ -34,64 +169,31 @@ paths:
           description: OpenWeatherMap API key
         - in: query
           name: mode
+          description: Type of mode
           schema:
-            default: json
             type: string
-            enum: [json, xml]
-          description: Response format (optional)
-        - in: query
-          name: cnt
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 96
-          description: Number of forecast hours to return (max 96)
+            enum: [ xml, html, json ]
+            default: json
         - in: query
           name: lang
           schema:
             type: string
           description: Language code for response text (omit in documentation)
+        - in: query
+          name: units
+          description: Type of metrics
+          schema:
+            type: string
+            enum: [ standard, metric, imperial ]
+            default: metric
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    dt:
-                      type: integer
-                      description: Unix timestamp representing the time of the forecast
-                    main:
-                      $ref: '#/components/schemas/MainProperties'
-                    weather:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/WeatherDescription'
-                    clouds:
-                      $ref: '#/components/schemas/CloudProperties'
-                    wind:
-                      $ref: '#/components/schemas/WindProperties'
-                    visibility:
-                      type: integer
-                      description: Average visibility in meters
-                    pop:
-                      type: number
-                      description: Probability of precipitation (0-1)
-                    rain:
-                      type: object
-                      description: Rain volume for last hour (mm) (present only for last hour)
-                      properties:
-                        '1h':
-                          type: number
-                    sys:
-                      $ref: '#/components/schemas/SysProperties'
-                    dt_txt:
-                      type: string
-                      format: date-time
-                      description: Date and time of the forecast in ISO 8601 format
+                $ref: '#/components/schemas/WeatherResponse'
+
         400:
           description: Bad request
           content:
@@ -140,6 +242,284 @@ components:
       required:
         - cod
         - message
+
+    WeatherResponsePrediction:
+      type: object
+      required:
+        - cod
+        - message
+        - cnt
+        - list
+        - city
+      properties:
+        cod:
+          type: string
+        message:
+          type: integer
+        cnt:
+          type: integer
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemPrediction'
+        city:
+          $ref: '#/components/schemas/CityPrediction'
+
+    CoordPrediction:
+      type: object
+      required:
+        - lat
+        - lon
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+
+    CityPrediction:
+      type: object
+      required:
+        - id
+        - name
+        - coord
+        - country
+        - population
+        - timezone
+        - sunrise
+        - sunset
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        coord:
+          $ref: '#/components/schemas/CoordPrediction'
+        country:
+          type: string
+        population:
+          type: integer
+        timezone:
+          type: integer
+        sunrise:
+          type: integer
+        sunset:
+          type: integer
+
+    MainPrediction:
+      type: object
+      required:
+        - temp
+        - feels_like
+        - temp_min
+        - temp_max
+        - pressure
+        - sea_level
+        - grnd_level
+        - humidity
+        - temp_kf
+      properties:
+        temp:
+          type: number
+        feels_like:
+          type: number
+        temp_min:
+          type: number
+        temp_max:
+          type: number
+        pressure:
+          type: integer
+        sea_level:
+          type: integer
+        grnd_level:
+          type: integer
+        humidity:
+          type: integer
+        temp_kf:
+          type: number
+
+    WeatherPrediction:
+      type: object
+      required:
+        - id
+        - main
+        - description
+        - icon
+      properties:
+        id:
+          type: integer
+        main:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+
+    SysPrediction:
+      type: object
+      required:
+        - pod
+      properties:
+        pod:
+          type: string
+
+    RainPrediction:
+      type: object
+      required:
+        - 3h
+      properties:
+        3h:
+          type: number
+
+    WindPrediction:
+      type: object
+      required:
+        - speed
+        - deg
+        - gust
+      properties:
+        speed:
+          type: number
+        deg:
+          type: integer
+        gust:
+          type: number
+
+    CloudsPrediction:
+      type: object
+      required:
+        - all
+      properties:
+        all:
+          type: integer
+
+    ItemPrediction:
+      type: object
+      required:
+        - dt
+        - main
+        - weather
+        - clouds
+        - wind
+        - visibility
+        - pop
+        - rain
+        - sys
+        - dt_txt
+      properties:
+        dt:
+          type: integer
+        main:
+          $ref: '#/components/schemas/MainPrediction'
+        weather:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeatherPrediction'
+        clouds:
+          $ref: '#/components/schemas/CloudsPrediction'
+        wind:
+          $ref: '#/components/schemas/WindPrediction'
+        visibility:
+          type: integer
+        pop:
+          type: number
+        rain:
+          $ref: '#/components/schemas/RainPrediction'
+        sys:
+          $ref: '#/components/schemas/SysPrediction'
+        dt_txt:
+          type: string
+
+    Geocoding:
+      type: object
+      properties:
+        name:
+          type: string
+        local_names:
+          type: object
+          additionalProperties: true
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+        country:
+          type: string
+        state:
+          type: string
+      required: [ name, local_names, lat, local_names, country ]
+
+    WeatherResponse:
+      type: object
+      properties:
+        coord:
+          $ref: '#/components/schemas/Coordinates'
+        weather:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeatherDescription'
+        base:
+          type: string
+          description: Station base identifier
+        main:
+          $ref: '#/components/schemas/MainProperties'
+        visibility:
+          type: integer
+          description: Average visibility in meters
+        wind:
+          $ref: '#/components/schemas/WindProperties'
+        rain:
+          type: object
+          description: Rain volume for last hour (mm)
+          properties:
+            '1h':
+              type: number
+        clouds:
+          $ref: '#/components/schemas/CloudProperties'
+        dt:
+          type: integer
+          description: Unix timestamp of the data
+        sys:
+          $ref: '#/components/schemas/SysProperties'
+        timezone:
+          type: integer
+          description: Timezone offset in seconds
+        id:
+          type: integer
+          description: City ID
+        name:
+          type: string
+          description: City name
+        cod:
+          type: integer
+          description: Internal API code (200 indicates success)
+      required: [ cod, weather, base, main, visibility, wind, rain, clouds, dt, sys, timezone, id, name, cod ]
+    Coordinates:
+      type: object
+      properties:
+        lon:
+          type: number
+          description: Longitude
+        lat:
+          type: number
+          description: Latitude
+      required: [ lon, lat ]
+    WeatherDescription:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Weather condition ID
+        main:
+          type: string
+          description: Group of weather conditions (e.g., Rain, Clouds)
+        description:
+          type: string
+          description: Weather condition description
+        icon:
+          type: string
+          description: Weather condition icon code
+      required: [ id, main, description, icon ]
     MainProperties:
       type: object
       properties:
@@ -158,39 +538,16 @@ components:
         pressure:
           type: integer
           description: Atmospheric pressure in hPa
+        humidity:
+          type: integer
+          description: Relative humidity (%)
         sea_level:
           type: integer
           description: Sea level pressure in hPa
         grnd_level:
           type: integer
           description: Ground level pressure in hPa
-        humidity:
-          type: integer
-          description: Relative humidity (%)
-        temp_kf:
-          type: number
-          description: Temperature difference between maximum and minimum in Kelvin
-    WeatherDescription:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Weather condition ID
-        main:
-          type: string
-          description: Group of weather conditions (e.g., Rain, Clouds)
-        description:
-          type: string
-          description: Weather condition description
-        icon:
-          type: string
-          description: Weather condition icon code
-    CloudProperties:
-      type: object
-      properties:
-        all:
-          type: integer
-          description: Cloudiness percentage (0-100)
+      required: [ temp, feels_like, temp_min, temp_max, pressure, humidity, sea_level, grnd_level ]
     WindProperties:
       type: object
       properties:
@@ -203,9 +560,29 @@ components:
         gust:
           type: number
           description: Wind gust speed in meters per second
+      required: [ speed, deg, gust ]
     SysProperties:
       type: object
       properties:
-        pod:
+        type:
+          type: integer
+          description: System type (1 for city, 2 for station)
+        id:
+          type: integer
+          description: System ID
+        country:
           type: string
-          description: Day or night ('d' or 'n')
+          description: Country code
+        sunrise:
+          type: integer
+          description: Unix timestamp of sunrise
+        sunset:
+          type: integer
+          description: Unix timestamp of sunset
+      required: [ type, id, country, sunset, sunrise ]
+    CloudProperties:
+      type: object
+      properties:
+        all:
+          type: integer
+      required: [ all ]

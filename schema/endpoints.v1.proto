@@ -39,7 +39,7 @@ message WeatherCurrent {
   float temperature = 1;
   float windSpeed = 2;
   uint64 timestamp = 3;
-  float humidity = 4;
+  int32 humidity = 4;
   WeatherType weather = 5;
 }
 
@@ -51,7 +51,7 @@ message TemperatureRange {
 message WeatherDailyPoint {
   uint64 timestamp = 1;
   float temperature = 2;
-  float humidity = 3;
+  int32 humidity = 3;
   TemperatureRange temperatureRange = 4;
   WeatherType weather = 5;
 }

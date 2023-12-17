@@ -363,7 +363,7 @@ export const WeatherCurrent = {
       writer.writeUint64String(3, msg.timestamp.toString());
     }
     if (msg.humidity) {
-      writer.writeFloat(4, msg.humidity);
+      writer.writeInt32(4, msg.humidity);
     }
     if (msg.weather && WeatherType._toInt(msg.weather)) {
       writer.writeEnum(5, WeatherType._toInt(msg.weather));
@@ -391,7 +391,7 @@ export const WeatherCurrent = {
           break;
         }
         case 4: {
-          msg.humidity = reader.readFloat();
+          msg.humidity = reader.readInt32();
           break;
         }
         case 5: {
@@ -524,7 +524,7 @@ export const WeatherDailyPoint = {
       writer.writeFloat(2, msg.temperature);
     }
     if (msg.humidity) {
-      writer.writeFloat(3, msg.humidity);
+      writer.writeInt32(3, msg.humidity);
     }
     if (msg.temperatureRange) {
       writer.writeMessage(
@@ -555,7 +555,7 @@ export const WeatherDailyPoint = {
           break;
         }
         case 3: {
-          msg.humidity = reader.readFloat();
+          msg.humidity = reader.readInt32();
           break;
         }
         case 4: {
@@ -976,7 +976,7 @@ export const WeatherCurrentJSON = {
     }
     const _humidity_ = json["humidity"];
     if (_humidity_) {
-      msg.humidity = protoscript.parseDouble(_humidity_);
+      msg.humidity = protoscript.parseNumber(_humidity_);
     }
     const _weather_ = json["weather"];
     if (_weather_) {
@@ -1119,7 +1119,7 @@ export const WeatherDailyPointJSON = {
     }
     const _humidity_ = json["humidity"];
     if (_humidity_) {
-      msg.humidity = protoscript.parseDouble(_humidity_);
+      msg.humidity = protoscript.parseNumber(_humidity_);
     }
     const _temperatureRange_ = json["temperatureRange"];
     if (_temperatureRange_) {

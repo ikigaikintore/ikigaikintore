@@ -11,21 +11,73 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/oapi-codegen/runtime"
 )
 
-// Defines values for GetData25ForecastHourlyParamsMode.
+// Defines values for GetForecast3HourParamsMode.
 const (
-	Json GetData25ForecastHourlyParamsMode = "json"
-	Xml  GetData25ForecastHourlyParamsMode = "xml"
+	GetForecast3HourParamsModeHtml GetForecast3HourParamsMode = "html"
+	GetForecast3HourParamsModeJson GetForecast3HourParamsMode = "json"
+	GetForecast3HourParamsModeXml  GetForecast3HourParamsMode = "xml"
 )
+
+// Defines values for GetForecast3HourParamsUnits.
+const (
+	GetForecast3HourParamsUnitsImperial GetForecast3HourParamsUnits = "imperial"
+	GetForecast3HourParamsUnitsMetric   GetForecast3HourParamsUnits = "metric"
+	GetForecast3HourParamsUnitsStandard GetForecast3HourParamsUnits = "standard"
+)
+
+// Defines values for GetCurrentParamsMode.
+const (
+	GetCurrentParamsModeHtml GetCurrentParamsMode = "html"
+	GetCurrentParamsModeJson GetCurrentParamsMode = "json"
+	GetCurrentParamsModeXml  GetCurrentParamsMode = "xml"
+)
+
+// Defines values for GetCurrentParamsUnits.
+const (
+	GetCurrentParamsUnitsImperial GetCurrentParamsUnits = "imperial"
+	GetCurrentParamsUnitsMetric   GetCurrentParamsUnits = "metric"
+	GetCurrentParamsUnitsStandard GetCurrentParamsUnits = "standard"
+)
+
+// CityPrediction defines model for CityPrediction.
+type CityPrediction struct {
+	Coord      CoordPrediction `json:"coord"`
+	Country    string          `json:"country"`
+	Id         int             `json:"id"`
+	Name       string          `json:"name"`
+	Population int             `json:"population"`
+	Sunrise    int             `json:"sunrise"`
+	Sunset     int             `json:"sunset"`
+	Timezone   int             `json:"timezone"`
+}
 
 // CloudProperties defines model for CloudProperties.
 type CloudProperties struct {
-	// All Cloudiness percentage (0-100)
-	All *int `json:"all,omitempty"`
+	All int `json:"all"`
+}
+
+// CloudsPrediction defines model for CloudsPrediction.
+type CloudsPrediction struct {
+	All int `json:"all"`
+}
+
+// CoordPrediction defines model for CoordPrediction.
+type CoordPrediction struct {
+	Lat float32 `json:"lat"`
+	Lon float32 `json:"lon"`
+}
+
+// Coordinates defines model for Coordinates.
+type Coordinates struct {
+	// Lat Latitude
+	Lat float32 `json:"lat"`
+
+	// Lon Longitude
+	Lon float32 `json:"lon"`
 }
 
 // ErrorResponse defines model for ErrorResponse.
@@ -36,71 +88,216 @@ type ErrorResponse struct {
 	Parameters *[]string `json:"parameters,omitempty"`
 }
 
+// Geocoding defines model for Geocoding.
+type Geocoding struct {
+	Country    string                 `json:"country"`
+	Lat        float64                `json:"lat"`
+	LocalNames map[string]interface{} `json:"local_names"`
+	Lon        *float64               `json:"lon,omitempty"`
+	Name       string                 `json:"name"`
+	State      *string                `json:"state,omitempty"`
+}
+
+// ItemPrediction defines model for ItemPrediction.
+type ItemPrediction struct {
+	Clouds     CloudsPrediction    `json:"clouds"`
+	Dt         int                 `json:"dt"`
+	DtTxt      string              `json:"dt_txt"`
+	Main       MainPrediction      `json:"main"`
+	Pop        float32             `json:"pop"`
+	Rain       RainPrediction      `json:"rain"`
+	Sys        SysPrediction       `json:"sys"`
+	Visibility int                 `json:"visibility"`
+	Weather    []WeatherPrediction `json:"weather"`
+	Wind       WindPrediction      `json:"wind"`
+}
+
+// MainPrediction defines model for MainPrediction.
+type MainPrediction struct {
+	FeelsLike float32 `json:"feels_like"`
+	GrndLevel int     `json:"grnd_level"`
+	Humidity  int     `json:"humidity"`
+	Pressure  int     `json:"pressure"`
+	SeaLevel  int     `json:"sea_level"`
+	Temp      float32 `json:"temp"`
+	TempKf    float32 `json:"temp_kf"`
+	TempMax   float32 `json:"temp_max"`
+	TempMin   float32 `json:"temp_min"`
+}
+
 // MainProperties defines model for MainProperties.
 type MainProperties struct {
 	// FeelsLike Perceived temperature in Kelvin
-	FeelsLike *float32 `json:"feels_like,omitempty"`
+	FeelsLike float32 `json:"feels_like"`
 
 	// GrndLevel Ground level pressure in hPa
-	GrndLevel *int `json:"grnd_level,omitempty"`
+	GrndLevel int `json:"grnd_level"`
 
 	// Humidity Relative humidity (%)
-	Humidity *int `json:"humidity,omitempty"`
+	Humidity int `json:"humidity"`
 
 	// Pressure Atmospheric pressure in hPa
-	Pressure *int `json:"pressure,omitempty"`
+	Pressure int `json:"pressure"`
 
 	// SeaLevel Sea level pressure in hPa
-	SeaLevel *int `json:"sea_level,omitempty"`
+	SeaLevel int `json:"sea_level"`
 
 	// Temp Temperature in Kelvin
-	Temp *float32 `json:"temp,omitempty"`
-
-	// TempKf Temperature difference between maximum and minimum in Kelvin
-	TempKf *float32 `json:"temp_kf,omitempty"`
+	Temp float32 `json:"temp"`
 
 	// TempMax Maximum temperature in Kelvin
-	TempMax *float32 `json:"temp_max,omitempty"`
+	TempMax float32 `json:"temp_max"`
 
 	// TempMin Minimum temperature in Kelvin
-	TempMin *float32 `json:"temp_min,omitempty"`
+	TempMin float32 `json:"temp_min"`
+}
+
+// RainPrediction defines model for RainPrediction.
+type RainPrediction struct {
+	N3h float32 `json:"3h"`
+}
+
+// SysPrediction defines model for SysPrediction.
+type SysPrediction struct {
+	Pod string `json:"pod"`
 }
 
 // SysProperties defines model for SysProperties.
 type SysProperties struct {
-	// Pod Day or night ('d' or 'n')
-	Pod *string `json:"pod,omitempty"`
+	// Country Country code
+	Country string `json:"country"`
+
+	// Id System ID
+	Id int `json:"id"`
+
+	// Sunrise Unix timestamp of sunrise
+	Sunrise int `json:"sunrise"`
+
+	// Sunset Unix timestamp of sunset
+	Sunset int `json:"sunset"`
+
+	// Type System type (1 for city, 2 for station)
+	Type int `json:"type"`
 }
 
 // WeatherDescription defines model for WeatherDescription.
 type WeatherDescription struct {
 	// Description Weather condition description
-	Description *string `json:"description,omitempty"`
+	Description string `json:"description"`
 
 	// Icon Weather condition icon code
-	Icon *string `json:"icon,omitempty"`
+	Icon string `json:"icon"`
 
 	// Id Weather condition ID
-	Id *int `json:"id,omitempty"`
+	Id int `json:"id"`
 
 	// Main Group of weather conditions (e.g., Rain, Clouds)
-	Main *string `json:"main,omitempty"`
+	Main string `json:"main"`
+}
+
+// WeatherPrediction defines model for WeatherPrediction.
+type WeatherPrediction struct {
+	Description string `json:"description"`
+	Icon        string `json:"icon"`
+	Id          int    `json:"id"`
+	Main        string `json:"main"`
+}
+
+// WeatherResponse defines model for WeatherResponse.
+type WeatherResponse struct {
+	// Base Station base identifier
+	Base   string          `json:"base"`
+	Clouds CloudProperties `json:"clouds"`
+
+	// Cod Internal API code (200 indicates success)
+	Cod   int          `json:"cod"`
+	Coord *Coordinates `json:"coord,omitempty"`
+
+	// Dt Unix timestamp of the data
+	Dt int `json:"dt"`
+
+	// Id City ID
+	Id   int            `json:"id"`
+	Main MainProperties `json:"main"`
+
+	// Name City name
+	Name string `json:"name"`
+
+	// Rain Rain volume for last hour (mm)
+	Rain struct {
+		N1h *float32 `json:"1h,omitempty"`
+	} `json:"rain"`
+	Sys SysProperties `json:"sys"`
+
+	// Timezone Timezone offset in seconds
+	Timezone int `json:"timezone"`
+
+	// Visibility Average visibility in meters
+	Visibility int                  `json:"visibility"`
+	Weather    []WeatherDescription `json:"weather"`
+	Wind       WindProperties       `json:"wind"`
+}
+
+// WeatherResponsePrediction defines model for WeatherResponsePrediction.
+type WeatherResponsePrediction struct {
+	City    CityPrediction   `json:"city"`
+	Cnt     int              `json:"cnt"`
+	Cod     string           `json:"cod"`
+	List    []ItemPrediction `json:"list"`
+	Message int              `json:"message"`
+}
+
+// WindPrediction defines model for WindPrediction.
+type WindPrediction struct {
+	Deg   int     `json:"deg"`
+	Gust  float32 `json:"gust"`
+	Speed float32 `json:"speed"`
 }
 
 // WindProperties defines model for WindProperties.
 type WindProperties struct {
 	// Deg Wind direction in degrees (0° is north)
-	Deg *int `json:"deg,omitempty"`
+	Deg int `json:"deg"`
 
 	// Gust Wind gust speed in meters per second
-	Gust *float32 `json:"gust,omitempty"`
+	Gust float32 `json:"gust"`
 
 	// Speed Wind speed in meters per second
-	Speed *float32 `json:"speed,omitempty"`
+	Speed float32 `json:"speed"`
 }
 
-// GetData25ForecastHourlyParams defines parameters for GetData25ForecastHourly.
-type GetData25ForecastHourlyParams struct {
+// GetForecast3HourParams defines parameters for GetForecast3Hour.
+type GetForecast3HourParams struct {
+	// Lat Latitude of the location
+	Lat float64 `form:"lat" json:"lat"`
+
+	// Lon Longitude of the location
+	Lon float64 `form:"lon" json:"lon"`
+
+	// Cnt Count
+	Cnt int `form:"cnt" json:"cnt"`
+
+	// Appid OpenWeatherMap API key
+	Appid string `form:"appid" json:"appid"`
+
+	// Mode Type of mode
+	Mode *GetForecast3HourParamsMode `form:"mode,omitempty" json:"mode,omitempty"`
+
+	// Lang Language code for response text (omit in documentation)
+	Lang *string `form:"lang,omitempty" json:"lang,omitempty"`
+
+	// Units Type of metrics
+	Units *GetForecast3HourParamsUnits `form:"units,omitempty" json:"units,omitempty"`
+}
+
+// GetForecast3HourParamsMode defines parameters for GetForecast3Hour.
+type GetForecast3HourParamsMode string
+
+// GetForecast3HourParamsUnits defines parameters for GetForecast3Hour.
+type GetForecast3HourParamsUnits string
+
+// GetCurrentParams defines parameters for GetCurrent.
+type GetCurrentParams struct {
 	// Lat Latitude of the location
 	Lat float64 `form:"lat" json:"lat"`
 
@@ -110,18 +307,28 @@ type GetData25ForecastHourlyParams struct {
 	// Appid OpenWeatherMap API key
 	Appid string `form:"appid" json:"appid"`
 
-	// Mode Response format (optional)
-	Mode *GetData25ForecastHourlyParamsMode `form:"mode,omitempty" json:"mode,omitempty"`
-
-	// Cnt Number of forecast hours to return (max 96)
-	Cnt *int `form:"cnt,omitempty" json:"cnt,omitempty"`
+	// Mode Type of mode
+	Mode *GetCurrentParamsMode `form:"mode,omitempty" json:"mode,omitempty"`
 
 	// Lang Language code for response text (omit in documentation)
 	Lang *string `form:"lang,omitempty" json:"lang,omitempty"`
+
+	// Units Type of metrics
+	Units *GetCurrentParamsUnits `form:"units,omitempty" json:"units,omitempty"`
 }
 
-// GetData25ForecastHourlyParamsMode defines parameters for GetData25ForecastHourly.
-type GetData25ForecastHourlyParamsMode string
+// GetCurrentParamsMode defines parameters for GetCurrent.
+type GetCurrentParamsMode string
+
+// GetCurrentParamsUnits defines parameters for GetCurrent.
+type GetCurrentParamsUnits string
+
+// GetLocationByNameParams defines parameters for GetLocationByName.
+type GetLocationByNameParams struct {
+	Q     string `form:"q" json:"q"`
+	Limit *int   `form:"limit,omitempty" json:"limit,omitempty"`
+	Appid string `form:"appid" json:"appid"`
+}
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -196,12 +403,18 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
-	// GetData25ForecastHourly request
-	GetData25ForecastHourly(ctx context.Context, params *GetData25ForecastHourlyParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetForecast3Hour request
+	GetForecast3Hour(ctx context.Context, params *GetForecast3HourParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetCurrent request
+	GetCurrent(ctx context.Context, params *GetCurrentParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetLocationByName request
+	GetLocationByName(ctx context.Context, params *GetLocationByNameParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-func (c *Client) GetData25ForecastHourly(ctx context.Context, params *GetData25ForecastHourlyParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetData25ForecastHourlyRequest(c.Server, params)
+func (c *Client) GetForecast3Hour(ctx context.Context, params *GetForecast3HourParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetForecast3HourRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -212,8 +425,32 @@ func (c *Client) GetData25ForecastHourly(ctx context.Context, params *GetData25F
 	return c.Client.Do(req)
 }
 
-// NewGetData25ForecastHourlyRequest generates requests for GetData25ForecastHourly
-func NewGetData25ForecastHourlyRequest(server string, params *GetData25ForecastHourlyParams) (*http.Request, error) {
+func (c *Client) GetCurrent(ctx context.Context, params *GetCurrentParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetCurrentRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetLocationByName(ctx context.Context, params *GetLocationByNameParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetLocationByNameRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// NewGetForecast3HourRequest generates requests for GetForecast3Hour
+func NewGetForecast3HourRequest(server string, params *GetForecast3HourParams) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -221,7 +458,136 @@ func NewGetData25ForecastHourlyRequest(server string, params *GetData25ForecastH
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/data/2.5/forecast/hourly")
+	operationPath := fmt.Sprintf("/data/2.5/forecast")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "lat", runtime.ParamLocationQuery, params.Lat); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "lon", runtime.ParamLocationQuery, params.Lon); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "cnt", runtime.ParamLocationQuery, params.Cnt); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "appid", runtime.ParamLocationQuery, params.Appid); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if params.Mode != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "mode", runtime.ParamLocationQuery, *params.Mode); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Lang != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "lang", runtime.ParamLocationQuery, *params.Lang); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Units != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "units", runtime.ParamLocationQuery, *params.Units); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetCurrentRequest generates requests for GetCurrent
+func NewGetCurrentRequest(server string, params *GetCurrentParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/data/2.5/weather")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -286,22 +652,6 @@ func NewGetData25ForecastHourlyRequest(server string, params *GetData25ForecastH
 
 		}
 
-		if params.Cnt != nil {
-
-			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "cnt", runtime.ParamLocationQuery, *params.Cnt); err != nil {
-				return nil, err
-			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
-				return nil, err
-			} else {
-				for k, v := range parsed {
-					for _, v2 := range v {
-						queryValues.Add(k, v2)
-					}
-				}
-			}
-
-		}
-
 		if params.Lang != nil {
 
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "lang", runtime.ParamLocationQuery, *params.Lang); err != nil {
@@ -316,6 +666,95 @@ func NewGetData25ForecastHourlyRequest(server string, params *GetData25ForecastH
 				}
 			}
 
+		}
+
+		if params.Units != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "units", runtime.ParamLocationQuery, *params.Units); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetLocationByNameRequest generates requests for GetLocationByName
+func NewGetLocationByNameRequest(server string, params *GetLocationByNameParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/geo/1.0/direct")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "q", runtime.ParamLocationQuery, params.Q); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "appid", runtime.ParamLocationQuery, params.Appid); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
 		}
 
 		queryURL.RawQuery = queryValues.Encode()
@@ -372,46 +811,29 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
-	// GetData25ForecastHourlyWithResponse request
-	GetData25ForecastHourlyWithResponse(ctx context.Context, params *GetData25ForecastHourlyParams, reqEditors ...RequestEditorFn) (*GetData25ForecastHourlyResponse, error)
+	// GetForecast3HourWithResponse request
+	GetForecast3HourWithResponse(ctx context.Context, params *GetForecast3HourParams, reqEditors ...RequestEditorFn) (*GetForecast3HourResponse, error)
+
+	// GetCurrentWithResponse request
+	GetCurrentWithResponse(ctx context.Context, params *GetCurrentParams, reqEditors ...RequestEditorFn) (*GetCurrentResponse, error)
+
+	// GetLocationByNameWithResponse request
+	GetLocationByNameWithResponse(ctx context.Context, params *GetLocationByNameParams, reqEditors ...RequestEditorFn) (*GetLocationByNameResponse, error)
 }
 
-type GetData25ForecastHourlyResponse struct {
+type GetForecast3HourResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *[]struct {
-		Clouds *CloudProperties `json:"clouds,omitempty"`
-
-		// Dt Unix timestamp representing the time of the forecast
-		Dt *int `json:"dt,omitempty"`
-
-		// DtTxt Date and time of the forecast in ISO 8601 format
-		DtTxt *time.Time      `json:"dt_txt,omitempty"`
-		Main  *MainProperties `json:"main,omitempty"`
-
-		// Pop Probability of precipitation (0-1)
-		Pop *float32 `json:"pop,omitempty"`
-
-		// Rain Rain volume for last hour (mm) (present only for last hour)
-		Rain *struct {
-			N1h *float32 `json:"1h,omitempty"`
-		} `json:"rain,omitempty"`
-		Sys *SysProperties `json:"sys,omitempty"`
-
-		// Visibility Average visibility in meters
-		Visibility *int                  `json:"visibility,omitempty"`
-		Weather    *[]WeatherDescription `json:"weather,omitempty"`
-		Wind       *WindProperties       `json:"wind,omitempty"`
-	}
-	JSON400 *ErrorResponse
-	JSON401 *ErrorResponse
-	JSON404 *ErrorResponse
-	JSON429 *ErrorResponse
-	JSON5XX *ErrorResponse
+	JSON200      *WeatherResponsePrediction
+	JSON400      *ErrorResponse
+	JSON401      *ErrorResponse
+	JSON404      *ErrorResponse
+	JSON429      *ErrorResponse
+	JSON5XX      *ErrorResponse
 }
 
 // Status returns HTTPResponse.Status
-func (r GetData25ForecastHourlyResponse) Status() string {
+func (r GetForecast3HourResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -419,61 +841,107 @@ func (r GetData25ForecastHourlyResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetData25ForecastHourlyResponse) StatusCode() int {
+func (r GetForecast3HourResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-// GetData25ForecastHourlyWithResponse request returning *GetData25ForecastHourlyResponse
-func (c *ClientWithResponses) GetData25ForecastHourlyWithResponse(ctx context.Context, params *GetData25ForecastHourlyParams, reqEditors ...RequestEditorFn) (*GetData25ForecastHourlyResponse, error) {
-	rsp, err := c.GetData25ForecastHourly(ctx, params, reqEditors...)
+type GetCurrentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *WeatherResponse
+	JSON400      *ErrorResponse
+	JSON401      *ErrorResponse
+	JSON404      *ErrorResponse
+	JSON429      *ErrorResponse
+	JSON5XX      *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetCurrentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetCurrentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetLocationByNameResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]Geocoding
+	JSON4XX      *ErrorResponse
+	JSON5XX      *ErrorResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetLocationByNameResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetLocationByNameResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// GetForecast3HourWithResponse request returning *GetForecast3HourResponse
+func (c *ClientWithResponses) GetForecast3HourWithResponse(ctx context.Context, params *GetForecast3HourParams, reqEditors ...RequestEditorFn) (*GetForecast3HourResponse, error) {
+	rsp, err := c.GetForecast3Hour(ctx, params, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetData25ForecastHourlyResponse(rsp)
+	return ParseGetForecast3HourResponse(rsp)
 }
 
-// ParseGetData25ForecastHourlyResponse parses an HTTP response from a GetData25ForecastHourlyWithResponse call
-func ParseGetData25ForecastHourlyResponse(rsp *http.Response) (*GetData25ForecastHourlyResponse, error) {
+// GetCurrentWithResponse request returning *GetCurrentResponse
+func (c *ClientWithResponses) GetCurrentWithResponse(ctx context.Context, params *GetCurrentParams, reqEditors ...RequestEditorFn) (*GetCurrentResponse, error) {
+	rsp, err := c.GetCurrent(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetCurrentResponse(rsp)
+}
+
+// GetLocationByNameWithResponse request returning *GetLocationByNameResponse
+func (c *ClientWithResponses) GetLocationByNameWithResponse(ctx context.Context, params *GetLocationByNameParams, reqEditors ...RequestEditorFn) (*GetLocationByNameResponse, error) {
+	rsp, err := c.GetLocationByName(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetLocationByNameResponse(rsp)
+}
+
+// ParseGetForecast3HourResponse parses an HTTP response from a GetForecast3HourWithResponse call
+func ParseGetForecast3HourResponse(rsp *http.Response) (*GetForecast3HourResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetData25ForecastHourlyResponse{
+	response := &GetForecast3HourResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest []struct {
-			Clouds *CloudProperties `json:"clouds,omitempty"`
-
-			// Dt Unix timestamp representing the time of the forecast
-			Dt *int `json:"dt,omitempty"`
-
-			// DtTxt Date and time of the forecast in ISO 8601 format
-			DtTxt *time.Time      `json:"dt_txt,omitempty"`
-			Main  *MainProperties `json:"main,omitempty"`
-
-			// Pop Probability of precipitation (0-1)
-			Pop *float32 `json:"pop,omitempty"`
-
-			// Rain Rain volume for last hour (mm) (present only for last hour)
-			Rain *struct {
-				N1h *float32 `json:"1h,omitempty"`
-			} `json:"rain,omitempty"`
-			Sys *SysProperties `json:"sys,omitempty"`
-
-			// Visibility Average visibility in meters
-			Visibility *int                  `json:"visibility,omitempty"`
-			Weather    *[]WeatherDescription `json:"weather,omitempty"`
-			Wind       *WindProperties       `json:"wind,omitempty"`
-		}
+		var dest WeatherResponsePrediction
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -506,6 +974,107 @@ func ParseGetData25ForecastHourlyResponse(rsp *http.Response) (*GetData25Forecas
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode/100 == 5:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON5XX = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetCurrentResponse parses an HTTP response from a GetCurrentWithResponse call
+func ParseGetCurrentResponse(rsp *http.Response) (*GetCurrentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetCurrentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest WeatherResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode/100 == 5:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON5XX = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetLocationByNameResponse parses an HTTP response from a GetLocationByNameWithResponse call
+func ParseGetLocationByNameResponse(rsp *http.Response) (*GetLocationByNameResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetLocationByNameResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []Geocoding
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode/100 == 4:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON4XX = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode/100 == 5:
 		var dest ErrorResponse
