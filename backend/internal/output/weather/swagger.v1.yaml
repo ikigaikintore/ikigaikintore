@@ -320,12 +320,16 @@ components:
       properties:
         temp:
           type: number
+          format: double
         feels_like:
           type: number
+          format: double
         temp_min:
           type: number
+          format: double
         temp_max:
           type: number
+          format: double
         pressure:
           type: integer
         sea_level:
@@ -336,6 +340,7 @@ components:
           type: integer
         temp_kf:
           type: number
+          format: double
 
     WeatherPrediction:
       type: object
@@ -379,10 +384,12 @@ components:
       properties:
         speed:
           type: number
+          format: double
         deg:
           type: integer
         gust:
           type: number
+          format: double
 
     CloudsPrediction:
       type: object
@@ -525,15 +532,19 @@ components:
       properties:
         temp:
           type: number
+          format: double
           description: Temperature in Kelvin
         feels_like:
           type: number
+          format: double
           description: Perceived temperature in Kelvin
         temp_min:
           type: number
+          format: double
           description: Minimum temperature in Kelvin
         temp_max:
           type: number
+          format: double
           description: Maximum temperature in Kelvin
         pressure:
           type: integer
@@ -553,6 +564,7 @@ components:
       properties:
         speed:
           type: number
+          format: double
           description: Wind speed in meters per second
         deg:
           type: integer

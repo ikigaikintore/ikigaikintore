@@ -3,6 +3,7 @@ package weather
 import (
 	"context"
 	"fmt"
+	"math"
 	"net/http"
 	"os"
 	"time"
@@ -14,11 +15,11 @@ type client struct {
 
 type Weather struct {
 	t                time.Time
-	windSpeed        float32
-	temperature      float32
+	windSpeed        float64
+	temperature      float64
 	humidity         int
 	temperatureRange struct {
-		min, max float32
+		min, max float64
 	}
 	weatherType int
 }
@@ -28,7 +29,7 @@ func (w Weather) GetTime() time.Time {
 	return w.t
 }
 
-func (w Weather) GetTemperature() float32 {
+func (w Weather) GetTemperature() float64 {
 	return w.temperature
 }
 
@@ -40,11 +41,11 @@ func (w Weather) GetWeatherType() int {
 	return w.weatherType
 }
 
-func (w Weather) GetTemperatureRange() (float32, float32) {
+func (w Weather) GetTemperatureRange() (float64, float64) {
 	return w.temperatureRange.min, w.temperatureRange.max
 }
 
-func (w Weather) GetWindSpeed() float32 {
+func (w Weather) GetWindSpeed() float64 {
 	return w.windSpeed
 }
 
@@ -59,12 +60,14 @@ func NewClientRequest() ClientRequest {
 }
 
 func (c client) GetCurrentWeather(ctx context.Context) (*Weather, error) {
+	units := GetCurrentParamsUnitsMetric
 	resp, err := c.c.GetCurrentWithResponse(
 		ctx,
 		&GetCurrentParams{
 			Appid: os.Getenv("OPENWEATHER_API_KEY"),
 			Lat:   35.71,
 			Lon:   139.73,
+			Units: &units,
 		},
 	)
 	if err != nil {
@@ -75,10 +78,10 @@ func (c client) GetCurrentWeather(ctx context.Context) (*Weather, error) {
 	}
 	return &Weather{
 		t:           time.Unix(int64(resp.JSON200.Dt), 0),
-		windSpeed:   resp.JSON200.Wind.Speed,
+		windSpeed:   math.Floor(resp.JSON200.Wind.Speed*100) / 100,
 		temperature: resp.JSON200.Main.Temp,
 		humidity:    resp.JSON200.Main.Humidity,
-		temperatureRange: struct{ min, max float32 }{
+		temperatureRange: struct{ min, max float64 }{
 			min: resp.JSON200.Main.TempMin,
 			max: resp.JSON200.Main.TempMax,
 		},
@@ -111,7 +114,7 @@ func (c client) GetForecastWeather(ctx context.Context) (ListWeather, error) {
 			windSpeed:   v.Wind.Speed,
 			temperature: v.Main.Temp,
 			humidity:    v.Main.Humidity,
-			temperatureRange: struct{ min, max float32 }{
+			temperatureRange: struct{ min, max float64 }{
 				min: v.Main.TempMin,
 				max: v.Main.TempMax,
 			},

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/ervitis/ikigaikintore/backend/internal/input/grpc"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
@@ -20,7 +21,7 @@ type Server interface {
 func NewServer() Server {
 	return &http.Server{
 		Addr:              ":8999",
-		Handler:           grpc.NewTwirpServer(),
+		Handler:           cors.Default().Handler(grpc.NewTwirpServer()),
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		WriteTimeout:      10 * time.Second,

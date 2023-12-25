@@ -10,3 +10,7 @@ generate: ## Generate go files
 
 install: ## Install dependencies and clean
 	go mod tidy
+
+run: ## Run server
+	go install github.com/cosmtrek/air@latest
+	air server -d --port 8999

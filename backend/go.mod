@@ -5,6 +5,7 @@ go 1.21.5
 require (
 	github.com/deepmap/oapi-codegen/v2 v2.0.0
 	github.com/oapi-codegen/runtime v1.1.0
+	github.com/rs/cors v1.10.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	google.golang.org/protobuf v1.31.0
 )

@@ -114,21 +114,21 @@ type ItemPrediction struct {
 
 // MainPrediction defines model for MainPrediction.
 type MainPrediction struct {
-	FeelsLike float32 `json:"feels_like"`
+	FeelsLike float64 `json:"feels_like"`
 	GrndLevel int     `json:"grnd_level"`
 	Humidity  int     `json:"humidity"`
 	Pressure  int     `json:"pressure"`
 	SeaLevel  int     `json:"sea_level"`
-	Temp      float32 `json:"temp"`
-	TempKf    float32 `json:"temp_kf"`
-	TempMax   float32 `json:"temp_max"`
-	TempMin   float32 `json:"temp_min"`
+	Temp      float64 `json:"temp"`
+	TempKf    float64 `json:"temp_kf"`
+	TempMax   float64 `json:"temp_max"`
+	TempMin   float64 `json:"temp_min"`
 }
 
 // MainProperties defines model for MainProperties.
 type MainProperties struct {
 	// FeelsLike Perceived temperature in Kelvin
-	FeelsLike float32 `json:"feels_like"`
+	FeelsLike float64 `json:"feels_like"`
 
 	// GrndLevel Ground level pressure in hPa
 	GrndLevel int `json:"grnd_level"`
@@ -143,13 +143,13 @@ type MainProperties struct {
 	SeaLevel int `json:"sea_level"`
 
 	// Temp Temperature in Kelvin
-	Temp float32 `json:"temp"`
+	Temp float64 `json:"temp"`
 
 	// TempMax Maximum temperature in Kelvin
-	TempMax float32 `json:"temp_max"`
+	TempMax float64 `json:"temp_max"`
 
 	// TempMin Minimum temperature in Kelvin
-	TempMin float32 `json:"temp_min"`
+	TempMin float64 `json:"temp_min"`
 }
 
 // RainPrediction defines model for RainPrediction.
@@ -250,8 +250,8 @@ type WeatherResponsePrediction struct {
 // WindPrediction defines model for WindPrediction.
 type WindPrediction struct {
 	Deg   int     `json:"deg"`
-	Gust  float32 `json:"gust"`
-	Speed float32 `json:"speed"`
+	Gust  float64 `json:"gust"`
+	Speed float64 `json:"speed"`
 }
 
 // WindProperties defines model for WindProperties.
@@ -263,7 +263,7 @@ type WindProperties struct {
 	Gust float32 `json:"gust"`
 
 	// Speed Wind speed in meters per second
-	Speed float32 `json:"speed"`
+	Speed float64 `json:"speed"`
 }
 
 // GetForecast3HourParams defines parameters for GetForecast3Hour.
