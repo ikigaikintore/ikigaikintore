@@ -12,4 +12,4 @@ generate: ## Generate automated code
 	docker build --target frontend -t frontend-twirp-compiler:latest . && \
 	docker run -v `pwd`:/app frontend-twirp-compiler:latest && \
 	rm -rf ../frontend/src/api/* && \
-	mv *.pb.js ../frontend/src/api/
+	mv *.pb.ts ../frontend/src/api/

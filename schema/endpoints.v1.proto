@@ -13,7 +13,7 @@ message WeatherFilter {
 }
 
 message WeatherRequest {
-  WeatherFilter weatherFilter = 1;
+  optional WeatherFilter weatherFilter = 1;
 }
 
 enum WeatherType {
@@ -36,21 +36,21 @@ enum WeatherType {
 }
 
 message WeatherCurrent {
-  float temperature = 1;
-  float windSpeed = 2;
+  double temperature = 1;
+  double windSpeed = 2;
   uint64 timestamp = 3;
   int32 humidity = 4;
   WeatherType weather = 5;
 }
 
 message TemperatureRange {
-  float max = 1;
-  float min = 2;
+  double max = 1;
+  double min = 2;
 }
 
 message WeatherDailyPoint {
   uint64 timestamp = 1;
-  float temperature = 2;
+  double temperature = 2;
   int32 humidity = 3;
   TemperatureRange temperatureRange = 4;
   WeatherType weather = 5;
