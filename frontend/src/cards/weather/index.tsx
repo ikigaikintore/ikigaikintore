@@ -3,9 +3,19 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import {useWeather} from './use-weather'
+
 type WeatherProps = {}
 
 export const Component = (props: WeatherProps) => {
+    const { weatherData, isLoading, isError } = useWeather('Tokyo')
+    if (isLoading) {
+        return <>Loading</>
+    }
+    if (isError) {
+        return <>Something happened!</>
+    }
+    console.log(isLoading, isError, weatherData)
     return (
         <WeatherCardContainer>
             <GridContainer>
@@ -14,10 +24,10 @@ export const Component = (props: WeatherProps) => {
                 </WeatherIconContainer>
                 <WeatherDataContainer>
                     <TemperatureHumidityGrid>
-                        <Temperature>25°C</Temperature>
-                        <Humidity>65%</Humidity>
+                        <Temperature>{weatherData.weatherCurrent.temperature} C</Temperature>
+                        <Humidity>{weatherData.weatherCurrent.humidity}%</Humidity>
                     </TemperatureHumidityGrid>
-                    <Wind>Wind: 15 km/h</Wind>
+                    <Wind>Wind: {weatherData.weatherCurrent.windSpeed}km/h</Wind>
                     <Place>Tokyo, Japan</Place>
                 </WeatherDataContainer>
             </GridContainer>
