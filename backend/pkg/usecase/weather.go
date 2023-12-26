@@ -38,6 +38,7 @@ func (w weatherService) GetWeather(ctx context.Context, req *proto.WeatherReques
 			Timestamp:   uint64(v.GetTime().Unix()),
 			Temperature: v.GetTemperature(),
 			Humidity:    int32(v.GetHumidity()),
+			Icon:        v.GetIcon(),
 			TemperatureRange: &proto.TemperatureRange{
 				Max: m,
 				Min: n,
@@ -49,6 +50,7 @@ func (w weatherService) GetWeather(ctx context.Context, req *proto.WeatherReques
 	return &proto.WeatherReply{
 		WeatherCurrent: &proto.WeatherCurrent{
 			Temperature: currWeather.GetTemperature(),
+			Icon:        currWeather.GetIcon(),
 			WindSpeed:   currWeather.GetWindSpeed(),
 			Timestamp:   uint64(currWeather.GetTime().Unix()),
 			Humidity:    int32(currWeather.GetHumidity()),

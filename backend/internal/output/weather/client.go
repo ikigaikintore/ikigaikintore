@@ -17,6 +17,7 @@ type Weather struct {
 	t                time.Time
 	windSpeed        float64
 	temperature      float64
+	icon             string
 	humidity         int
 	temperatureRange struct {
 		min, max float64
@@ -31,6 +32,10 @@ func (w Weather) GetTime() time.Time {
 
 func (w Weather) GetTemperature() float64 {
 	return w.temperature
+}
+
+func (w Weather) GetIcon() string {
+	return w.icon
 }
 
 func (w Weather) GetHumidity() int {
@@ -81,6 +86,7 @@ func (c client) GetCurrentWeather(ctx context.Context) (*Weather, error) {
 		windSpeed:   math.Floor(resp.JSON200.Wind.Speed*100) / 100,
 		temperature: resp.JSON200.Main.Temp,
 		humidity:    resp.JSON200.Main.Humidity,
+		icon:        resp.JSON200.Weather[0].Icon,
 		temperatureRange: struct{ min, max float64 }{
 			min: resp.JSON200.Main.TempMin,
 			max: resp.JSON200.Main.TempMax,

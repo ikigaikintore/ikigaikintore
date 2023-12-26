@@ -41,6 +41,7 @@ message WeatherCurrent {
   uint64 timestamp = 3;
   int32 humidity = 4;
   WeatherType weather = 5;
+  string icon = 6;
 }
 
 message TemperatureRange {
@@ -54,6 +55,7 @@ message WeatherDailyPoint {
   int32 humidity = 3;
   TemperatureRange temperatureRange = 4;
   WeatherType weather = 5;
+  string icon = 6;
 }
 
 message WeatherReply {

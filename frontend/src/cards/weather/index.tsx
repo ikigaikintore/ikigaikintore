@@ -20,7 +20,7 @@ export const Component = (props: WeatherProps) => {
         <WeatherCardContainer>
             <GridContainer>
                 <WeatherIconContainer>
-                    <img src="path/to/weather-icon.png" alt="Weather icon" />
+                    <Image24x24 rel="preload" srcSet={`https://openweathermap.org/img/wn/${weatherData.weatherCurrent.icon}@2x.png`} alt="Weather icon" />
                 </WeatherIconContainer>
                 <WeatherDataContainer>
                     <TemperatureHumidityGrid>
@@ -42,6 +42,14 @@ const WeatherCardContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   padding: 16px;
+`;
+
+const Image24x24 = styled.img`
+    width: 128px;
+    height: 128px;
+
+    border-radius: 50%;
+    object-fit: cover;
 `;
 
 const GridContainer = styled.div`

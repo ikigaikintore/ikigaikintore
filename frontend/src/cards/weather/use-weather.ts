@@ -1,4 +1,3 @@
-import {useEffect, useState} from 'react'
 import {GetWeather} from "@/src/api/endpoints.v1.pb";
 import useSWR from "swr";
 
@@ -11,8 +10,6 @@ type WeatherCurrent = {
 }
 
 export const useWeather = (city: string) => {
-    const [weatherData, setWeatherData] = useState<WeatherCurrent>()
-
     const fetchWeather = async () => {
         return GetWeather({weatherFilter: {location: city}}, {baseURL: "http://localhost:8999", prefix: "/v1/weather"})
             .then(res => {

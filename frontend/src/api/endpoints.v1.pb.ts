@@ -47,6 +47,7 @@ export interface WeatherCurrent {
   timestamp: bigint;
   humidity: number;
   weather: WeatherType;
+  icon: string;
 }
 
 export interface TemperatureRange {
@@ -60,6 +61,7 @@ export interface WeatherDailyPoint {
   humidity: number;
   temperatureRange: TemperatureRange;
   weather: WeatherType;
+  icon: string;
 }
 
 export interface WeatherReply {
@@ -433,6 +435,7 @@ export const WeatherCurrent = {
       timestamp: 0n,
       humidity: 0,
       weather: WeatherType._fromInt(0),
+      icon: "",
       ...msg,
     };
   },
@@ -458,6 +461,9 @@ export const WeatherCurrent = {
     }
     if (msg.weather && WeatherType._toInt(msg.weather)) {
       writer.writeEnum(5, WeatherType._toInt(msg.weather));
+    }
+    if (msg.icon) {
+      writer.writeString(6, msg.icon);
     }
     return writer;
   },
@@ -490,6 +496,10 @@ export const WeatherCurrent = {
         }
         case 5: {
           msg.weather = WeatherType._fromInt(reader.readEnum());
+          break;
+        }
+        case 6: {
+          msg.icon = reader.readString();
           break;
         }
         default: {
@@ -609,6 +619,7 @@ export const WeatherDailyPoint = {
       humidity: 0,
       temperatureRange: TemperatureRange.initialize(),
       weather: WeatherType._fromInt(0),
+      icon: "",
       ...msg,
     };
   },
@@ -638,6 +649,9 @@ export const WeatherDailyPoint = {
     }
     if (msg.weather && WeatherType._toInt(msg.weather)) {
       writer.writeEnum(5, WeatherType._toInt(msg.weather));
+    }
+    if (msg.icon) {
+      writer.writeString(6, msg.icon);
     }
     return writer;
   },
@@ -673,6 +687,10 @@ export const WeatherDailyPoint = {
         }
         case 5: {
           msg.weather = WeatherType._fromInt(reader.readEnum());
+          break;
+        }
+        case 6: {
+          msg.icon = reader.readString();
           break;
         }
         default: {
@@ -1046,6 +1064,7 @@ export const WeatherCurrentJSON = {
       timestamp: 0n,
       humidity: 0,
       weather: WeatherType._fromInt(0),
+      icon: "",
       ...msg,
     };
   },
@@ -1071,6 +1090,9 @@ export const WeatherCurrentJSON = {
     }
     if (msg.weather && WeatherTypeJSON._toInt(msg.weather)) {
       json["weather"] = msg.weather;
+    }
+    if (msg.icon) {
+      json["icon"] = msg.icon;
     }
     return json;
   },
@@ -1098,6 +1120,10 @@ export const WeatherCurrentJSON = {
     const _weather_ = json["weather"];
     if (_weather_) {
       msg.weather = WeatherType._fromInt(_weather_);
+    }
+    const _icon_ = json["icon"];
+    if (_icon_) {
+      msg.icon = _icon_;
     }
     return msg;
   },
@@ -1192,6 +1218,7 @@ export const WeatherDailyPointJSON = {
       humidity: 0,
       temperatureRange: TemperatureRangeJSON.initialize(),
       weather: WeatherType._fromInt(0),
+      icon: "",
       ...msg,
     };
   },
@@ -1222,6 +1249,9 @@ export const WeatherDailyPointJSON = {
     }
     if (msg.weather && WeatherTypeJSON._toInt(msg.weather)) {
       json["weather"] = msg.weather;
+    }
+    if (msg.icon) {
+      json["icon"] = msg.icon;
     }
     return json;
   },
@@ -1255,6 +1285,10 @@ export const WeatherDailyPointJSON = {
     const _weather_ = json["weather"];
     if (_weather_) {
       msg.weather = WeatherType._fromInt(_weather_);
+    }
+    const _icon_ = json["icon"];
+    if (_icon_) {
+      msg.icon = _icon_;
     }
     return msg;
   },
