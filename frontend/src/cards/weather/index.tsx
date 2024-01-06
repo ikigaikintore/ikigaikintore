@@ -9,13 +9,12 @@ type WeatherProps = {}
 
 export const Component = (props: WeatherProps) => {
     const { weatherData, isLoading, isError } = useWeather('Tokyo')
-    if (isLoading) {
+    if (isLoading || !weatherData) {
         return <>Loading</>
     }
     if (isError) {
         return <>Something happened!</>
     }
-    console.log(isLoading, isError, weatherData)
     return (
         <WeatherCardContainer>
             <GridContainer>
@@ -40,8 +39,8 @@ Component.displayName = 'WeatherCard'
 const WeatherCardContainer = styled.div`
   background-color: white;
   border-radius: 10px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 8px;
 `;
 
 const Image24x24 = styled.img`
@@ -49,45 +48,36 @@ const Image24x24 = styled.img`
     height: 128px;
 
     border-radius: 50%;
-    object-fit: cover;
+    //object-fit: cover;
 `;
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-  }
-  column-gap: 16px;
+  grid-template-columns: 2fr 2fr;
+  //column-gap: 16px;
 `;
 
 const WeatherIconContainer = styled.div`
-  grid-column: span 2;
-  @media (min-width: 768px) {
-    grid-column: span 1;
-  }
+  grid-column: span 4;
 `;
 
 const WeatherDataContainer = styled.div`
-  grid-column: span 2;
-  @media (min-width: 768px) {
-    grid-column: span 1;
-  }
+  grid-column: span 4;
 `;
 
 const TemperatureHumidityGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 16px;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
 `;
 
 const Temperature = styled.p`
   font-weight: bold;
-  font-size: 24px;
+  font-size: 16px;
 `;
 
 const Humidity = styled.p`
-  color: #6b7280;
+  color: darkblue;
 `;
 
 const Wind = styled.p`
@@ -95,5 +85,5 @@ const Wind = styled.p`
 `;
 
 const Place = styled.p`
-  font-weight: 600;
+  font-weight: bold;
 `;

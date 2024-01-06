@@ -4,13 +4,15 @@
       "dom",
       "dom.iterable",
       "esnext",
-      "es2020",
+      "es2020"
     ],
     "baseUrl": ".",
     "paths": {
-      "@/src/*": ["./src/*"]
+      "@/src/*": [
+        "./src/*"
+      ]
     },
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "strict": false,
     "noEmit": true,
@@ -25,7 +27,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
