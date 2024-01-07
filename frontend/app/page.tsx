@@ -1,21 +1,52 @@
+"use client"
+
 import * as WeatherCard from '@/src/cards/weather'
+import styled from "styled-components";
 
 export default function Page() {
     return (
-        <section className="mt-12 mx-auto px-4 max-w-screen-xl md:px-8">
-            <header className="mainLinks">
-                My links here
-            </header>
-            <main className="lower-part grid grid-cols-2 gap-4">
-                <aside className="linksPages">
+        <AppPage>
+            <MainMenu>
+                My menu here
+            </MainMenu>
+            <MainBody>
+                <LinkSection>
                     Link elements
-                </aside>
-                <section className="bodyCards grid grid-cols-4 gap-4">
-                    <div>
-                        <WeatherCard.Component/>
-                    </div>
-                </section>
-            </main>
-        </section>
+                </LinkSection>
+                <CardComponents>
+                    <WeatherCard.Component/>
+                </CardComponents>
+            </MainBody>
+        </AppPage>
     )
 }
+
+const AppPage = styled.section`
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+`
+
+const MainMenu = styled.header`
+    background-color: #333; /* Example background color */
+    color: white; /* Example text color */
+    padding: 10px;
+`
+
+const LinkSection = styled.aside`
+    background-color: #ddd; /* Example background color */
+    padding: 10px;
+`
+
+const MainBody = styled.main`
+    display: grid;
+    grid-template-columns: 10% 1fr; /* 10% for LinkSection and 90% for CardComponents */
+    height: 100%;
+`
+
+const CardComponents = styled.div`
+    display: grid;
+    padding: 10px;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+`

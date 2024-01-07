@@ -1,9 +1,10 @@
-'use client'
+"use client"
 
 import React from 'react'
 import styled from 'styled-components'
 
 import {useWeather} from './use-weather'
+import CardStyle from "@/src/cards/CardStyle";
 
 type WeatherProps = {}
 
@@ -37,53 +38,51 @@ export const Component = (props: WeatherProps) => {
 Component.displayName = 'WeatherCard'
 
 const WeatherCardContainer = styled.div`
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 8px;
+  ${CardStyle}
 `;
 
 const Image24x24 = styled.img`
-    width: 128px;
-    height: 128px;
+    //width: 128px;
+    //height: 128px;
 
-    border-radius: 50%;
+    //border-radius: 50%;
     //object-fit: cover;
 `;
 
 const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 2fr;
+  //display: grid;
+  //grid-template-columns: 2fr 2fr;
   //column-gap: 16px;
 `;
 
 const WeatherIconContainer = styled.div`
-  grid-column: span 4;
+  //grid-column: span 4;
+    background-color: white;
 `;
 
 const WeatherDataContainer = styled.div`
-  grid-column: span 4;
+  //grid-column: span 4;
 `;
 
 const TemperatureHumidityGrid = styled.div`
-    display: grid;
-    grid-auto-flow: column;
-    align-items: center;
+    //display: grid;
+    //grid-auto-flow: column;
+    //align-items: center;
 `;
 
 const Temperature = styled.p`
-  font-weight: bold;
-  font-size: 16px;
+  //font-weight: bold;
+  //font-size: 16px;
 `;
 
 const Humidity = styled.p`
-  color: darkblue;
+  //color: darkblue;
 `;
 
 const Wind = styled.p`
-  font-size: 14px;
+  //font-size: 14px;
 `;
 
 const Place = styled.p`
-  font-weight: bold;
+  //font-weight: bold;
 `;
