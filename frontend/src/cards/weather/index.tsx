@@ -42,47 +42,29 @@ const WeatherCardContainer = styled.div`
 `;
 
 const Image24x24 = styled.img`
-    //width: 128px;
-    //height: 128px;
-
-    //border-radius: 50%;
-    //object-fit: cover;
 `;
 
 const GridContainer = styled.div`
-  //display: grid;
-  //grid-template-columns: 2fr 2fr;
-  //column-gap: 16px;
 `;
 
 const WeatherIconContainer = styled.div`
-  //grid-column: span 4;
     background-color: white;
 `;
 
 const WeatherDataContainer = styled.div`
-  //grid-column: span 4;
 `;
 
 const TemperatureHumidityGrid = styled.div`
-    //display: grid;
-    //grid-auto-flow: column;
-    //align-items: center;
 `;
 
 const Temperature = styled.p`
-  //font-weight: bold;
-  //font-size: 16px;
 `;
 
 const Humidity = styled.p`
-  //color: darkblue;
 `;
 
 const Wind = styled.p`
-  //font-size: 14px;
 `;
 
 const Place = styled.p`
-  //font-weight: bold;
 `;
