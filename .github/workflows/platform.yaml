@@ -10,6 +10,8 @@ jobs:
   check_infra_changed_files:
     runs-on: ubuntu-latest
 
+    environment: prd
+
     outputs:
       is_infra_changed: ${{ steps.is_infra_changed.outputs.HAS_CHANGES }}
 
@@ -34,6 +36,8 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.check_infra_changed_files.outputs.is_infra_changed }} == 'true'
     needs: check_infra_changed_files
+
+    environment: prd
 
     permissions:
       contents: 'read'
