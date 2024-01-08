@@ -10,8 +10,6 @@ jobs:
   check_infra_changed_files:
     runs-on: ubuntu-latest
 
-    environment: prd
-
     outputs:
       is_infra_changed: ${{ steps.is_infra_changed.outputs.HAS_CHANGES }}
 
@@ -29,7 +27,8 @@ jobs:
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          has_changes=$([ $(echo ${${{ env.CHANGED_FILES }}[@]} | fgrep -w 'ikigaikintore/infra' ] && 'true' || 'false')
+          has_changes=[[${${{ env.CHANGED_FILES }}[*]}=~'ikigaikintore/infra']] && echo 'true' || echo 'false')
+          echo "_"${has_changes}
           echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
 
   iaac:
