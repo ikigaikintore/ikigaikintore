@@ -60,5 +60,5 @@ jobs:
       - name: Configure Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v2
         with:
-          version: '= 363.0.0'
+          version: '= 459.0.0'
           project_id: ${{ secrets.PROJECT_ID }}
