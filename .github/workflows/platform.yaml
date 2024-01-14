@@ -30,12 +30,38 @@ jobs:
           has_changes=${{ contains('${{ env.CHANGED_FILES }}', 'ikigaikintore/infra') && 'true' || 'false' }}
           echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
 
-  iaac:
+  summary_plan:
     runs-on: ubuntu-latest
-    # if: ${{ needs.check_infra_changed_files.outputs.is_infra_changed }} == 'true'
+    if: ${{ needs.check_infra_changed_files.outputs.is_infra_changed }} == 'true'
     needs: check_infra_changed_files
 
-    # environment: prd
+    permissions:
+      contents: write
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: ./infra
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: terraform init
+        run: |
+          terraform init
+
+      - name: terraform plan
+        run: |
+          terraform plan
+
+  iaac:
+    runs-on: ubuntu-latest
+    if: ${{ needs.check_infra_changed_files.outputs.is_infra_changed }} == 'true'
+    needs: summary_plan
+
+    environment: prd
 
     permissions:
       contents: 'read'
@@ -43,8 +69,7 @@ jobs:
 
     steps:
 
-      - name: checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: install terraform
         uses: hashicorp/setup-terraform@v3
