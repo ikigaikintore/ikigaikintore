@@ -42,3 +42,4 @@ resource "google_project_iam_member" "gitops-sa-binding" {
   project = var.project_id
   role    = "roles/iam.workloadIdentityUser"
 }
+
