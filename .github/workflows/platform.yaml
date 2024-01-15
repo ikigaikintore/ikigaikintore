@@ -32,7 +32,7 @@ jobs:
 
   summary_plan:
     runs-on: ubuntu-latest
-    if: ${{ needs.check_infra_changed_files.outputs.is_infra_changed }} == 'true'
+    if: needs.check_infra_changed_files.outputs.is_infra_changed == 'true'
     needs: check_infra_changed_files
 
     permissions:
