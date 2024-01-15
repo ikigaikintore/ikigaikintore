@@ -28,7 +28,7 @@ jobs:
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          has_changes=${{ endsWith('${{ env.CHANGED_FILES }}', '.tf') && 'true' || 'false' }}
+          has_changes=${{ contains('${{ env.CHANGED_FILES }}', '.tf') && 'true' || 'false' }}
           echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
 
   summary_plan:
