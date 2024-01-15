@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  pull_request:
 
 jobs:
 
@@ -66,7 +67,6 @@ jobs:
 
   iaac_apply:
     runs-on: ubuntu-latest
-    if: ${{ needs.check_infra_changed_files.outputs.is_infra_changed }} == 'true'
     needs: summary_plan
 
     environment: prd
