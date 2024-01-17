@@ -1,0 +1,79 @@
+name: iaac_plan
+
+on:
+  pull_request:
+
+jobs:
+
+  check_infra_changed_files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    outputs:
+      is_infra_changed: ${{ steps.is_infra_changed.outputs.HAS_CHANGES }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+
+      - name: Set is_infra_changed
+        id: is_infra_changed
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          has_changes=${{ contains(env.CHANGED_FILES, '.tf') }}
+          echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
+
+  summary_plan:
+    runs-on: ubuntu-latest
+    if: needs.check_infra_changed_files.outputs.is_infra_changed == 'true'
+    needs: check_infra_changed_files
+    timeout-minutes: 8
+
+    permissions:
+      id-token: read
+      contents: write
+
+    defaults:
+      run:
+        working-directory: ./infra
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+
+      - run: |
+          sudo curl -fL -o tfcmt.tar.gz https://github.com/suzuki-shunsuke/tfcmt/releases/download/${TFCMT_VERSION}/tfcmt_linux_amd64.tar.gz
+          sudo tar -C /usr/bin -xzf ./tfcmt.tar.gz
+        env:
+          TFCMT_VERSION: v4.8.0
+
+      - name: terraform init -input=false
+        run: |
+          terraform init
+
+      - name: terraform plan
+        run: |
+          tfcmt apply -- terraform plan -no-color -lock=false
+        env:
+          TF_VAR_region: ${{ secrets.REGION }}
+          TF_VAR_zone: ${{ secrets.ZONE }}
+          TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
+          TF_VAR_key_file: ${{ steps.auth.outputs.credentials_file_path }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.number }}
+          GITHUB_TOKEN: ${{ secrets.TERRAFORM_COMMENT_TOKEN }}

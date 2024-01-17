@@ -1,36 +1,53 @@
-name: iaac
+name: iaac_apply
 
 on:
   push:
     branches:
       - master
-  pull_request:
 
 jobs:
 
-  check_infra_changed_files:
+  terraform_apply:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
 
     outputs:
       is_infra_changed: ${{ steps.is_infra_changed.outputs.HAS_CHANGES }}
 
     steps:
       - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
         with:
-          fetch-depth: 0
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v41
+      - uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: '= 459.0.0'
+          project_id: ${{ secrets.PROJECT_ID }}
 
-      - name: Set is_infra_changed
-        id: is_infra_changed
+      - run: |
+          sudo curl -fL -o tfcmt.tar.gz https://github.com/suzuki-shunsuke/tfcmt/releases/download/${TFCMT_VERSION}/tfcmt_linux_amd64.tar.gz
+          sudo tar -C /usr/bin -xzf ./tfcmt.tar.gz
         env:
-          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-        run: |
-          has_changes=${{ contains(env.CHANGED_FILES, '.tf') }}
-          echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
+          TFCMT_VERSION: v4.8.0
+
+      - uses: hashicorp/setup-terraform@v2.0.3
+        with:
+          terraform_version: 1.6.6
+
+      - run: terraform fmt
+        continue-on-error: true
+
+      - run: terraform init -input=false
+      - run: |
+          tfcmt apply -- terraform apply -input=false -auto-approve -lock=false -no-color
 
   summary_plan:
     runs-on: ubuntu-latest
@@ -39,8 +56,7 @@ jobs:
     timeout-minutes: 8
 
     permissions:
-      contents: write
-      id-token: write
+      id-token: read
 
     defaults:
       run:
