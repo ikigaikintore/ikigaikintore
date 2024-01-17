@@ -1,14 +1,13 @@
-name: iaac
+name: iaac_plan
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
 
 jobs:
 
   check_infra_changed_files:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
 
     outputs:
       is_infra_changed: ${{ steps.is_infra_changed.outputs.HAS_CHANGES }}
@@ -27,17 +26,18 @@ jobs:
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          has_changes=${{ contains('${{ env.CHANGED_FILES }}', 'ikigaikintore/infra') && 'true' || 'false' }}
+          has_changes=${{ contains(env.CHANGED_FILES, '.tf') }}
           echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
 
   summary_plan:
     runs-on: ubuntu-latest
     if: needs.check_infra_changed_files.outputs.is_infra_changed == 'true'
     needs: check_infra_changed_files
+    timeout-minutes: 8
 
     permissions:
-      contents: write
       id-token: write
+      contents: write
 
     defaults:
       run:
@@ -56,31 +56,24 @@ jobs:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
-      - name: terraform init
+      - run: |
+          sudo curl -fL -o tfcmt.tar.gz https://github.com/suzuki-shunsuke/tfcmt/releases/download/${TFCMT_VERSION}/tfcmt_linux_amd64.tar.gz
+          sudo tar -C /usr/bin -xzf ./tfcmt.tar.gz
+        env:
+          TFCMT_VERSION: v4.8.0
+
+      - name: terraform init -input=false
         run: |
           terraform init
 
       - name: terraform plan
         run: |
-          terraform plan
-
-  iaac_apply:
-    runs-on: ubuntu-latest
-    if: ${{ needs.check_infra_changed_files.outputs.is_infra_changed }} == 'true'
-    needs: summary_plan
-
-    environment: prd
-
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
-
-      - uses: actions/checkout@v4
-
-      - name: Configure Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: '= 459.0.0'
-          project_id: ${{ secrets.PROJECT_ID }}
+          tfcmt apply -- terraform plan -no-color -lock=false
+        env:
+          TF_VAR_region: ${{ secrets.REGION }}
+          TF_VAR_zone: ${{ secrets.ZONE }}
+          TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
+          TF_VAR_key_file: ${{ steps.auth.outputs.credentials_file_path }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.number }}
+          GITHUB_TOKEN: ${{ secrets.TERRAFORM_COMMENT_TOKEN }}

@@ -42,3 +42,9 @@ resource "google_project_iam_member" "gitops-sa-binding" {
   project = var.project_id
   role    = "roles/iam.workloadIdentityUser"
 }
+
+resource "google_project_iam_member" "gitops-sa-cloudstorage" {
+  project = var.project_id
+  role    = "roles/editor"
+  member  = "serviceAccount:${google_service_account.gitops-sa.email}"
+}
