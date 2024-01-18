@@ -14,7 +14,7 @@ jobs:
         with:
           repo-token: ${{ secrets.LABEL_SYNC_TOKEN }}
           configuration-path: .github/labeler.yaml
-      - uses: toshimaru/auto-author-assign@v2
+      - uses: toshimaru/auto-author-assign@v2.1.0
         with:
           repo-token: ${{ secrets.AUTO_ASSIGNER_TOKEN }}
 
