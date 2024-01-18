@@ -5,6 +5,16 @@ on:
 
 jobs:
 
+  set_up:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - uses: actions/labeler@v4
+        with:
+          repo-token: ${{ secrets.LABEL_SYNC_TOKEN }}
+          configuration-path: .github/labeler.yaml
+
   check_infra_changed_files:
     runs-on: ubuntu-latest
     timeout-minutes: 3
