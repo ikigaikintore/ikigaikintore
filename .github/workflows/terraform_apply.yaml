@@ -17,6 +17,10 @@ jobs:
       id-token: write
       pull-requests: write
 
+    defaults:
+      run:
+        working-directory: ./infra
+
     outputs:
       is_infra_changed: ${{ steps.is_infra_changed.outputs.HAS_CHANGES }}
 
