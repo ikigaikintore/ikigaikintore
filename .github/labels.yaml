@@ -1,0 +1,15 @@
+- name: backend
+  description: "backend"
+  color: bfd4f2
+- name: frontend
+  description: "frontend"
+  color: 7b3479
+- name: infra
+  description: "infra"
+  color: 1d76db
+- name: docs
+  description: "docs"
+  color: a2eeef
+- name: schema
+  description: "schema"
+  color: a2eeef

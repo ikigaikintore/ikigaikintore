@@ -68,7 +68,7 @@ jobs:
 
       - name: terraform plan
         run: |
-          tfcmt apply -- terraform plan -no-color -lock=false
+          tfcmt plan -patch -- terraform plan -no-color -lock=false
         env:
           TF_VAR_region: ${{ secrets.REGION }}
           TF_VAR_zone: ${{ secrets.ZONE }}

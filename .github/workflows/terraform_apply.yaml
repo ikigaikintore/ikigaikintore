@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - infra/**
 
 jobs:
 
@@ -46,66 +48,14 @@ jobs:
         continue-on-error: true
 
       - run: terraform init -input=false
+
       - run: |
           tfcmt apply -- terraform apply -input=false -auto-approve -lock=false -no-color
-
-  summary_plan:
-    runs-on: ubuntu-latest
-    if: needs.check_infra_changed_files.outputs.is_infra_changed == 'true'
-    needs: check_infra_changed_files
-    timeout-minutes: 8
-
-    permissions:
-      id-token: read
-
-    defaults:
-      run:
-        working-directory: ./infra
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.6.6
-
-      - id: auth
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
-
-      - name: terraform init
-        run: |
-          terraform init
-
-      - name: terraform plan
-        run: |
-          terraform plan -no-color -lock=false
         env:
           TF_VAR_region: ${{ secrets.REGION }}
           TF_VAR_zone: ${{ secrets.ZONE }}
           TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
           TF_VAR_key_file: ${{ steps.auth.outputs.credentials_file_path }}
-
-
-  iaac_apply:
-    runs-on: ubuntu-latest
-    needs: summary_plan
-    timeout-minutes: 12
-
-    environment: prd
-
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
-
-      - uses: actions/checkout@v4
-
-      - name: Configure Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: '= 459.0.0'
-          project_id: ${{ secrets.PROJECT_ID }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.number }}
+          GITHUB_TOKEN: ${{ secrets.TERRAFORM_COMMENT_TOKEN }}
