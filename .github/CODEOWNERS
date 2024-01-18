@@ -1,0 +1,12 @@
+# app
+/backend/*  @ervitis
+
+# front
+/frontend/* @ervitis
+
+# docs
+/docs/* @ervitis
+/schema/* @ervitis
+
+# infra
+/infra/*    @ervitis
