@@ -1,0 +1,23 @@
+name: setup
+
+on:
+  pull_request:
+
+
+jobs:
+  set_up:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/labeler@v4
+        with:
+          repo-token: ${{ secrets.LABEL_SYNC_TOKEN }}
+          configuration-path: .github/labeler.yaml
+      - uses: toshimaru/auto-author-assign@v2.1.0
+        with:
+          repo-token: ${{ secrets.TOKEN }}
