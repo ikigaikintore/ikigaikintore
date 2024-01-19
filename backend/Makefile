@@ -20,6 +20,9 @@ fmt: ## Format code
 	find . -type f -name '*.go' | xargs goimports -w && go fmt `go list ./...`
 	go mod tidy
 
+tests: ## Execute tests
+	go test -race -v ./...
+
 lint: ## Execute golangci-lint
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	golangci-lint run ./... --new-from-rev=origin/main --exclude-use-default=false --timeout 10m
