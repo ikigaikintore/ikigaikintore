@@ -25,7 +25,7 @@ jobs:
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          has_changes=${{ contains(env.CHANGED_FILES, 'backend') }}
+          has_changes=${{ contains(env.CHANGED_FILES, 'backend/') }}
           echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
 
   ci:
