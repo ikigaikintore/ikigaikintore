@@ -30,6 +30,8 @@ jobs:
 
   ci:
     runs-on: ubuntu-latest
+    needs: check_backend_changed_files
+    if: needs.check_backend_changed_files.outputs.is_backend_changed == 'true'
 
     strategy:
       matrix:
