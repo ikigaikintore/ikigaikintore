@@ -2,7 +2,9 @@
 {
     includePaths: [
         ".github/workflows/*",
-        ".",
+        "./backend/*",
+        "./frontend/*",
+        "./infra/*",
     ],
     extends: [
         "workarounds:all",
