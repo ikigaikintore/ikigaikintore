@@ -36,6 +36,8 @@ jobs:
     steps:
 
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Get latest tag
         id: set-tag
@@ -68,7 +70,6 @@ jobs:
         run: |
           ls -l
 
-      - uses: actions/checkout@v4
       - name: Setup Golang
         uses: actions/setup-go@v4
         with:
