@@ -74,7 +74,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           cache-dependency-path: 'go.sum'
-          go-version-file: 'go.mod'
+          go-version-file: './backend/go.mod'
 
       - name: Compile
         run: |
