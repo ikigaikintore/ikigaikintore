@@ -78,7 +78,7 @@ jobs:
 
       - name: check
         run: |
-          ls -l
+          ls -l ./tmp
 
       - uses: actions/upload-artifact@v4
         with:
