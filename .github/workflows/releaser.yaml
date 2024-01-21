@@ -48,6 +48,7 @@ jobs:
 
       - name: Determine New Version
         id: create-version
+        if: steps.set-tag.outputs.latest_tag != ''
         run: |
           case ${{ github.event.inputs.release_type }} in
           major)
@@ -72,19 +73,22 @@ jobs:
           cache-dependency-path: './backend/go.sum'
           go-version-file: './backend/go.mod'
 
+      - name: Tests
+        run: |
+          make tests
+
       - name: Compile
+        if: steps.create-version.outputs.new_version != ''
         run: |
           make compile
 
-      - name: check
-        run: |
-          ls -l ./tmp
-          ls -l
-
       - uses: actions/upload-artifact@v4
         with:
+          if-no-files-found: 'error'
           name: ikigai.app-${{ steps.create-version.outputs.new_version }}
           path: ./backend/tmp/iki.app
+          retention-days: 1
+          overwrite: true
 
 
       #- name: Create Tag
