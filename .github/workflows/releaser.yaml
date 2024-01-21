@@ -66,19 +66,19 @@ jobs:
           esac
           echo "NEW_VERSION=${version}" >> $GITHUB_OUTPUT
 
-      - name: check
-        run: |
-          ls -l
-
       - name: Setup Golang
         uses: actions/setup-go@v4
         with:
-          cache-dependency-path: 'go.sum'
+          cache-dependency-path: './backend/go.sum'
           go-version-file: './backend/go.mod'
 
       - name: Compile
         run: |
           make compile
+
+      - name: check
+        run: |
+          ls -l
 
       - uses: actions/upload-artifact@v4
         with:
