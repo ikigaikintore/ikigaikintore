@@ -84,7 +84,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ikigai.app-${{ steps.create-version.outputs.new_version }}
-          path: ./tmp/iki.app
+          path: ./backend/tmp/iki.app
 
 
       #- name: Create Tag
