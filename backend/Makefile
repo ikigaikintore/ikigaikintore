@@ -1,4 +1,8 @@
-.PHONY: generate
+.PHONY: generate install run fmt tests compile lint
+
+BUILD_FLAGS := -ldflags="-s -w"
+BUILD_ENV := CGO_ENABLED=0 GOARCH="amd64" GOOS="linux"
+
 
 help: ## Show this help
 	@echo "Help"
@@ -22,6 +26,10 @@ fmt: ## Format code
 
 tests: ## Execute tests
 	go test -race -v ./...
+
+compile: ## Compile the bin
+	@mkdir -p tmp
+	$(BUILD_ENV) go build -o ./tmp/iki.app $(BUILD_FLAGS) ./cmd/server/main.go
 
 lint: ## Execute golangci-lint
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest

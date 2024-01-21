@@ -29,6 +29,10 @@ jobs:
       latest_tag: ${{steps.set-tag.outputs.LATEST_TAG}}
       new_version: ${{steps.create-version.outputs.NEW_VERSION}}
 
+    defaults:
+      run:
+        working-directory: ./backend
+
     steps:
 
       - uses: actions/checkout@v4
@@ -62,9 +66,25 @@ jobs:
           esac
           echo "NEW_VERSION=${version}" >> $GITHUB_OUTPUT
 
-      - name: Create Tag
+      - name: Setup Golang
+        uses: actions/setup-go@v4
+        with:
+          cache-dependency-path: go.sum
+          go-version-file: go.mod
+
+      - name: Compile
         run: |
-          git config user.email "${{ secrets.BOT_EMAIL }}"
-          git config user.name "${{ secrets.BOT_NAME }}"
-          git tag -a "${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
-          git push origin "${{ steps.create-version.outputs.new_version }}"
+          make compile
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ikigai.app-${{ steps.create-version.outputs.new_version }}
+          path: ./tmp/iki.app
+
+
+      #- name: Create Tag
+      #  run: |
+      #    git config user.email "${{ secrets.BOT_EMAIL }}"
+      #    git config user.name "${{ secrets.BOT_NAME }}"
+      #    git tag -a "${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
+      #    git push origin "${{ steps.create-version.outputs.new_version }}"
