@@ -89,7 +89,7 @@ jobs:
         with:
           if-no-files-found: 'error'
           name: ikigai.app-${{ steps.create-version.outputs.new_version }}
-          path: ./backend/tmp/${{ envs.APP_NAME }}
+          path: ./backend/tmp/${{ env.APP_NAME }}
           retention-days: 1
           overwrite: true
 
@@ -108,11 +108,11 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker build . -t ${{ envs.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
+          docker build . -t ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
 
       - name: Push image
         run: |
-          docker push ${{ envs.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
+          docker push ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
 
       - name: Rollback
         if: failure()
