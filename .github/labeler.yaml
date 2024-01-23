@@ -9,3 +9,5 @@ docs:
 schema:
   - schema/**
   - backend/internal/output/weather/swagger.v1.yaml
+ci:
+  - .github/**
