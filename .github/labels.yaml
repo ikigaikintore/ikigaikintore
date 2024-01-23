@@ -13,3 +13,6 @@
 - name: schema
   description: "schema"
   color: a2eeef
+- name: ci
+  description: "ci system"
+  color: ededed
