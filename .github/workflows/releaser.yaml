@@ -33,6 +33,9 @@ jobs:
       run:
         working-directory: ./backend
 
+    env:
+      APP_NAME: iki.app
+
     steps:
 
       - uses: actions/checkout@v4
@@ -86,14 +89,33 @@ jobs:
         with:
           if-no-files-found: 'error'
           name: ikigai.app-${{ steps.create-version.outputs.new_version }}
-          path: ./backend/tmp/iki.app
+          path: ./backend/tmp/${{ envs.APP_NAME }}
           retention-days: 1
           overwrite: true
 
+      - run: |
+          git config user.email "${{ secrets.BOT_EMAIL }}"
+          git config user.name "${{ secrets.BOT_NAME }}"
 
-      #- name: Create Tag
-      #  run: |
-      #    git config user.email "${{ secrets.BOT_EMAIL }}"
-      #    git config user.name "${{ secrets.BOT_NAME }}"
-      #    git tag -a "${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
-      #    git push origin "${{ steps.create-version.outputs.new_version }}"
+      - name: Create Tag
+        run: |
+          git tag -a "${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
+          git push origin "${{ steps.create-version.outputs.new_version }}"
+
+      - name: Setup docker
+        run: |
+          gcloud auth configure-docker --quiet
+
+      - name: Build docker image
+        run: |
+          docker build . -t ${{ envs.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
+
+      - name: Push image
+        run: |
+          docker push ${{ envs.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
+
+      - name: Rollback
+        if: failure()
+        run: |
+          git push origin --delete ${{ steps.create-version.outputs.new_version }}
+          git tag -d ${{ steps.create-version.outputs.new_version }}
