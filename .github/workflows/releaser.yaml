@@ -96,7 +96,7 @@ jobs:
 
       - name: Setup docker
         run: |
-          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker ${{ secrets.REGION }}-docker.pkg.dev --quiet
 
       - name: Build docker image
         run: |
@@ -108,7 +108,7 @@ jobs:
 
       - name: Push image
         run: |
-          docker push ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
+          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai-app/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
 
       - name: Rollback
         if: failure()
