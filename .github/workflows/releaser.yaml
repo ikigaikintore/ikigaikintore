@@ -85,14 +85,6 @@ jobs:
         run: |
           make compile
 
-      - uses: actions/upload-artifact@v4
-        with:
-          if-no-files-found: 'error'
-          name: ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
-          path: ./backend/tmp/${{ env.APP_NAME }}
-          retention-days: 1
-          overwrite: true
-
       - run: |
           git config user.email "${{ secrets.BOT_EMAIL }}"
           git config user.name "${{ secrets.BOT_NAME }}"
@@ -105,12 +97,6 @@ jobs:
       - name: Setup docker
         run: |
           gcloud auth configure-docker --quiet
-
-      - name: Download binary artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
-          path: tmp
 
       - name: Build docker image
         run: |
