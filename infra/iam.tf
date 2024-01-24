@@ -43,8 +43,16 @@ resource "google_project_iam_member" "gitops-sa-binding" {
   role    = "roles/iam.workloadIdentityUser"
 }
 
+locals {
+  roles = [
+    "roles/editor",
+    "roles/artifactregistry.writer",
+  ]
+}
+
 resource "google_project_iam_member" "gitops-sa-cloudstorage" {
   project = var.project_id
-  role    = "roles/editor"
+  role    = each.value
+  for_each = toset(local.roles)
   member  = "serviceAccount:${google_service_account.gitops-sa.email}"
 }
