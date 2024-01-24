@@ -103,6 +103,11 @@ jobs:
           mv tmp/${{ env.APP_NAME }}* .
           docker build --target app-deploy -t ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }} .
 
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+
       - name: Push image
         run: |
           docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
