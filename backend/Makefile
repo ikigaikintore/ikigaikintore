@@ -29,7 +29,7 @@ tests: ## Execute tests
 
 compile: ## Compile the bin
 	@mkdir -p tmp
-	$(BUILD_ENV) go build -o ./tmp/iki.app $(BUILD_FLAGS) ./cmd/server/main.go
+	$(BUILD_ENV) go build -o ./tmp/ikigai.app $(BUILD_FLAGS) ./cmd/server/main.go
 
 lint: ## Execute golangci-lint
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
