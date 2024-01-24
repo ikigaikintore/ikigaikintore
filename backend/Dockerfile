@@ -16,6 +16,6 @@ CMD ["/iki.app"]
 FROM gcr.io/distroless/static-debian12:nonroot-amd64 as app-deploy
 
 WORKDIR /
-COPY iki.app /iki.app
+COPY /backend/iki.app* /iki.app
 EXPOSE 8999
 ENTRYPOINT ["/iki.app"]
