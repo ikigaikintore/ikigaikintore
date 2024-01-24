@@ -108,7 +108,7 @@ jobs:
 
       - name: Push image
         run: |
-          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai-app/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
+          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.APP_NAME }}/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
 
       - name: Rollback
         if: failure()
