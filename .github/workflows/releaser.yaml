@@ -102,6 +102,8 @@ jobs:
         run: |
           ls -l
           ls -l tmp
+          pwd
+          mv tmp/${{ env.APP_NAME }}* .
           docker build --target app-deploy -t ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }} .
 
       - name: Push image
