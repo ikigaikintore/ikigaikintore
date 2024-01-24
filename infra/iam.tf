@@ -51,7 +51,7 @@ locals {
   ]
 }
 
-resource "google_project_iam_member" "gitops-sa-cloudstorage" {
+resource "google_project_iam_member" "gitops-sa-roles" {
   project = var.project_id
   role    = each.value
   for_each = toset(local.roles)

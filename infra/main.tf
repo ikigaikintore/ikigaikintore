@@ -12,7 +12,6 @@ resource "google_project_service" "api-resources" {
 
 resource "google_artifact_registry_repository" "artifact-repository" {
   project       = var.project_id
-  location      = var.region
   repository_id = "ikigai.app"
   format        = "DOCKER"
 
