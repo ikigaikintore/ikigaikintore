@@ -101,11 +101,11 @@ jobs:
       - name: Build docker image
         run: |
           mv tmp/${{ env.APP_NAME }}* .
-          docker build --target app-deploy -t ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.APP_NAME }}/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }} .
+          docker build --target app-deploy -t ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }} .
 
       - name: Push image
         run: |
-          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ env.APP_NAME }}/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
+          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
 
       - name: Rollback
         if: failure()
