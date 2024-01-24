@@ -89,7 +89,7 @@ jobs:
         with:
           if-no-files-found: 'error'
           name: ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
-          path: ./backend/${{ env.APP_NAME }}
+          path: ./backend/tmp/${{ env.APP_NAME }}
           retention-days: 1
           overwrite: true
 
