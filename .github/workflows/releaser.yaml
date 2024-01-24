@@ -115,6 +115,7 @@ jobs:
       - name: Build docker image
         run: |
           ls -l
+          ls -l tmp
           ls -l ./backend/tmp/
           docker build --target app-deploy -t ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }} .
 
