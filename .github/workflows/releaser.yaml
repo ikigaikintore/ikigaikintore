@@ -106,6 +106,16 @@ jobs:
         run: |
           gcloud auth configure-docker --quiet
 
+      - name: Download binary artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }}
+
+      - name: Set binary
+        run: |
+          mv ${{ env.APP_NAME }}* ./backend/tmp/${{ env.APP_NAME }}
+
+
       - name: Build docker image
         run: |
           docker build --target app-deploy -t ${{ env.APP_NAME }}-${{ steps.create-version.outputs.new_version }} .
