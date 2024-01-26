@@ -18,4 +18,4 @@ FROM gcr.io/distroless/static-debian12:nonroot-amd64 as app-deploy
 WORKDIR /
 COPY ikigai.app* /ikigai.app
 EXPOSE 8999
-ENTRYPOINT ["/iki.app"]
+CMD ["/iki.app"]
