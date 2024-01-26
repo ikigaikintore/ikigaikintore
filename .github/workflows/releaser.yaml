@@ -128,7 +128,6 @@ jobs:
           region: ${{ secrets.REGION }}
           labels: |
             app=${{ env.SERVICE_NAME }}
-            version=${{ steps.create-version.outputs.new_version }}
           flags: |
             --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
             --ingress=internal
