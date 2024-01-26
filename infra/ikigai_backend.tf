@@ -8,6 +8,7 @@ locals {
   backend_sa_roles = [
     "roles/iam.serviceAccountUser",
     "roles/iam.serviceAccountTokenCreator",
+    "roles/run.developer",
   ]
 }
 
