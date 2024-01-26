@@ -133,7 +133,7 @@ jobs:
             --ingress=internal
             --memory=128Mi
             --concurrency=20
-            --cpu=400m
+            --cpu="0.7"
             --min-instances=0
             --max-instances=3
             --port=8999
