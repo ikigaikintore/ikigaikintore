@@ -119,11 +119,9 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v1
         env:
           SERVICE_NAME: ikigai
-          SUFFIX: echo $(${{ steps.create-version.outputs.new_version }} | cut -c1-2)
         with:
           service: ${{ secrets.BACKEND_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
-          suffix: ${{ env.SUFFIX }}
           env_vars: |
             OPENWEATHER_API_KEY=${{ secrets.BACKEND_OPENWEATHER_API_KEY }}
           timeout: 4m
