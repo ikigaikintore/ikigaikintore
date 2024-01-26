@@ -117,6 +117,8 @@ jobs:
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
+        env:
+          SERVICE_NAME: ikigai
         with:
           service: ${{ secrets.BACKEND_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
@@ -126,7 +128,7 @@ jobs:
           timeout: 4m
           region: ${{ secrets.REGION }}
           labels: |
-            app=${{ env.APP_NAME }}
+            app=${{ env.SERVICE_NAME }}
             version=${{ steps.create-version.outputs.new_version }}
           flags: |
             --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
