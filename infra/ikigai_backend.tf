@@ -22,3 +22,9 @@ resource "google_project_iam_member" "backend-sa-roles" {
   role     = each.value
   member   = "serviceAccount:${google_service_account.backend-sa.email}"
 }
+
+resource "google_project_service" "backend-api-resources" {
+  project  = var.project_id
+  for_each = toset(local.backend_apis)
+  service  = each.value
+}
