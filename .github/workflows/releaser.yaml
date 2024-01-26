@@ -71,7 +71,7 @@ jobs:
           echo "NEW_VERSION=${version}" >> $GITHUB_OUTPUT
 
       - name: Setup Golang
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           cache-dependency-path: './backend/go.sum'
           go-version-file: './backend/go.mod'
