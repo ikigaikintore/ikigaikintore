@@ -1,4 +1,4 @@
-name: Manual Release
+name: Manual Release Backend
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
 
 jobs:
 
-  create-tag:
+  create-tag-backend:
     permissions:
       contents: write
 
@@ -114,6 +114,11 @@ jobs:
       - name: Push image
         run: |
           docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          metadata: ${{ secrets.BACKEND_METADATA }}
 
       - name: Rollback
         if: failure()
