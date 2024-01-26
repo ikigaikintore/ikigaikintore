@@ -10,6 +10,10 @@ locals {
     "roles/iam.serviceAccountTokenCreator",
     "roles/run.developer",
   ]
+
+  backend_apis = [
+    "run.googleapis.com",
+  ]
 }
 
 resource "google_project_iam_member" "backend-sa-roles" {
