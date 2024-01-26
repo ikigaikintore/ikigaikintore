@@ -13,12 +13,6 @@ CMD ["/ikigai.app"]
 
 FROM gcr.io/distroless/static-debian12:nonroot-amd64 as app-deploy
 WORKDIR /
-COPY ikigai.app* /ikigai.app
-EXPOSE 8999
-CMD ["/ikigai.app"]
-
-FROM debian:12-slim as app-deploy-debug
-WORKDIR /
-COPY ikigai.app* /ikigai.app
+COPY /tmp/ikigai.app* /ikigai.app
 EXPOSE 8999
 CMD ["/ikigai.app"]

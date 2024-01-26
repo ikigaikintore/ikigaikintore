@@ -5,3 +5,4 @@
 !go.mod
 !go.sum
 !tools.go
+!tmp/ikigai.app*
