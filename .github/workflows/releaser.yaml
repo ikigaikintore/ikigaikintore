@@ -125,12 +125,11 @@ jobs:
             OPENWEATHER_API_KEY: ${{ secrets.BACKEND_OPENWEATHER_API_KEY }}
           timeout: 4m
           region: ${{ secrets.REGION }}
-          service_account: ${{ secrets.BACKEND_SERVICE_ACCOUNT }}
-          allow_unauthenticated: false
           labels: |
-            app: ${{ env.APP_NAME }}
-            version: ${{ steps.create-version.outputs.new_version }}
+            app=${{ env.APP_NAME }}
+            version=${{ steps.create-version.outputs.new_version }}
           flags: |
+            --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
             --ingress=internal
             --memory=128Mi
             --concurrency=20
@@ -139,6 +138,8 @@ jobs:
             --max-instances=3
             --port=8999
             --no-cpu-boost
+            --no-allow-unauthenticated
+
 
       - name: Rollback
         if: failure()
