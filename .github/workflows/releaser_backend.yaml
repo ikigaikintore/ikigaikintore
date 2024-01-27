@@ -46,7 +46,7 @@ jobs:
         id: set-tag
         run: |
           git fetch --tags
-          latest_tag=$(git tag --sort=-creatordate | head -n 1)
+          latest_tag=$(git tag --sort=-creatordate | grep ${{ secrets.BACKEND_SERVICE_NAME }} | head -n 1)
           echo "LATEST_TAG=${latest_tag}" >> $GITHUB_OUTPUT
 
       - name: Determine New Version
@@ -91,7 +91,7 @@ jobs:
 
       - name: Create Tag
         run: |
-          git tag -a "${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
+          git tag -a "${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
           git push origin "${{ steps.create-version.outputs.new_version }}"
 
       - uses: google-github-actions/auth@v2
