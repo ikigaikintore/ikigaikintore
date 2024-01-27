@@ -145,3 +145,20 @@ jobs:
           git push origin --delete ${{ steps.create-version.outputs.new_version }}
           git tag -d ${{ steps.create-version.outputs.new_version }}
           gcloud artifacts docker images delete ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+          
+          revisions=$(gcloud run revisions list --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --format="value(REVISION)")
+
+          # Count the number of revisions
+          num_revisions=$(echo "${revisions}" | wc -l)
+
+          # If there is only one revision, delete it
+          if [ "$num_revisions" -eq 1 ]; then
+              revision_to_delete=$(echo "${revisions}")
+              gcloud run revisions delete "${revision_to_delete}" --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --quiet
+              echo "Deleted the only revision: ${revision_to_delete}"
+          else
+              # If there are multiple revisions, get the next successful deployed service
+              next_successful_revision=$(echo "$revisions" | grep -m 1 "yes" | awk '{print $1}')
+              echo "Next successful revision: ${next_successful_revision}"
+              gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions ${next_successful_revision}=100
+          fi
