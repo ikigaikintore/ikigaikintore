@@ -1,0 +1,160 @@
+name: Manual Release Frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_version_message:
+        description: 'Enter a description'
+        required: true
+        type: string
+      release_type:
+        description: 'Select the release type'
+        type: choice
+        required: true
+        default: 'patch'
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+
+  create-tag-frontend:
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      latest_tag: ${{steps.set-tag.outputs.LATEST_TAG}}
+      new_version: ${{steps.create-version.outputs.NEW_VERSION}}
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    env:
+      APP_NAME: ikigai.front
+
+    strategy:
+      matrix:
+        node-version: [ '20.x', '21.x' ]
+
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: set-tag
+        run: |
+          git fetch --tags
+          latest_tag=$(git tag --sort=-creatordate | grep ${{ secrets.FRONTEND_SERVICE_NAME }} | head -n 1)
+          echo "LATEST_TAG=${latest_tag}" >> $GITHUB_OUTPUT
+
+      - name: Determine New Version
+        id: create-version
+        if: steps.set-tag.outputs.latest_tag != ''
+        run: |
+          case ${{ github.event.inputs.release_type }} in
+          major)
+           version=$(echo "${{ steps.set-tag.outputs.latest_tag }}" | awk -F. '{printf "v%d.%d.%d\n", $1+1, 0, 0}')
+           ;;
+          minor)
+           version=$(echo "${{ steps.set-tag.outputs.latest_tag }}" | awk -F. '{printf "v%d.%d.%d\n", $1, $2+1, 0}')
+           ;;
+          patch)
+           version=$(echo "${{ steps.set-tag.outputs.latest_tag }}" | awk -F. '{printf "v%d.%d.%d\n", $1, $2, $3+1}')
+           ;;
+          *)
+           echo "Invalid release type specified."
+           exit 1
+           ;;
+          esac
+          echo "NEW_VERSION=${version}" >> $GITHUB_OUTPUT
+
+      - name: Setup Golang
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Tests
+        run: |
+          npm ci
+          npm run test
+
+      - run: |
+          git config user.email "${{ secrets.BOT_EMAIL }}"
+          git config user.name "${{ secrets.BOT_NAME }}"
+
+      - name: Create Tag
+        run: |
+          git tag -a "${{ secrets.FRONTEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
+          git push origin "${{ steps.create-version.outputs.new_version }}"
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+          token_format: 'access_token'
+
+      - name: Setup docker
+        run: |
+          gcloud auth configure-docker ${{ secrets.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build docker image
+        run: |
+          docker build \
+            -t ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }} \
+            .
+
+      - name: Push image
+        run: |
+          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        env:
+          SERVICE_NAME: ikigai
+        with:
+          service: ${{ secrets.FRONTEND_SERVICE_NAME }}
+          image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+          timeout: 4m
+          region: ${{ secrets.REGION }}
+          labels: |
+            app=${{ env.SERVICE_NAME }}
+          flags: |
+            --service-account=${{ secrets.FRONTEND_SERVICE_ACCOUNT }}
+            --ingress=internal
+            --memory=128Mi
+            --concurrency=20
+            --cpu=1000m
+            --min-instances=0
+            --max-instances=3
+            --port=80
+            --no-cpu-boost
+            --no-allow-unauthenticated
+
+      - name: Rollback
+        if: failure()
+        run: |
+          git push origin --delete ${{ steps.create-version.outputs.new_version }}
+          git tag -d ${{ steps.create-version.outputs.new_version }}
+          gcloud artifacts docker images delete ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+          
+          revisions=$(gcloud run revisions list --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --format="value(REVISION)")
+
+          # Count the number of revisions
+          num_revisions=$(echo "${revisions}" | wc -l)
+
+          # If there is only one revision, delete it
+          if [ "$num_revisions" -eq 1 ]; then
+              revision_to_delete=$(echo "${revisions}")
+              gcloud run revisions delete "${revision_to_delete}" --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --quiet
+              echo "Deleted the only revision: ${revision_to_delete}"
+          else
+              # If there are multiple revisions, get the next successful deployed service
+              next_successful_revision=$(echo "$revisions" | grep -m 1 "yes" | awk '{print $1}')
+              echo "Next successful revision: ${next_successful_revision}"
+              gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions ${next_successful_revision}=100
+          fi
