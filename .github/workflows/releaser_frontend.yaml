@@ -36,10 +36,6 @@ jobs:
     env:
       APP_NAME: ikigai.front
 
-    strategy:
-      matrix:
-        node-version: [ '20.x', '21.x' ]
-
     steps:
 
       - uses: actions/checkout@v4
@@ -74,10 +70,10 @@ jobs:
           esac
           echo "NEW_VERSION=${version}" >> $GITHUB_OUTPUT
 
-      - name: Setup Golang
+      - name: Setup Nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '21.6.x'
 
       - name: Tests
         run: |
@@ -91,7 +87,7 @@ jobs:
       - name: Create Tag
         run: |
           git tag -a "${{ secrets.FRONTEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
-          git push origin "${{ steps.create-version.outputs.new_version }}"
+          git push origin "${{ secrets.FRONTEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}"
 
       - uses: google-github-actions/auth@v2
         with:

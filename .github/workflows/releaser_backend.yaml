@@ -92,7 +92,7 @@ jobs:
       - name: Create Tag
         run: |
           git tag -a "${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
-          git push origin "${{ steps.create-version.outputs.new_version }}"
+          git push origin "${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}"
 
       - uses: google-github-actions/auth@v2
         with:

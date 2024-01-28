@@ -18,7 +18,7 @@ RUN mkdir -p /opt/var/cache/nginx && \
     rm -rf /opt/etc/nginx/conf.d/default.conf && \
     rm -rf /opt/usr/share/nginx/html
 
-FROM node:21-slim as builder-app
+FROM node:21.6-slim as builder-app
 
 WORKDIR /build
 COPY . .
