@@ -142,8 +142,8 @@ jobs:
       - name: Rollback
         if: failure()
         run: |
-          git push origin --delete ${{ steps.create-version.outputs.new_version }}
-          git tag -d ${{ steps.create-version.outputs.new_version }}
+          git push origin --delete ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
+          git tag -d ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
           gcloud artifacts docker images delete ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
           
           revisions=$(gcloud run revisions list --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --format="value(REVISION)")
