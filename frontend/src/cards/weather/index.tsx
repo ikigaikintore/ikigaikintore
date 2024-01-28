@@ -1,15 +1,13 @@
 "use client"
 
-import React from 'react'
-import styled from 'styled-components'
+import React from "react"
+import styled from "styled-components"
 
-import {useWeather} from './use-weather'
+import {useWeather} from "./use-weather"
 import CardStyle from "@/src/cards/CardStyle";
 
-type WeatherProps = {}
-
-export const Component = (props: WeatherProps) => {
-    const { weatherData, isLoading, isError } = useWeather('Tokyo')
+export const Component = () => {
+    const { weatherData, isLoading, isError } = useWeather("Tokyo")
     if (isLoading || !weatherData) {
         return <>Loading</>
     }
@@ -35,7 +33,7 @@ export const Component = (props: WeatherProps) => {
     )
 }
 
-Component.displayName = 'WeatherCard'
+Component.displayName = "WeatherCard"
 
 const WeatherCardContainer = styled.div`
   ${CardStyle}

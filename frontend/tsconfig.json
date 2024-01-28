@@ -6,6 +6,7 @@
       "esnext",
       "es2020"
     ],
+    "target": "esnext",
     "baseUrl": ".",
     "paths": {
       "@/src/*": [
@@ -28,13 +29,15 @@
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "build/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

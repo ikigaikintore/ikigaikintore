@@ -1,0 +1,11 @@
+*
+!src
+!app
+!styles
+!package-lock.json
+!package.json
+!next.config.js
+!tsconfig.json
+!tailwind.config.js
+!postcss.config.js
+!nginx.conf

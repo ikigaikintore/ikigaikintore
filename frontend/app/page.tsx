@@ -1,7 +1,7 @@
 "use client"
 
-import * as WeatherCard from '@/src/cards/weather'
 import styled from "styled-components";
+import * as WeatherCard from "@/src/cards/weather"
 
 export default function Page() {
     return (

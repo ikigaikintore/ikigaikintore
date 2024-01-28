@@ -1,4 +1,4 @@
-import { css } from 'styled-components'
+import { css } from "styled-components"
 
 const CardStyle = css`
     background-color: #f0f0f0;

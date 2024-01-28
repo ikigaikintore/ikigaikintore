@@ -4,9 +4,14 @@
     "extends": [
         "eslint:recommended",
         // Use the recommended rules from eslint
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
         // Use recommended rules from @typescript-eslint/eslint-plugin
+        "plugin:@next/next/recommended"
     ],
+    "env": {
+        "node": true,
+        "es2021": true
+    },
     "parserOptions": {
         "ecmaVersion": 2021,
         // Allows for the parsing of modern ECMAScript features
@@ -61,5 +66,4 @@
             }
         ]
     }
-}
 }
