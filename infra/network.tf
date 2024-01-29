@@ -20,8 +20,8 @@ resource "google_vpc_access_connector" "internal-vpc-connector" {
   region        = var.region
   ip_cidr_range = "10.5.5.0/24"
   project       = var.project_id
-  min_throughput = 20
-  max_throughput = 200
+  min_throughput = 200
+  max_throughput = 500
 
   min_instances = 0
   max_instances = 1
