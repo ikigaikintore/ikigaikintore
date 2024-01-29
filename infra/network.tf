@@ -26,7 +26,7 @@ resource "google_vpc_access_connector" "internal-vpc-connector" {
   min_instances = 0
   max_instances = 1
 
-  machine_type = "e2-small"
+  machine_type = "e2-micro"
 
   depends_on = [
     google_project_service.network_apis
