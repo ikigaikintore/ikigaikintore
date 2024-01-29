@@ -23,8 +23,8 @@ resource "google_vpc_access_connector" "internal-vpc-connector" {
   min_throughput = 200
   max_throughput = 500
 
-  min_instances = 0
-  max_instances = 1
+  min_instances = 2
+  max_instances = 2
 
   machine_type = "e2-micro"
 
