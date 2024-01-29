@@ -15,11 +15,11 @@ resource "google_compute_subnetwork" "internal-vpc-subnet" {
 }
 
 resource "google_vpc_access_connector" "internal-vpc-connector" {
-  name          = "vpc-connector"
-  network       = google_compute_network.internal-vpc-network.id
-  region        = var.region
-  ip_cidr_range = "10.5.5.0/24"
-  project       = var.project_id
+  name           = "vpc-connector"
+  network        = google_compute_network.internal-vpc-network.id
+  region         = var.region
+  ip_cidr_range  = "10.5.5.0/28"
+  project        = var.project_id
   min_throughput = 200
   max_throughput = 500
 
@@ -27,6 +27,10 @@ resource "google_vpc_access_connector" "internal-vpc-connector" {
   max_instances = 1
 
   machine_type = "e2-small"
+
+  depends_on = [
+    google_project_service.network_apis
+  ]
 }
 
 locals {
