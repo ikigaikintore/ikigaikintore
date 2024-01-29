@@ -14,10 +14,10 @@ resource "google_compute_subnetwork" "internal-vpc-subnet" {
   private_ip_google_access = true
 }
 
-# resource "google_vpc_access_connector" "internal-vpc-connector" {
-#   name    = "connector"
-#   network = google_compute_network.internal-vpc-network.self_link
-# }
+resource "google_vpc_access_connector" "internal-vpc-connector" {
+  name    = "connector"
+  network = google_compute_network.internal-vpc-network.self_link
+}
 
 locals {
   network_apis = [
@@ -26,9 +26,9 @@ locals {
 }
 
 resource "google_project_service" "network_apis" {
-  project = var.project_id
+  project  = var.project_id
   for_each = toset(local.network_apis)
-  service = each.value
+  service  = each.value
 
   disable_on_destroy = true
 }
