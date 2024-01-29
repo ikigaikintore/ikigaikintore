@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "serve out",
     "lint": "next lint",
     "test": "echo \"Error: no test specified\""
   },
@@ -34,6 +34,7 @@
     "eslint": "8.55.0",
     "eslint-plugin-import": "2.29.1",
     "postcss": "8.4.32",
+    "serve": "14.2.1",
     "tailwindcss": "3.4.0"
   }
 }

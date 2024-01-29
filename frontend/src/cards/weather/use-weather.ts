@@ -3,7 +3,7 @@ import {GetWeather} from "@/src/api/endpoints.v1.pb";
 
 export const useWeather = (city: string) => {
     const fetchWeather = async () => {
-        return GetWeather({weatherFilter: {location: city}}, {baseURL: process.env.NEXT_PUBLIC_BASE_ENDPOINT, prefix: "/v1/weather"})
+        return GetWeather({weatherFilter: {location: city}}, {baseURL: process.env.BASE_ENDPOINT, prefix: "/v1/weather"})
             .then(res => {
                 return res
             })
