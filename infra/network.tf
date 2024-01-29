@@ -5,15 +5,6 @@ resource "google_compute_network" "internal-vpc-network" {
   project                 = var.project_id
 }
 
-resource "google_compute_subnetwork" "internal-vpc-subnet" {
-  name                     = "int-vpc-subnet"
-  ip_cidr_range            = "10.5.5.0/24"
-  region                   = var.region
-  network                  = google_compute_network.internal-vpc-network.id
-  project                  = var.project_id
-  private_ip_google_access = true
-}
-
 resource "google_vpc_access_connector" "internal-vpc-connector" {
   name           = "vpc-connector"
   network        = google_compute_network.internal-vpc-network.id
