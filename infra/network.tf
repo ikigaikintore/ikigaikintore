@@ -13,3 +13,8 @@ resource "google_compute_subnetwork" "internal-vpc-subnet" {
   project                  = var.project_id
   private_ip_google_access = true
 }
+
+resource "google_vpc_access_connector" "internal-vpc-connector" {
+  name    = "connector"
+  network = google_compute_network.internal-vpc-network.self_link
+}
