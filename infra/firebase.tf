@@ -12,3 +12,10 @@ resource "google_project_service" "firebase_apis" {
 
   disable_on_destroy = true
 }
+
+resource "google_firebase_project" "ikigaikintore" {
+  provider = google-beta
+  project  = var.project_id
+
+  depends_on = [google_project_service.firebase_apis]
+}
