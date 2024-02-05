@@ -5,6 +5,8 @@ resource "google_project" "default" {
   labels = {
     "firebase" = "enabled"
   }
+
+  billing_account = var.billing_account
 }
 
 locals {

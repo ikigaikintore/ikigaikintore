@@ -13,4 +13,9 @@ variable "zone" {
   type        = string
 }
 
+variable "billing_account" {
+  description = "billing account"
+  type        = string
+}
+
 variable "key_file" {}
