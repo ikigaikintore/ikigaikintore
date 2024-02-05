@@ -1,11 +1,10 @@
 locals {
   firebase_apis = [
     "firebase.googleapis.com",
-    "serviceusage.googleapis.com",
   ]
 }
 
-resource "google_project_service" "firebase_apis" {
+resource "google_project_service" "firebase-apis" {
   for_each = toset(local.firebase_apis)
   project  = var.project_id
   service  = each.value
@@ -17,7 +16,7 @@ resource "google_firebase_project" "ikigaikintore" {
   provider = google-beta
   project  = var.project_id
 
-  depends_on = [google_project_service.firebase_apis]
+  depends_on = [google_project_service.firebase-apis]
 }
 
 resource "google_project_service" "firebase-auth" {
