@@ -1,7 +1,6 @@
 locals {
   firebase_apis = [
     "firebase.googleapis.com",
-    "serviceusage.googleapis.com",
   ]
 }
 
