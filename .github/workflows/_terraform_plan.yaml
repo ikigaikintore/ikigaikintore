@@ -74,6 +74,7 @@ jobs:
           TF_VAR_zone: ${{ secrets.ZONE }}
           TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
           TF_VAR_key_file: ${{ steps.auth.outputs.credentials_file_path }}
+          TF_VAR_billing_account: ${{ secrets.BILLING_PROJECT }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           PR_NUMBER: ${{ github.event.number }}
           GITHUB_TOKEN: ${{ secrets.TERRAFORM_COMMENT_TOKEN }}
