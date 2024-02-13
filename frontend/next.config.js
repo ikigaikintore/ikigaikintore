@@ -1,6 +1,6 @@
 module.exports = {
-    compiler: {
-        styledComponents: true,
-    },
-    output: "export"
+  compiler: {
+    styledComponents: true,
+  },
+  output: "export"
 }

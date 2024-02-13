@@ -1,69 +1,59 @@
 {
-    "parser": "@typescript-eslint/parser",
-    // Specifies the ESLint parser
-    "extends": [
-        "eslint:recommended",
-        // Use the recommended rules from eslint
-        "plugin:@typescript-eslint/recommended",
-        // Use recommended rules from @typescript-eslint/eslint-plugin
-        "plugin:@next/next/recommended"
+  "parser": "@typescript-eslint/parser",
+  // Specifies the ESLint parser
+  "extends": [
+    "eslint:recommended",
+    // Use the recommended rules from eslint
+    "plugin:@typescript-eslint/recommended",
+    // Use recommended rules from @typescript-eslint/eslint-plugin
+    "plugin:@next/next/recommended"
+  ],
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module"
+    // Allows for the use of imports
+  },
+  "plugins": ["import"],
+  "rules": {
+    "semi": "off",
+    "indent": ["error", 2],
+    "@typescript-eslint/semi": ["error", "never"],
+    "quotes": ["error", "double"],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
     ],
-    "env": {
-        "node": true,
-        "es2021": true
-    },
-    "parserOptions": {
-        "ecmaVersion": 2021,
-        // Allows for the parsing of modern ECMAScript features
-        "sourceType": "module"
-        // Allows for the use of imports
-    },
-    "plugins": [
-        "import"
-    ],
-    "rules": {
-        "quotes": [
-            "error",
-            "double"
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          ["builtin", "external"],
+          "internal",
+          ["parent", "sibling", "index"]
         ],
-        "import/no-extraneous-dependencies": [
-            "error",
-            {
-                "devDependencies": true
-            }
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
         ],
-        "import/newline-after-import": "error",
-        "import/no-duplicates": "error",
-        "import/order": [
-            "error",
-            {
-                "groups": [
-                    [
-                        "builtin",
-                        "external"
-                    ],
-                    "internal",
-                    [
-                        "parent",
-                        "sibling",
-                        "index"
-                    ]
-                ],
-                "pathGroups": [
-                    {
-                        "pattern": "react",
-                        "group": "external",
-                        "position": "before"
-                    }
-                ],
-                "pathGroupsExcludedImportTypes": [
-                    "react"
-                ],
-                "alphabetize": {
-                    "order": "asc",
-                    "caseInsensitive": true
-                }
-            }
-        ]
-    }
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ]
+  }
 }
