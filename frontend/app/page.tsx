@@ -7,12 +7,11 @@ import { useAuth } from "@/src/auth/use-auth"
 
 export default function Page() {
   const { user, signInUser, signOutUser } = useAuth()
-  
+
   return (
     <AuthProvider>
       <AppPage>
         <MainMenu>
-          <span>My menu here</span>
           <AuthButtons>
             {user ? (
               <button onClick={signOutUser}>Sign out</button>
@@ -21,12 +20,14 @@ export default function Page() {
             )}
           </AuthButtons>
         </MainMenu>
-        <MainBody>
-          <LinkSection>Link elements</LinkSection>
-          <CardComponents>
-            <WeatherCard.Component />
-          </CardComponents>
-        </MainBody>
+        {user ? (
+          <MainBody>
+            <LinkSection>Link elements</LinkSection>
+            <CardComponents>
+              <WeatherCard.Component />
+            </CardComponents>
+          </MainBody>
+        ) : (<div></div>)}
       </AppPage>
     </AuthProvider>
   )
