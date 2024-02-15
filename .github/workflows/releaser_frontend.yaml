@@ -102,6 +102,15 @@ jobs:
         run: |
           docker build \
             -t ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }} \
+            --build-arg BASE_ENDPOINT=${{ secrets.BASE_ENDPOINT }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }} \
+            --build-arg NEXT_PUBLIC_ENVIRONMENT=${{ secrets.NEXT_PUBLIC_ENVIRONMENT }} \
+            --build-arg NEXT_PUBLIC_USER_AUTH=${{ secrets.NEXT_PUBLIC_USER_AUTH }} \
             .
 
       - name: Push image
