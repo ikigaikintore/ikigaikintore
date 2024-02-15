@@ -4,8 +4,9 @@
 !styles
 !package-lock.json
 !package.json
-!next.config.js
+!next.config.mjs
 !tsconfig.json
 !tailwind.config.js
 !postcss.config.js
 !nginx.conf
+!.env.production
