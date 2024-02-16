@@ -22,6 +22,8 @@ locals {
 
   frontend_apis = [
     "identitytoolkit.googleapis.com",
+    "firestore.googleapis.com",
+    "serviceusage.googleapis.com",
   ]
 }
 
