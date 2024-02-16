@@ -8,6 +8,8 @@ locals {
   frontend_sa_roles = [
     "roles/run.developer",
     "roles/secretmanager.secretAccessor",
+    "roles/iam.serviceAccountUser",
+    "roles/iam.serviceAccountTokenCreator",
   ]
 
   frontend_secrets = [
