@@ -16,6 +16,7 @@ locals {
     "firebase_storage_bucket",
     "firebase_messaging_sender_id",
     "firebase_app_id",
+    "base_endpoint",
     "environment",
     "user_auth",
   ]
