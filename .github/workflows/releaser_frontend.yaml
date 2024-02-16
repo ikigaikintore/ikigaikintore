@@ -124,7 +124,7 @@ jobs:
         with:
           service: ${{ secrets.FRONTEND_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
-          timeout: 1m
+          timeout: 3m
           region: ${{ secrets.REGION }}
           labels: |
             app=${{ env.SERVICE_NAME }}
