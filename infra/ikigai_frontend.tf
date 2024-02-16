@@ -7,6 +7,7 @@ resource "google_service_account" "frontend-sa" {
 locals {
   frontend_sa_roles = [
     "roles/run.developer",
+    "roles/secretmanager.secretAccessor",
   ]
 
   frontend_secrets = [
