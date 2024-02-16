@@ -1,7 +1,6 @@
 resource "google_compute_network" "vpc-network" {
   name                    = "vpc-network"
   project                 = var.project_id
-  region                  = var.region
   auto_create_subnetworks = true
 }
 
