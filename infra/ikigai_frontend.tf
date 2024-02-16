@@ -19,6 +19,10 @@ locals {
     "environment",
     "user_auth",
   ]
+
+  frontend_apis = [
+    "identitytoolkit.googleapis.com",
+  ]
 }
 
 resource "google_project_iam_member" "frontend-sa-roles" {
@@ -28,8 +32,22 @@ resource "google_project_iam_member" "frontend-sa-roles" {
   member   = "serviceAccount:${google_service_account.frontend-sa.email}"
 }
 
+resource "google_project_service" "frontend-api-resources" {
+  for_each = toset(local.frontend_apis)
+  project  = var.project_id
+  service  = each.value
+}
+
 resource "google_secret_manager_secret" "frontend-secrets" {
   for_each  = toset(local.frontend_secrets)
   project   = var.project_id
   secret_id = each.value
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [
+    google_project_service.frontend-api-resources,
+  ]
 }
