@@ -31,7 +31,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./
 
     env:
       APP_NAME: ikigai.app
