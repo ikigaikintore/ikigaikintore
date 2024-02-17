@@ -293,3 +293,4 @@ terraform.rc
 infra/key
 tmp
 infra/scripts
+Makefile
