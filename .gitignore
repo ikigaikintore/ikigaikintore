@@ -294,3 +294,5 @@ infra/key
 tmp
 infra/scripts
 Makefile
+!backend/Makefile
+!frontend/Makefile
