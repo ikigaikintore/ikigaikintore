@@ -108,6 +108,15 @@ jobs:
           docker build \
             --target app-deploy \
             -t ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }} \
+            --build-arg BASE_ENDPOINT=${{ secrets.BASE_ENDPOINT }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID }} \
+            --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }} \
+            --build-arg NEXT_PUBLIC_ENVIRONMENT=${{ secrets.NEXT_PUBLIC_ENVIRONMENT }} \
+            --build-arg NEXT_PUBLIC_USER_AUTH=${{ secrets.NEXT_PUBLIC_USER_AUTH }} \
             .
 
       - name: Push image
@@ -123,7 +132,16 @@ jobs:
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
           secrets: |
             OPENWEATHER_API_KEY=${{ secrets.BACKEND_OPENWEATHER_API_KEY }}
-          timeout: 4m
+            NEXT_PUBLIC_FIREBASE_API_KEY=firebase_api_key:latest
+            NEXT_PUBLIC_BASE_ENDPOINT=base_endpoint:latest
+            NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase_auth_domain:latest
+            NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase_project_id:latest
+            NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=firebase_storage_bucket:latest
+            NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID=firebase_messaging_sender_id:latest
+            NEXT_PUBLIC_FIREBASE_APP_ID=firebase_app_id:latest
+            NEXT_PUBLIC_ENVIRONMENT=environment:latest
+            NEXT_PUBLIC_USER_AUTH=user_auth:latest
+          timeout: 3m
           region: ${{ secrets.REGION }}
           labels: |
             app=${{ env.SERVICE_NAME }}
@@ -135,7 +153,7 @@ jobs:
             --cpu=1000m
             --min-instances=0
             --max-instances=3
-            --port=8999
+            --port=3000
             --no-cpu-boost
             --no-allow-unauthenticated
 
