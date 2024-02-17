@@ -31,7 +31,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./
 
     env:
       APP_NAME: ikigai.app
@@ -158,7 +158,7 @@ jobs:
             --no-allow-unauthenticated
 
       - name: Rollback
-        if: failure()
+        if: failure() || cancelled()
         run: |
           git push origin --delete ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
           git tag -d ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
