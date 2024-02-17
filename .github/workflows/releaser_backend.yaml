@@ -80,11 +80,6 @@ jobs:
         run: |
           make tests
 
-      - name: Compile
-        if: steps.create-version.outputs.new_version != ''
-        run: |
-          make compile
-
       - run: |
           git config user.email "${{ secrets.BOT_EMAIL }}"
           git config user.name "${{ secrets.BOT_NAME }}"
