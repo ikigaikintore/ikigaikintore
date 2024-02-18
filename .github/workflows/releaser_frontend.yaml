@@ -120,7 +120,6 @@ jobs:
 
       - name: Setup gcs
         run: |
-          gsutil -m acl ch -r -u AllUsers:R gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}
           gsutil -m setmeta -r -h "Cache-Control:public, max-age=0, must-revalidate" gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/**
           gsutil -m setmeta -r -h "Content-Type:text/html" gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/**/*.html
           gsutil -m setmeta -r -h "Content-Encoding:gzip" gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/**
