@@ -119,6 +119,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GIG_JAPAN_398904 }}'
           projectId: ${{ secrets.PROJECT_ID }}
+          entrypoint: './frontend'
 
 
       #- name: Setup docker
