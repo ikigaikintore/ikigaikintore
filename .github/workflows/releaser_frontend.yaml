@@ -118,6 +118,21 @@ jobs:
         run: |
           gsutil -m rsync -r -d ./out gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/${{ steps.create-version.outputs.new_version }}
 
+      - name: Setup gcs
+        run: |
+          gsutil -m acl ch -r -u AllUsers:R gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/${{ steps.create-version.outputs.new_version }}
+          gsutil -m setmeta -r -h "Cache-Control:public, max-age=0, must-revalidate" gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/${{ steps.create-version.outputs.new_version }}/**
+          gsutil -m setmeta -r -h "Content-Type:text/html" gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/${{ steps.create-version.outputs.new_version }}/**/*.html
+          gsutil -m setmeta -r -h "Content-Encoding:gzip" gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/${{ steps.create-version.outputs.new_version }}/**
+          gsutil -m setmeta -r -h "Content-Type:application/javascript" gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/${{ steps.create-version.outputs.new_version }}/**/*.js
+          gsutil -m setmeta -r -h "Content-Type:text/css" gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/${{ steps.create-version.outputs.new_version }}/_next/static/css
+
+      - name: Set cors
+        run: |
+          echo '[{"origin": ["*"],"responseHeader": ["Content-Type"],"method": ["GET", "HEAD"],"maxAgeSeconds": 3600}]' > cors.json
+          gsutil cors set cors.json gs://${{ secrets.FRONTEND_BUCKET_NAME }}
+          
+
       #- name: Setup docker
       #  run: |
       #    gcloud auth configure-docker ${{ secrets.REGION }}-docker.pkg.dev --quiet
