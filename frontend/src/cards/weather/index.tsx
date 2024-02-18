@@ -1,9 +1,11 @@
 "use client"
 
 import React from "react"
+
 import styled from "styled-components"
 
 import { useWeather } from "./use-weather"
+
 import CardStyle from "@/src/cards/CardStyle"
 
 export const Component = () => {

@@ -1,6 +1,8 @@
 import React from "react"
-import * as fb from "./firebase"
+
 import { User } from "firebase/auth"
+
+import * as fb from "./firebase"
 
 export type AuthContextType = {
   user: User | null

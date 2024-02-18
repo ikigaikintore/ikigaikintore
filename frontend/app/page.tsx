@@ -1,9 +1,10 @@
 "use client"
 
 import styled from "styled-components"
-import * as WeatherCard from "@/src/cards/weather"
+
 import { AuthProvider } from "@/src/auth/index"
 import { useAuth } from "@/src/auth/use-auth"
+import * as WeatherCard from "@/src/cards/weather"
 
 export default function Page() {
   const { user, signInUser, signOutUser } = useAuth()
