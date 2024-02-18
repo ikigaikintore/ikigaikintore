@@ -57,35 +57,3 @@ resource "google_secret_manager_secret" "frontend-secrets" {
     google_project_service.frontend-api-resources,
   ]
 }
-
-# gcs
-resource "google_storage_bucket_iam_binding" "frontend-sa-gcs" {
-  bucket = google_storage_bucket.frontend-bucket.name
-  role   = "roles/storage.objectViewer"
-  members = [
-    "allUsers",
-  ]
-}
-
-resource "google_storage_bucket" "frontend-bucket" {
-  name          = "web-iki"
-  location      = var.region
-  project       = var.project_id
-
-  storage_class = "STANDARD"
-  uniform_bucket_level_access = true
-
-  website {
-    main_page_suffix = "index.html"
-    not_found_page   = "404.html"
-  }
-
-  lifecycle_rule {
-    action {
-      type = "Delete"
-    }
-    condition {
-      age = 30
-    }
-  }
-}
