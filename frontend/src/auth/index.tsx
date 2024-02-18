@@ -1,5 +1,5 @@
-import React from "react"
-import { createContext, useContext } from "react"
+import React, { createContext, useContext } from "react"
+
 import { AuthContextType, useAuth } from "./use-auth"
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType)
