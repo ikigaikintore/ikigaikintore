@@ -1,12 +1,15 @@
 import React from "react"
+
 import {
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
   connectAuthEmulator,
 } from "firebase/auth"
-import { useConfig } from "@/src/config/use-config"
+
 import { auth } from "./init"
+
+import { useConfig } from "@/src/config/use-config"
 
 export const useFirebase = () => {
   const { isLocal, emulatorHost, emails } = useConfig()

@@ -1,4 +1,5 @@
 import useSWR from "swr"
+
 import { GetWeather } from "@/src/api/endpoints.v1.pb"
 
 export const useWeather = (city: string) => {
