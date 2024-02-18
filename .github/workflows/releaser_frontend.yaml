@@ -94,61 +94,75 @@ jobs:
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
           token_format: 'access_token'
 
-      - name: Setup docker
-        run: |
-          gcloud auth configure-docker ${{ secrets.REGION }}-docker.pkg.dev --quiet
-
-      - name: Build docker image
-        run: |
-          docker build \
-            -t ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }} \
-            --build-arg BASE_ENDPOINT=${{ secrets.BASE_ENDPOINT }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }} \
-            --build-arg NEXT_PUBLIC_ENVIRONMENT=${{ secrets.NEXT_PUBLIC_ENVIRONMENT }} \
-            --build-arg NEXT_PUBLIC_USER_AUTH=${{ secrets.NEXT_PUBLIC_USER_AUTH }} \
-            .
-
-      - name: Push image
-        run: |
-          docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
-
-      - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@v1
-        env:
-          SERVICE_NAME: ikigai
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
         with:
-          service: ${{ secrets.FRONTEND_SERVICE_NAME }}
-          image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
-          timeout: 3m
-          region: ${{ secrets.REGION }}
-          labels: |
-            app=${{ env.SERVICE_NAME }}
-          secrets: |
-            NEXT_PUBLIC_FIREBASE_API_KEY=firebase_api_key:latest
-            NEXT_PUBLIC_BASE_ENDPOINT=base_endpoint:latest
-            NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase_auth_domain:latest
-            NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase_project_id:latest
-            NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=firebase_storage_bucket:latest
-            NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID=firebase_messaging_sender_id:latest
-            NEXT_PUBLIC_FIREBASE_APP_ID=firebase_app_id:latest
-            NEXT_PUBLIC_ENVIRONMENT=environment:latest
-            NEXT_PUBLIC_USER_AUTH=user_auth:latest
-          flags: |
-            --service-account=${{ secrets.FRONTEND_SERVICE_ACCOUNT }}
-            --ingress=internal
-            --memory=128Mi
-            --concurrency=20
-            --cpu=1000m
-            --min-instances=0
-            --max-instances=3
-            --port=80
-            --no-cpu-boost
-            --no-allow-unauthenticated
+          version: '459.0.0'
+          project_id: ${{ secrets.PROJECT_ID }}
+
+      - name: Build
+        run: |
+          npm run build
+
+      - name: Upload web
+        run: |
+          gsutil -m rsync -r -d ./out gs://${{ secrets.FRONTEND_BUCKET_NAME }}/${{ env.APP_NAME }}/${{ steps.create-version.outputs.new_version }}
+
+      #- name: Setup docker
+      #  run: |
+      #    gcloud auth configure-docker ${{ secrets.REGION }}-docker.pkg.dev --quiet
+
+      #- name: Build docker image
+      #  run: |
+      #    docker build \
+      #      -t ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }} \
+      #      --build-arg BASE_ENDPOINT=${{ secrets.BASE_ENDPOINT }} \
+      #      --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }} \
+      #      --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
+      #      --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }} \
+      #      --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
+      #      --build-arg NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID }} \
+      #      --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }} \
+      #      --build-arg NEXT_PUBLIC_ENVIRONMENT=${{ secrets.NEXT_PUBLIC_ENVIRONMENT }} \
+      #      --build-arg NEXT_PUBLIC_USER_AUTH=${{ secrets.NEXT_PUBLIC_USER_AUTH }} \
+      #      .
+
+      #- name: Push image
+      #  run: |
+      #    docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+
+      #- name: Deploy to Cloud Run
+      #  uses: google-github-actions/deploy-cloudrun@v1
+      #  env:
+      #    SERVICE_NAME: ikigai
+      #  with:
+      #    service: ${{ secrets.FRONTEND_SERVICE_NAME }}
+      #    image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+      #    timeout: 3m
+      #    region: ${{ secrets.REGION }}
+      #    labels: |
+      #      app=${{ env.SERVICE_NAME }}
+      #    secrets: |
+      #      NEXT_PUBLIC_FIREBASE_API_KEY=firebase_api_key:latest
+      #      NEXT_PUBLIC_BASE_ENDPOINT=base_endpoint:latest
+      #      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=firebase_auth_domain:latest
+      #      NEXT_PUBLIC_FIREBASE_PROJECT_ID=firebase_project_id:latest
+      #      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=firebase_storage_bucket:latest
+      #      NEXT_PUBLIC_FIREBASE_MESSAGE_SENDER_ID=firebase_messaging_sender_id:latest
+      #      NEXT_PUBLIC_FIREBASE_APP_ID=firebase_app_id:latest
+      #      NEXT_PUBLIC_ENVIRONMENT=environment:latest
+      #      NEXT_PUBLIC_USER_AUTH=user_auth:latest
+      #    flags: |
+      #      --service-account=${{ secrets.FRONTEND_SERVICE_ACCOUNT }}
+      #      --ingress=internal
+      #      --memory=128Mi
+      #      --concurrency=20
+      #      --cpu=1000m
+      #      --min-instances=0
+      #      --max-instances=3
+      #      --port=80
+      #      --no-cpu-boost
+      #      --no-allow-unauthenticated
 
       - name: Rollback
         if: failure()
