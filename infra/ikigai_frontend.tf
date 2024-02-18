@@ -63,7 +63,7 @@ resource "google_storage_bucket_iam_binding" "frontend-sa-gcs" {
   bucket = google_storage_bucket.frontend-bucket.name
   role   = "roles/storage.objectViewer"
   members = [
-    "allUsers",
+    "allAuthenticatedUsers",
   ]
 }
 
