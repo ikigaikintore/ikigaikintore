@@ -3,13 +3,14 @@ package server
 import (
 	"context"
 	"errors"
-	firebase "firebase.google.com/go/v4"
 	"io"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	firebase "firebase.google.com/go/v4"
 )
 
 func NewProxy(target string) *http.ServeMux {
