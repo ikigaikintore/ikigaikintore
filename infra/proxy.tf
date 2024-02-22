@@ -7,7 +7,7 @@ resource "google_service_account" "proxy-sa" {
 locals {
   proxy_sa_roles = [
     "roles/run.invoker",
-    "roles/secretsmanager.secretAccessor",
+    "roles/secretmanager.secretAccessor",
   ]
 }
 
