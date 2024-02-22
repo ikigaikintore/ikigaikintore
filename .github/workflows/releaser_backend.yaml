@@ -140,6 +140,8 @@ jobs:
 
       - name: Rollback
         if: failure() || cancelled()
+        env:
+          SERVICE_NAME: ikigai
         run: |
           git push origin --delete ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
           git tag -d ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
