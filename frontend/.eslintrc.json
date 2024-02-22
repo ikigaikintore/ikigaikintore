@@ -20,6 +20,8 @@
   },
   "plugins": ["import"],
   "rules": {
+    "object-curly-spacing": ["error", "always"],
+    "@typescript-eslint/object-curly-spacing": ["error", "always"],
     "semi": "off",
     "indent": ["error", 2],
     "@typescript-eslint/semi": ["error", "never"],
