@@ -8,11 +8,11 @@ RUN go mod download && \
 
 FROM gcr.io/distroless/static-debian12:nonroot-amd64 as app-builder
 COPY --from=builder /ikigaikintore/ikigai.app /
-EXPOSE 8999
+EXPOSE 8080
 CMD ["/ikigai.app"]
 
 FROM gcr.io/distroless/static-debian12:nonroot-amd64 as app-deploy
 WORKDIR /
 COPY /tmp/ikigai.app* /ikigai.app
-EXPOSE 8999
+EXPOSE 8080
 CMD ["/ikigai.app"]

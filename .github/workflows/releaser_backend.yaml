@@ -134,7 +134,7 @@ jobs:
             --cpu=1000m
             --min-instances=0
             --max-instances=3
-            --port=8999
+            --port=8080
             --no-cpu-boost
             --no-allow-unauthenticated
 

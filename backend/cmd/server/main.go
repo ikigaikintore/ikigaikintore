@@ -26,8 +26,8 @@ func NewAppServer() Server {
 		w.WriteHeader(http.StatusOK)
 	}))
 	return &http.Server{
-		Addr:              ":8999",
-		Handler:           cors.Default().Handler(mux),
+		Addr:              ":8080",
+		Handler:           cors.AllowAll().Handler(mux),
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		WriteTimeout:      10 * time.Second,
