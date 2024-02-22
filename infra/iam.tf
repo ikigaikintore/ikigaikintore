@@ -47,6 +47,7 @@ locals {
   roles = [
     "roles/editor",
     "roles/artifactregistry.writer",
+    "roles/run.admin",
     "roles/secretmanager.admin",
     "roles/iam.workloadIdentityUser",
     "roles/storage.admin",
