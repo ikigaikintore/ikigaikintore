@@ -1,4 +1,4 @@
-name: Manual Release Backend
+name: Manual Release Proxy
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
 
 jobs:
 
-  create-tag-backend:
+  create-tag-proxy:
     permissions:
       contents: write
 
@@ -31,10 +31,10 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./
 
     env:
-      APP_NAME: ikigai.app
+      APP_NAME: proxy.app
 
     steps:
 
@@ -46,7 +46,7 @@ jobs:
         id: set-tag
         run: |
           git fetch --tags
-          latest_tag=$(git tag --sort=-creatordate | grep ${{ secrets.BACKEND_SERVICE_NAME }} | head -n 1)
+          latest_tag=$(git tag --sort=-creatordate | grep ${{ secrets.PROXY_SERVICE_NAME }} | head -n 1)
           echo "LATEST_TAG=${latest_tag}" >> $GITHUB_OUTPUT
 
       - name: Determine New Version
@@ -73,8 +73,8 @@ jobs:
       - name: Setup Golang
         uses: actions/setup-go@v5
         with:
-          cache-dependency-path: './backend/go.sum'
-          go-version-file: './backend/go.mod'
+          cache-dependency-path: './proxy/go.sum'
+          go-version-file: './proxy/go.mod'
 
       - name: Tests
         run: |
@@ -86,8 +86,8 @@ jobs:
 
       - name: Create Tag
         run: |
-          git tag -a "${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
-          git push origin "${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}"
+          git tag -a "${{ secrets.PROXY_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
+          git push origin "${{ secrets.PROXY_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}"
 
       - uses: google-github-actions/auth@v2
         with:
@@ -112,33 +112,36 @@ jobs:
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
         env:
-          SERVICE_NAME: ikigai
+          SERVICE_NAME: proxy
         with:
-          service: ${{ secrets.BACKEND_SERVICE_NAME }}
+          # TODO check this
+          service: ${{ secrets.PROXY_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
           secrets: |
-            OPENWEATHER_API_KEY=${{ secrets.BACKEND_OPENWEATHER_API_KEY }}
-          timeout: 4m
+            PROXY_TARGET_BACKEND=base_endpoint:latest
+            PROJECT_ID=firebase_project_id:latest
+            NEXT_PUBLIC_USER_AUTH=user_auth:latest
+          timeout: 3m
           region: ${{ secrets.REGION }}
           labels: |
             app=${{ env.SERVICE_NAME }}
           flags: |
-            --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
+            --service-account=${{ secrets.PROXY_SERVICE_ACCOUNT }}
             --ingress=internal
             --memory=128Mi
             --concurrency=20
             --cpu=1000m
             --min-instances=0
             --max-instances=3
-            --port=8999
+            --port=8080
             --no-cpu-boost
-            --no-allow-unauthenticated
+            --allow-unauthenticated
 
       - name: Rollback
         if: failure() || cancelled()
         run: |
-          git push origin --delete ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
-          git tag -d ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
+          git push origin --delete ${{ secrets.PROXY_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
+          git tag -d ${{ secrets.PROXY_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
           gcloud artifacts docker images delete ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
           
           revisions=$(gcloud run revisions list --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --format="value(REVISION)")
