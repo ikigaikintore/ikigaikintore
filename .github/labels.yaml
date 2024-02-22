@@ -16,3 +16,6 @@
 - name: ci
   description: "ci system"
   color: ededed
+- name: proxy
+  descritpion: "proxy system"
+  color: 1d76db
