@@ -30,7 +30,7 @@ spec:
                   key: latest
           resources:
             limits:
-              cpu: "0.7"
+              cpu: "1"
               memory: "128Mi"
           startupProbe:
             tcpSocket:
