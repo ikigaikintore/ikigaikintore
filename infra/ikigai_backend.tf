@@ -10,7 +10,6 @@ locals {
     "roles/iam.serviceAccountTokenCreator",
     "roles/run.developer",
     "roles/secretmanager.secretAccessor",
-    "iam.serviceAccounts.actAs"
   ]
 
   backend_apis = [
