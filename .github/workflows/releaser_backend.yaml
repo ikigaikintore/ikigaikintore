@@ -122,7 +122,7 @@ jobs:
           IMAGE: "${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}"
         run: |
           envsubst < cloud/service.yaml.tpl > cloud/service.yaml
-          gcloud run services replace cloud/service.yaml
+          gcloud run services replace cloud/service.yaml --verbosity=debug
 
       #- name: Rollback
       #  if: failure() || cancelled()
