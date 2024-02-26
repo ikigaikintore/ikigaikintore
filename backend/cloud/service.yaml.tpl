@@ -2,8 +2,6 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: ikigai
-  labels:
-    cloud.googleapis.com/location: $REGION
   annotations:
     run.googleapis.com/ingress: internal
 spec:
