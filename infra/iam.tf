@@ -48,6 +48,8 @@ locals {
     "roles/editor",
     "roles/artifactregistry.writer",
     "roles/run.admin",
+    "roles/iam.serviceAccountUser",
+    "iam.serviceAccounts.actAs",
     "roles/secretmanager.admin",
     "roles/iam.workloadIdentityUser",
     "roles/storage.admin",
