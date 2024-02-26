@@ -95,6 +95,11 @@ jobs:
           credentials_json: ${{ secrets.TERF_CREDENTIALS }}
           token_format: 'access_token'
 
+      - uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: '= 459.0.0'
+          project_id: ${{ secrets.PROJECT_ID }}
+
       - name: Setup docker
         run: |
           gcloud auth configure-docker ${{ secrets.REGION }}-docker.pkg.dev --quiet

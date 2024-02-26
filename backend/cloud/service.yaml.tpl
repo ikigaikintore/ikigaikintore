@@ -15,7 +15,7 @@ spec:
         run.googleapis.com/startup-cpu-boost: "false"
     spec:
       containerConcurrency: 30
-      timeoutSeconds: 120
+      timeoutSeconds: 300
       serviceAccountName: $SERVICE_ACCOUNT_EMAIL
       containers:
         - image: $IMAGE
