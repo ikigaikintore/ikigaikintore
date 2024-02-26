@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/ervitis/ikigaikintore/backend/internal/input/grpc"
-	"github.com/rs/cors"
 )
 
 type Server interface {
@@ -27,7 +26,7 @@ func NewAppServer() Server {
 	}))
 	return &http.Server{
 		Addr:              ":8080",
-		Handler:           cors.AllowAll().Handler(mux),
+		Handler:           mux,
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		WriteTimeout:      10 * time.Second,
