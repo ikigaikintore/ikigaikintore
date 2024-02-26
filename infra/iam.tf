@@ -51,6 +51,7 @@ locals {
     "roles/secretmanager.admin",
     "roles/iam.workloadIdentityUser",
     "roles/storage.admin",
+    "roles/iam.serviceAccountUser",
   ]
 }
 
