@@ -93,7 +93,6 @@ jobs:
         with:
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
           token_format: 'access_token'
-          export_default_credentials: true
 
       - name: Setup docker
         run: |
