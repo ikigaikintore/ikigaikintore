@@ -19,8 +19,8 @@ spec:
       serviceAccountName: $SERVICE_ACCOUNT_EMAIL
       containers:
         - image: $IMAGE
-          ports:
-            - containerPort: 8080
+          #ports:
+          #  - containerPort: 8080
           env:
             - name: OPENWEATHER_API_KEY
               valueFrom:
@@ -31,18 +31,18 @@ spec:
             limits:
               cpu: "1"
               memory: "256Mi"
-          startupProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 0
-            timeoutSeconds: 10
-            failureThreshold: 4
-            periodSeconds: 20
-          livenessProbe:
-            httpGet:
-              path: "/health"
-              port: 8080
-            initialDelaySeconds: 0
-            timeoutSeconds: 4
-            failureThreshold: 4
-            periodSeconds: 40
+          #startupProbe:
+          #  tcpSocket:
+          #    port: 8080
+          #  initialDelaySeconds: 0
+          #  timeoutSeconds: 10
+          #  failureThreshold: 4
+          #  periodSeconds: 20
+          #livenessProbe:
+          #  httpGet:
+          #    path: "/health"
+          #    port: 8080
+          #  initialDelaySeconds: 0
+          #  timeoutSeconds: 4
+          #  failureThreshold: 4
+          #  periodSeconds: 40
