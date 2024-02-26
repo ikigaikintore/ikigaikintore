@@ -13,7 +13,6 @@ spec:
         autoscaling.knative.dev/minScale: "0"
         autoscaling.knative.dev/maxScale: "3"
         run.googleapis.com/startup-cpu-boost: "false"
-        run.googleapis.com/vpc-access-egress: "all-traffic"
     spec:
       containerConcurrency: 30
       timeoutSeconds: 60
