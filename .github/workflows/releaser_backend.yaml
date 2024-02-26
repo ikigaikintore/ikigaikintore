@@ -93,6 +93,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
           token_format: 'access_token'
+          export_default_credentials: true
 
       - name: Setup docker
         run: |
@@ -114,29 +115,14 @@ jobs:
           docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
 
       - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@v1
         env:
           SERVICE_NAME: ikigai
-        with:
-          service: ${{ secrets.BACKEND_SERVICE_NAME }}
-          image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
-          secrets: |
-            OPENWEATHER_API_KEY=${{ secrets.BACKEND_OPENWEATHER_API_KEY }}
-          timeout: 4m
-          region: ${{ secrets.REGION }}
-          labels: |
-            app=${{ env.SERVICE_NAME }}
-          flags: |
-            --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
-            --ingress=internal
-            --memory=128Mi
-            --concurrency=20
-            --cpu=1000m
-            --min-instances=0
-            --max-instances=3
-            --port=8080
-            --no-cpu-boost
-            --no-allow-unauthenticated
+          REGION: ${{ secrets.REGION }}
+          SERVICE_ACCOUNT_EMAIL: ${{ secrets.BACKEND_SERVICE_ACCOUNT }}
+          IMAGE: "${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}"
+        run: |
+          envsubst < cloud/service.yaml.tpl > cloud/service.yaml
+          gcloud run services replace cloud/service.yaml
 
       - name: Rollback
         if: failure() || cancelled()
