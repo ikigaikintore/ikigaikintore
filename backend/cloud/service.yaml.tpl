@@ -19,8 +19,6 @@ spec:
       serviceAccountName: $SERVICE_ACCOUNT_EMAIL
       containers:
         - image: $IMAGE
-          ports:
-            - containerPort: 8080
           env:
             - name: OPENWEATHER_API_KEY
               valueFrom:
