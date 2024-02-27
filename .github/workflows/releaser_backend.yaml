@@ -131,14 +131,14 @@ jobs:
           timeout: 5m
           region: ${{ secrets.REGION }}
           labels: |
-            app=${{ env.SERVICE_NAME }}
+            app=${{ secrets.BACKEND_SERVICE_NAME }}
           project_id: ${{ secrets.PROJECT_ID }}
           gcloud_version: "459.0.0"
           flags: |
             --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
             --ingress=internal
             --memory=128Mi
-            --concurrency=20
+            --concurrency=80
             --cpu=1000m
             --min-instances=0
             --max-instances=3
