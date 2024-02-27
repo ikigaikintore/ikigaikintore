@@ -143,6 +143,7 @@ jobs:
             --port=8080
             --no-cpu-boost
             --no-allow-unauthenticated
+            --no-traffic
             --verbosity=debug
 
       #- name: Deploy to Cloud Run
