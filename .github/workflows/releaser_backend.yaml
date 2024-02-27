@@ -137,7 +137,7 @@ jobs:
           flags: |
             --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
             --ingress=internal
-            --memory=128Mi
+            --memory=512Mi
             --concurrency=80
             --cpu=1000m
             --min-instances=0
