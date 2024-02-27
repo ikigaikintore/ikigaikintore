@@ -46,7 +46,7 @@ resource "google_project_iam_member" "gitops-sa-binding" {
 locals {
   roles = [
     "roles/editor",
-    "roles/artifactregistry.writer",
+    "roles/artifactregistry.admin",
     "roles/run.admin",
     "roles/secretmanager.admin",
     "roles/iam.workloadIdentityUser",

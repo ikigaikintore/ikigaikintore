@@ -12,6 +12,7 @@ locals {
     "roles/secretmanager.secretAccessor",
     "roles/monitoring.viewer",
     "roles/logging.viewer",
+    "roles/artifactregistry.reader",
   ]
 
   backend_apis = [
