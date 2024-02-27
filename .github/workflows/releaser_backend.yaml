@@ -132,6 +132,9 @@ jobs:
           region: ${{ secrets.REGION }}
           labels: |
             app=${{ env.SERVICE_NAME }}
+          no_traffic: true
+          project_id: ${{ secrets.PROJECT_ID }}
+          gcloud_version: "459.0.0"
           flags: |
             --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
             --ingress=internal
@@ -143,7 +146,6 @@ jobs:
             --port=8080
             --no-cpu-boost
             --no-allow-unauthenticated
-            --no-traffic
             --verbosity=debug
 
       #- name: Deploy to Cloud Run
