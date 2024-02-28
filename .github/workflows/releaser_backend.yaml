@@ -95,11 +95,6 @@ jobs:
           credentials_json: ${{ secrets.TERF_CREDENTIALS }}
           token_format: 'access_token'
 
-      - uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: '= 459.0.0'
-          project_id: ${{ secrets.PROJECT_ID }}
-
       - name: Setup docker
         run: |
           gcloud auth configure-docker ${{ secrets.REGION }}-docker.pkg.dev --quiet
@@ -129,7 +124,7 @@ jobs:
           secrets: |
             OPENWEATHER_API_KEY=weather_api_key:latest
           timeout: 5m
-          region: ${{ secrets.REGION }}
+          region: us-central1
           labels: |
             app=${{ secrets.BACKEND_SERVICE_NAME }}
           project_id: ${{ secrets.PROJECT_ID }}
@@ -137,7 +132,7 @@ jobs:
           flags: |
             --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
             --ingress=internal
-            --memory=512Mi
+            --memory=128Mi
             --concurrency=80
             --cpu=1000m
             --min-instances=0
@@ -147,36 +142,26 @@ jobs:
             --no-allow-unauthenticated
             --verbosity=debug
 
-      #- name: Deploy to Cloud Run
-      #  timeout-minutes: 19
-      #  env:
-      #    REGION: ${{ secrets.REGION }}
-      #    SERVICE_ACCOUNT_EMAIL: ${{ secrets.BACKEND_SERVICE_ACCOUNT }}
-      #    IMAGE: "${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}"
-      #  run: |
-      #    envsubst < cloud/service.yaml.tpl > cloud/service.yaml
-      #    gcloud run services replace cloud/service.yaml --verbosity=debug --region=${{ secrets.REGION }}
-
-      #- name: Rollback
-      #  if: failure() || cancelled()
-      #  run: |
-      #    git push origin --delete ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
-      #    git tag -d ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
-      #    gcloud artifacts docker images delete ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
-      #
-      #    revisions=$(gcloud run revisions list --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --format="value(REVISION)")
-#
-      #    # Count the number of revisions
-      #    num_revisions=$(echo "${revisions}" | wc -l)
-#
-      #    # If there is only one revision, delete it
-      #    if [ "$num_revisions" -eq 1 ]; then
-      #        revision_to_delete=$(echo "${revisions}")
-      #        gcloud run revisions delete "${revision_to_delete}" --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --quiet
-      #        echo "Deleted the only revision: ${revision_to_delete}"
-      #    else
-      #        # If there are multiple revisions, get the next successful deployed service
-      #        next_successful_revision=$(echo "$revisions" | grep -m 1 "yes" | awk '{print $1}')
-      #        echo "Next successful revision: ${next_successful_revision}"
-      #        gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions ${next_successful_revision}=100
-      #    fi
+      - name: Rollback
+        if: failure() || cancelled()
+        run: |
+          git push origin --delete ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
+          git tag -d ${{ secrets.BACKEND_SERVICE_NAME }}-${{ steps.create-version.outputs.new_version }}
+          gcloud artifacts docker images delete ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+      
+          revisions=$(gcloud run revisions list --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --format="value(REVISION)")
+      
+          # Count the number of revisions
+          num_revisions=$(echo "${revisions}" | wc -l)
+      
+          # If there is only one revision, delete it
+          if [ "$num_revisions" -eq 1 ]; then
+              revision_to_delete=$(echo "${revisions}")
+              gcloud run revisions delete "${revision_to_delete}" --service ${{ env.SERVICE_NAME }} --region ${{ secrets.REGION }} --quiet
+              echo "Deleted the only revision: ${revision_to_delete}"
+          else
+              # If there are multiple revisions, get the next successful deployed service
+              next_successful_revision=$(echo "$revisions" | grep -m 1 "yes" | awk '{print $1}')
+              echo "Next successful revision: ${next_successful_revision}"
+              gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions ${next_successful_revision}=100
+          fi
