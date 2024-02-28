@@ -47,7 +47,7 @@ jobs:
         id: set-tag
         run: |
           git fetch --tags
-          latest_tag=$(git tag --sort=-creatordate | grep ${{ secrets.BACKEND_SERVICE_NAME }} | head -n 1)
+          latest_tag=$(git tag --sort=-creatordate | grep ${{ secrets.BACKEND_SERVICE_NAME }}-v | head -n 1)
           echo "LATEST_TAG=${latest_tag}" >> $GITHUB_OUTPUT
 
       - name: Determine New Version
@@ -116,8 +116,6 @@ jobs:
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v1
-        env:
-          SERVICE_NAME: ikigai
         with:
           service: ${{ secrets.BACKEND_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
