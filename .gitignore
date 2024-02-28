@@ -294,3 +294,6 @@ infra/key
 tmp
 infra/scripts
 Makefile.local
+
+go.work
+go.work.sum
