@@ -1,8 +1,8 @@
 package grpc
 
 import (
-	"github.com/ervitis/ikigaikintore/backend/pkg/proto"
-	"github.com/ervitis/ikigaikintore/backend/pkg/usecase"
+	"github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
+	"github.com/ikigaikintore/ikigaikintore/backend/pkg/usecase"
 	"github.com/twitchtv/twirp"
 )
 

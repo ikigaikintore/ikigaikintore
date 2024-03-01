@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/ervitis/ikigaikintore/backend/internal/config"
+	"github.com/ikigaikintore/ikigaikintore/backend/internal/config"
+	"github.com/ikigaikintore/ikigaikintore/libs/cors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -87,12 +88,17 @@ func Test_corsHandler(t *testing.T) {
 			t.Setenv("CORS_ALLOWED_DOMAINS", strings.Join(tt.args.allowedDomains, ","))
 			t.Setenv("APP_ENV", "staging")
 			cfg := config.Load()
-			got := corsHandler(cfg)
+			opts := make([]cors.Option, 0)
+			if cfg.App.IsDev() {
+				opts = append(opts, cors.LocalEnvironment())
+			}
+			opts = append(opts, cors.WithAllowedDomains(strings.Split(cfg.Cors.AllowedDomains, ",")...))
+			got := cors.NewHandler(opts...)
 			req, _ := http.NewRequest(tt.args.method, tt.args.host+"/foo", nil)
 			req.Host = tt.args.host
 			req.Header.Set("Origin", tt.args.originHeader)
 			rr := httptest.NewRecorder()
-			handler := domainAllowed(got, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			handler := cors.DomainAllowed(got, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusOK)
 			}))
 			handler.ServeHTTP(rr, req)
