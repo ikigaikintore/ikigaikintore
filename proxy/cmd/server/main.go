@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/rs/cors"
 	"golang.org/x/time/rate"
 	"io"
 	"net/http"
@@ -18,6 +17,9 @@ import (
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
+
+	"github.com/ikigaikintore/ikigaikintore/libs/cors"
+	"github.com/ikigaikintore/ikigaikintore/proxy/cmd/internal/config"
 )
 
 func NewProxy(target string, authClient *auth.Client) http.Handler {
@@ -154,24 +156,20 @@ func logger(next http.Handler) http.Handler {
 	})
 }
 
-func corsHandler() *cors.Cors {
-	if os.Getenv("ENV") == "dev" {
-		return cors.AllowAll()
-	}
-	return cors.Default()
-}
-
 func main() {
-	target := os.Getenv("PROXY_TARGET_BACKEND")
-	if target == "" {
-		panic("no target")
-	}
-
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	envCfg := config.Load()
+
+	opts := make([]cors.Option, 0)
+	if envCfg.App.IsDev() {
+		opts = append(opts, cors.LocalEnvironment())
+	}
+	opts = append(opts, cors.WithAllowedDomains(strings.Split(envCfg.Cors.AllowedDomains, ",")...))
 
 	app, err := firebase.NewApp(ctx, &firebase.Config{
 		ProjectID: os.Getenv("PROJECT_ID"),
@@ -188,7 +186,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              ":8080",
-		Handler:           corsHandler().Handler(ipRateLimiterMid(limCli)(logger(NewProxy(target, authClient)))),
+		Handler:           cors.DomainAllowed(cors.NewHandler(opts...), ipRateLimiterMid(limCli)(logger(NewProxy(envCfg.App.TargetBackend, authClient)))),
 		IdleTimeout:       time.Minute,
 		ReadHeaderTimeout: 10 * time.Second,
 		ReadTimeout:       10 * time.Second,

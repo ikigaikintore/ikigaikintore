@@ -1,4 +1,4 @@
-module github.com/ervitis/ikigaikintore/libs/cors
+module github.com/ikigaikintore/ikigaikintore/libs/cors
 
 go 1.22.0
 

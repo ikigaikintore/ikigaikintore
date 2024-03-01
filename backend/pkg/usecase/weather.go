@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"context"
-	"github.com/ervitis/ikigaikintore/backend/internal/output/weather"
-	"github.com/ervitis/ikigaikintore/backend/pkg/proto"
+	"github.com/ikigaikintore/ikigaikintore/backend/internal/output/weather"
+	"github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
 )
 
 type WeatherService interface {

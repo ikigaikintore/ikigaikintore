@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/ervitis/ikigaikintore/backend/internal/config"
-	"github.com/ervitis/ikigaikintore/libs/cors"
+	"github.com/ikigaikintore/ikigaikintore/backend/internal/config"
+	"github.com/ikigaikintore/ikigaikintore/libs/cors"
 	"io"
 	"net/http"
 	"net/http/httptest"

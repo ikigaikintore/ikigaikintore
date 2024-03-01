@@ -1,6 +1,6 @@
 package usecase
 
-import "github.com/ervitis/ikigaikintore/backend/pkg/proto"
+import "github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
 
 type weatherToProto struct {
 }
