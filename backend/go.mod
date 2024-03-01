@@ -1,10 +1,12 @@
 module github.com/ervitis/ikigaikintore/backend
 
-go 1.22
+go 1.22.0
 
 require (
 	github.com/deepmap/oapi-codegen/v2 v2.0.0
+	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/oapi-codegen/runtime v1.1.0
+	github.com/rs/cors v1.10.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	google.golang.org/protobuf v1.31.0
 )

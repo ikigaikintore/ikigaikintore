@@ -35,7 +35,7 @@ jobs:
 
     strategy:
       matrix:
-        go-version: [ '1.21' ]
+        go-version: [ '1.21', '1.22' ]
 
     defaults:
       run:
@@ -49,6 +49,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
+          cache-dependency-path: "**/go.sum"
 
       - name: Test
         run: |
