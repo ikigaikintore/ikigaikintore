@@ -1,6 +1,6 @@
 module github.com/ervitis/ikigaikintore/backend
 
-go 1.22
+go 1.22.0
 
 require (
 	github.com/deepmap/oapi-codegen/v2 v2.0.0
