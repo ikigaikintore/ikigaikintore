@@ -82,6 +82,22 @@ func Test_corsHandler(t *testing.T) {
 				return nil
 			},
 		},
+		{
+			args: args{
+				method:         http.MethodGet,
+				host:           "https://ikigaipanel-hello-uc.a.run.app:8080",
+				allowedDomains: []string{"ikigaipanel-hello-uc.a.run.app"},
+				originHeader:   "https://ikigaipanel-hello-uc.a.run.app:8080",
+			},
+			name: "ok in cloud run",
+			checker: func(rr *httptest.ResponseRecorder) error {
+				s := getBody(rr.Result())
+				if rr.Code != http.StatusOK {
+					return fmt.Errorf("http code not 200 %v: %v", rr.Code, s)
+				}
+				return nil
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
