@@ -20,6 +20,10 @@ fmt: ## Format code
 	find . -type f -name '*.go' | xargs goimports -w && go fmt `go list ./...`
 	go mod tidy
 
+compile: ## Compile project
+	@mkdir -p tmp
+	$(BUILD_ENV) go build -o ./tmp/ikigai.app $(BUILD_FLAGS) ./cmd/server/main.go
+
 tests: ## Execute tests
 	go test -race -v ./...
 
