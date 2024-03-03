@@ -85,6 +85,6 @@ func DomainAllowed(c *libCors.Cors, next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
-		next.ServeHTTP(w, r)
+		c.Handler(next)
 	})
 }
