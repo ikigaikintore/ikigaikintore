@@ -138,7 +138,7 @@ jobs:
             --max-instances=3
             --port=8080
             --no-cpu-boost
-            ---no-allow-unauthenticated
+            ---allow-unauthenticated
 
       - name: Rollback
         if: failure() || cancelled()
