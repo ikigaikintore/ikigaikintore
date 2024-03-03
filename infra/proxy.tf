@@ -9,6 +9,10 @@ locals {
     "roles/run.invoker",
     "roles/secretmanager.secretAccessor",
   ]
+
+  proxy_secrets = [
+    "allowed_domains"
+  ]
 }
 
 resource "google_project_iam_member" "proxy-sa-roles" {
@@ -16,4 +20,13 @@ resource "google_project_iam_member" "proxy-sa-roles" {
   project  = var.project_id
   for_each = toset(local.proxy_sa_roles)
   role     = each.value
+}
+
+resource "google_secret_manager_secret" "proxy-sa-secret" {
+  secret_id = each.value
+  project   = var.project_id
+  for_each  = toset(local.proxy_secrets)
+  replication {
+    auto {}
+  }
 }
