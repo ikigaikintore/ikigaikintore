@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/time/rate"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -26,23 +27,26 @@ func NewProxy(target string, authClient *auth.Client) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := authClient.VerifyIDToken(r.Context(), strings.TrimSpace(strings.Replace(r.Header.Get("Authorization"), "Bearer", "", 1)))
 		if err != nil {
-			fmt.Println(err)
+			log.Println("token error ", err)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
 		emailRaw, ok := token.Claims["email"]
 		if !ok {
+			log.Println("email not in token")
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
 		email, ok := emailRaw.(string)
 		if !ok {
+			log.Println("email not found in token")
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 		if !slices.Contains(strings.Split(os.Getenv("NEXT_PUBLIC_USER_AUTH"), ","), email) {
+			log.Println("email not valid in env")
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
@@ -61,6 +65,7 @@ func NewProxy(target string, authClient *auth.Client) http.Handler {
 
 		resp, err := client.RoundTrip(req)
 		if err != nil {
+			log.Println("client request error ", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
