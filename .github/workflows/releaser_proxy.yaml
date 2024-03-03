@@ -121,9 +121,11 @@ jobs:
           service: ${{ secrets.PROXY_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
           secrets: |
-            PROXY_TARGET_BACKEND=base_endpoint:latest
+            APP_TARGET_BACKEND=base_endpoint:latest
             PROJECT_ID=firebase_project_id:latest
             NEXT_PUBLIC_USER_AUTH=user_auth:latest
+            APP_ENV=environment:latest
+            CORS_ALLOWED_DOMAINS=allowed_domains:latest
           timeout: 3m
           region: ${{ secrets.REGION }}
           labels: |
