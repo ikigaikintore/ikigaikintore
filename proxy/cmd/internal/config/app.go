@@ -22,10 +22,10 @@ type Envs struct {
 
 func Load() Envs {
 	var envCors cors
-	envconfig.MustProcess("CORS", &envCors)
+	envconfig.MustProcess("PROXY_CORS", &envCors)
 
 	var envApp app
-	envconfig.MustProcess("APP", &envApp)
+	envconfig.MustProcess("PROXY_APP", &envApp)
 
 	return Envs{
 		Cors: envCors,

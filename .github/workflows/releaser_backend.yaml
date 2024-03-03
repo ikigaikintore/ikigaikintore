@@ -121,6 +121,7 @@ jobs:
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
           secrets: |
             OPENWEATHER_API_KEY=weather_api_key:latest
+            BACKEND_CORS_ALLOWED_DOMAINS=backend_allowed_domains:latest
           timeout: 5m
           region: us-central1
           labels: |

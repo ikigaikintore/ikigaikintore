@@ -101,8 +101,8 @@ func Test_corsHandler(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Setenv("CORS_ALLOWED_DOMAINS", strings.Join(tt.args.allowedDomains, ","))
-			t.Setenv("APP_ENV", "staging")
+			t.Setenv("BACKEND_CORS_ALLOWED_DOMAINS", strings.Join(tt.args.allowedDomains, ","))
+			t.Setenv("BACKEND_APP_ENV", "staging")
 			cfg := config.Load()
 			opts := make([]cors.Option, 0)
 			if cfg.App.IsDev() {
