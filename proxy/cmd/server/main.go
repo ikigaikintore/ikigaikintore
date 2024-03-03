@@ -76,7 +76,7 @@ func NewProxy(target string, authClient *auth.Client) http.Handler {
 type ipRateLimiter struct {
 	ips        map[string]*rate.Limiter
 	tokenPerIp int
-	mtx        sync.Locker
+	mtx        sync.RWMutex
 	rl         rate.Limit
 }
 
@@ -97,7 +97,7 @@ func withLimit(limit rate.Limit) option {
 func newIpRateLimiter(opts ...option) *ipRateLimiter {
 	def := &ipRateLimiter{
 		tokenPerIp: 10,
-		mtx:        &sync.Mutex{},
+		mtx:        sync.RWMutex{},
 		rl:         1,
 	}
 
@@ -118,16 +118,14 @@ func (ir *ipRateLimiter) ipAddress(ip string) string {
 }
 
 func (ir *ipRateLimiter) addIp(ip string) *rate.Limiter {
-	ir.mtx.Lock()
 	lim := rate.NewLimiter(ir.rl, ir.tokenPerIp)
+	ir.mtx.Lock()
 	ir.ips[ip] = lim
 	ir.mtx.Unlock()
 	return lim
 }
 
 func (ir *ipRateLimiter) getLimiter(ip string) *rate.Limiter {
-	ir.mtx.Lock()
-	defer ir.mtx.Unlock()
 	lim, ok := ir.ips[ip]
 	if !ok {
 		return ir.addIp(ip)
