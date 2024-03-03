@@ -22,6 +22,13 @@
       {
         "source": "**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/v1/**",
+        "run": {
+          "serviceId": "ikiproxy",
+          "region": "us-central1"
+        }
       }
     ]
   }
