@@ -2,7 +2,7 @@ export const compiler = {
     styledComponents: true,
 };
 export const output = "export";
-export async const headers = () => {
+export const headers = () => {
     return [
         {
             source: "/",
