@@ -125,7 +125,7 @@ jobs:
             PROJECT_ID=firebase_project_id:latest
             NEXT_PUBLIC_USER_AUTH=user_auth:latest
             APP_ENV=environment:latest
-            PROXY_CORS_ALLOWED_DOMAINS=allowed_domains:latest
+            PROXY_CORS_ALLOWED_DOMAINS=proxy_allowed_domains:latest
           timeout: 3m
           region: us-central1
           labels: |
