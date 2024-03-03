@@ -22,7 +22,7 @@ fmt: ## Format code
 
 compile: ## Compile project
 	@mkdir -p tmp
-	$(BUILD_ENV) go build -o ./tmp/ikigai.app $(BUILD_FLAGS) ./cmd/server/main.go
+	$(BUILD_ENV) go build -o ./tmp/proxy.app $(BUILD_FLAGS) ./cmd/server/main.go
 
 tests: ## Execute tests
 	go test -race -v ./...
