@@ -21,10 +21,10 @@ type Envs struct {
 
 func Load() Envs {
 	var envCors cors
-	envconfig.MustProcess("CORS", &envCors)
+	envconfig.MustProcess("BACKEND_CORS", &envCors)
 
 	var envApp app
-	envconfig.MustProcess("APP", &envApp)
+	envconfig.MustProcess("BACKEND_APP", &envApp)
 
 	return Envs{
 		Cors: envCors,

@@ -22,6 +22,7 @@ locals {
 
   backend_secrets = [
     "weather_api_key",
+    "backend_allowed_domains",
   ]
 }
 
