@@ -1,7 +1,6 @@
 export const compiler = {
     styledComponents: true,
 };
-export const output = "export";
 export const headers = () => {
     return [
         {
