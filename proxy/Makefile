@@ -13,7 +13,7 @@ install: ## Install dependencies and clean
 
 run: ## Run server
 	go install github.com/cosmtrek/air@latest
-	air server -d --port 8999
+	air server -d --port 8997
 
 fmt: ## Format code
 	go install golang.org/x/tools/cmd/goimports@latest

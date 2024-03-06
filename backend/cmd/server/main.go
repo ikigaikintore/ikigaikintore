@@ -3,15 +3,13 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
-
-	"github.com/ikigaikintore/ikigaikintore/libs/cors"
 
 	"github.com/ikigaikintore/ikigaikintore/backend/internal/config"
 	"github.com/ikigaikintore/ikigaikintore/backend/internal/input/grpc"
@@ -24,17 +22,12 @@ type Server interface {
 
 func NewAppServer(envCfg config.Envs) Server {
 	mux := http.NewServeMux()
-	opts := make([]cors.Option, 0)
-	if envCfg.App.IsDev() {
-		opts = append(opts, cors.LocalEnvironment())
-	}
-	opts = append(opts, cors.WithAllowedDomains(strings.Split(envCfg.Cors.AllowedDomains, ",")...))
-	mux.Handle("/v1/weather/", cors.DomainAllowed(cors.NewHandler(opts...), grpc.NewTwirpServer()))
+	mux.Handle("/v1/weather/", grpc.NewTwirpServer())
 	mux.Handle("/health", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 	return &http.Server{
-		Addr:              ":8080",
+		Addr:              fmt.Sprintf(":%d", envCfg.Infra.Port),
 		Handler:           mux,
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,

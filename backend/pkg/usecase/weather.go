@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/ikigaikintore/ikigaikintore/backend/internal/output/weather"
 	"github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
+	"log"
 )
 
 type WeatherService interface {
@@ -23,11 +24,13 @@ func NewWeatherService() WeatherService {
 func (w weatherService) GetWeather(ctx context.Context, req *proto.WeatherRequest) (*proto.WeatherReply, error) {
 	currWeather, err := w.client.GetCurrentWeather(ctx)
 	if err != nil {
+		log.Println("error getting current weather", err)
 		return nil, err
 	}
 
 	hourlyWeather, err := w.client.GetForecastWeather(ctx)
 	if err != nil {
+		log.Println("error getting forecast weather", err)
 		return nil, err
 	}
 

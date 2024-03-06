@@ -10,13 +10,18 @@ type app struct {
 	Env string `envconfig:"ENV" default:"dev"`
 }
 
+type infra struct {
+	Port int `envconfig:"PORT" default:"8999"`
+}
+
 func (a app) IsDev() bool {
 	return a.Env == "dev"
 }
 
 type Envs struct {
-	Cors cors
-	App  app
+	Cors  cors
+	App   app
+	Infra infra
 }
 
 func Load() Envs {
@@ -26,8 +31,12 @@ func Load() Envs {
 	var envApp app
 	envconfig.MustProcess("BACKEND_APP", &envApp)
 
+	var infraData infra
+	envconfig.MustProcess("", &infraData)
+
 	return Envs{
-		Cors: envCors,
-		App:  envApp,
+		Cors:  envCors,
+		App:   envApp,
+		Infra: infraData,
 	}
 }

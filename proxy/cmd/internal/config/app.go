@@ -8,7 +8,11 @@ type cors struct {
 
 type app struct {
 	Env           string `envconfig:"ENV" default:"dev"`
-	TargetBackend string `envconfig:"TARGET_BACKEND"`
+	TargetBackend string `envconfig:"TARGET_BACKEND" default:"localhost:8999"`
+}
+
+type infra struct {
+	Port int `envconfig:"PORT" default:"8997"`
 }
 
 func (a app) IsDev() bool {
@@ -16,8 +20,9 @@ func (a app) IsDev() bool {
 }
 
 type Envs struct {
-	Cors cors
-	App  app
+	Cors  cors
+	App   app
+	Infra infra
 }
 
 func Load() Envs {
@@ -27,8 +32,12 @@ func Load() Envs {
 	var envApp app
 	envconfig.MustProcess("PROXY_APP", &envApp)
 
+	var infraData infra
+	envconfig.MustProcess("", &infraData)
+
 	return Envs{
-		Cors: envCors,
-		App:  envApp,
+		Cors:  envCors,
+		App:   envApp,
+		Infra: infraData,
 	}
 }
