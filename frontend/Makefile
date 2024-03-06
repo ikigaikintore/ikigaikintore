@@ -6,3 +6,6 @@ help: ## Show this help
 
 emulator: ## Start firebase emulator
 	firebase emulators:start
+
+emulator-debug: ## Start firebase emulator with debug
+	firebase emulators:start --debug
