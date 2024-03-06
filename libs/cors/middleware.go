@@ -77,14 +77,3 @@ func NewHandler(opts ...Option) *libCors.Cors {
 		},
 	)
 }
-
-// DomainAllowed checks if the domain from host is allowed using the options set in cors.Cors object
-func DomainAllowed(c *libCors.Cors, next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !c.OriginAllowed(r) {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
-		c.Handler(next)
-	})
-}

@@ -5,9 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"golang.org/x/time/rate"
-	"io"
 	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"os"
 	"os/signal"
 	"slices"
@@ -23,59 +24,70 @@ import (
 	"github.com/ikigaikintore/ikigaikintore/proxy/cmd/internal/config"
 )
 
-func NewProxy(target string, authClient *auth.Client) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		token, err := authClient.VerifyIDToken(r.Context(), strings.TrimSpace(strings.Replace(r.Header.Get("Authorization"), "Bearer", "", 1)))
-		if err != nil {
-			log.Println("token error ", err)
+func newReverseProxy(target *url.URL, token string) *httputil.ReverseProxy {
+	director := func(req *http.Request) {
+		req.URL.Scheme = target.Scheme
+		req.URL.Host = target.Host
+		req.Header.Set("X-Forwarded-Host", req.Header.Get("Host"))
+		req.Header.Set("X-Forwarded-For", req.RemoteAddr)
+		req.Header.Set("X-Forwarded-Proto", req.URL.Scheme)
+		req.Header.Set("X-Forwarded-Uri", req.URL.Path)
+		req.Host = target.Host
+		if token != "" {
+			req.Header.Set("Authorization", "Bearer "+token)
+		}
+	}
+	return &httputil.ReverseProxy{Director: director, Transport: http.DefaultTransport}
+}
+
+func NewProxy(envConfig config.Envs, authClient *auth.Client) http.Handler {
+	pr := http.NewServeMux()
+	pr.HandleFunc("/v1/*", func(w http.ResponseWriter, r *http.Request) {
+		validateToken := func(r *http.Request, rawToken string) bool {
+			token, err := authClient.VerifyIDToken(r.Context(), rawToken)
+			if err != nil {
+				log.Println("token error ", err)
+				return false
+			}
+
+			emailRaw, ok := token.Claims["email"]
+			if !ok {
+				log.Println("email not in token")
+				return false
+			}
+
+			email, ok := emailRaw.(string)
+			if !ok {
+				log.Println("email not found in token")
+				return false
+			}
+			if !slices.Contains(strings.Split(os.Getenv("NEXT_PUBLIC_USER_AUTH"), ","), email) {
+				log.Println("email not valid in env")
+				return false
+			}
+			return true
+		}
+		rawToken := strings.TrimSpace(strings.Replace(r.Header.Get("Authorization"), "Bearer", "", 1))
+		if rawToken != "" && !validateToken(r, rawToken) {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
-		emailRaw, ok := token.Claims["email"]
-		if !ok {
-			log.Println("email not in token")
-			w.WriteHeader(http.StatusUnauthorized)
-			return
+		scheme := "http"
+		if !envConfig.App.IsDev() {
+			scheme = "https"
+		}
+		urlTarget := &url.URL{
+			Scheme: scheme,
+			Host:   envConfig.App.TargetBackend,
+			Path:   r.URL.Path,
 		}
 
-		email, ok := emailRaw.(string)
-		if !ok {
-			log.Println("email not found in token")
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		if !slices.Contains(strings.Split(os.Getenv("NEXT_PUBLIC_USER_AUTH"), ","), email) {
-			log.Println("email not valid in env")
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
+		proxy := newReverseProxy(urlTarget, rawToken)
 
-		req, err := http.NewRequest(r.Method, target+r.URL.String(), r.Body)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		req.Header = r.Header
-		req.Header.Set("X-Forwarded-For", r.RemoteAddr)
-		req.Header.Set("X-Forwarded-Host", r.Host)
-
-		client := http.DefaultTransport
-
-		resp, err := client.RoundTrip(req)
-		if err != nil {
-			log.Println("client request error ", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		defer func() {
-			_ = resp.Body.Close()
-		}()
-
-		w.WriteHeader(resp.StatusCode)
-		_, _ = io.Copy(w, resp.Body)
+		proxy.ServeHTTP(w, r)
 	})
+	return pr
 }
 
 type ipRateLimiter struct {
@@ -188,8 +200,10 @@ func main() {
 	limCli := newIpRateLimiter()
 
 	srv := &http.Server{
-		Addr:              ":8080",
-		Handler:           cors.DomainAllowed(cors.NewHandler(opts...), ipRateLimiterMid(limCli)(logger(NewProxy(envCfg.App.TargetBackend, authClient)))),
+		Addr: fmt.Sprintf(":%d", envCfg.Infra.Port),
+		Handler: cors.NewHandler(opts...).Handler(
+			ipRateLimiterMid(limCli)(logger(NewProxy(envCfg, authClient))),
+		),
 		IdleTimeout:       time.Minute,
 		ReadHeaderTimeout: 10 * time.Second,
 		ReadTimeout:       10 * time.Second,
@@ -197,6 +211,7 @@ func main() {
 	}
 
 	go func() {
+		log.Println("serving proxy")
 		if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 			panic(err)
 		}

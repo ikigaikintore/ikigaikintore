@@ -114,7 +114,7 @@ func Test_corsHandler(t *testing.T) {
 			req.Host = tt.args.host
 			req.Header.Set("Origin", tt.args.originHeader)
 			rr := httptest.NewRecorder()
-			handler := cors.DomainAllowed(got, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			handler := got.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusOK)
 			}))
 			handler.ServeHTTP(rr, req)
