@@ -72,6 +72,7 @@ jobs:
 
       - name: Setup Nodejs
         uses: actions/setup-node@v4
+        working-directory: ./frontend
         with:
           node-version: '20'
           cache: 'npm'
