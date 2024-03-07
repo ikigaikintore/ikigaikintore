@@ -1,6 +1,6 @@
-import { connectFunctionsEmulator, getFunctions } from "@firebase/functions"
 import { initializeApp } from "firebase/app"
 import { Auth, getAuth } from "firebase/auth"
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions"
 
 import { firebaseConfig } from "./config"
 
