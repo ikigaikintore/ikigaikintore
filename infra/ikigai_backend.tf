@@ -51,11 +51,11 @@ resource "google_secret_manager_secret" "backend-sa-secret" {
   ]
 }
 
-resource "google_cloud_run_service_iam_binding" "proxy-invoker" {
-  members = [
-    "serviceAccount:${google_service_account.proxy-sa.email}"
-  ]
-  role    = "roles/run.invoker"
-  service = var.proxy_app_backend_target
-  project = var.project_id
-}
+#resource "google_cloud_run_service_iam_binding" "proxy-invoker" {
+#  members = [
+#    "serviceAccount:${google_service_account.proxy-sa.email}"
+#  ]
+#  role    = "roles/run.invoker"
+#  service = var.proxy_app_backend_target
+#  project = var.project_id
+#}
