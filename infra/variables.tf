@@ -19,3 +19,8 @@ variable "billing_account" {
 }
 
 variable "key_file" {}
+
+variable "proxy_app_backend_target" {
+  description = "The name of the backend service for the proxy app"
+  type        = string
+}
