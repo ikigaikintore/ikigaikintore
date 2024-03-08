@@ -67,6 +67,7 @@ jobs:
           terraform init
 
       - name: terraform plan
+        timeout-minutes: 15
         run: |
           tfcmt plan -patch -- terraform plan -no-color -lock=false
         env:
