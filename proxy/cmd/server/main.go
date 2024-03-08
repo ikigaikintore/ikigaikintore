@@ -4,7 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"golang.org/x/oauth2/google"
 	"golang.org/x/time/rate"
+	"google.golang.org/api/idtoken"
+	gOpt "google.golang.org/api/option"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -25,6 +28,19 @@ import (
 )
 
 func newReverseProxy(target *url.URL, token string) *httputil.ReverseProxy {
+	if credentials, err := google.FindDefaultCredentials(context.Background()); err != nil {
+		fmt.Println("FindDefaultCredentials", err)
+	} else {
+		if ts, err := idtoken.NewTokenSource(context.Background(), target.String(), gOpt.WithCredentials(credentials)); err != nil {
+			fmt.Println("NewTokenSource", err)
+		} else {
+			if t, err := ts.Token(); err != nil {
+				fmt.Println("Token", err)
+			} else {
+				token = t.AccessToken
+			}
+		}
+	}
 	director := func(req *http.Request) {
 		req.URL.Scheme = target.Scheme
 		req.URL.Host = target.Host
