@@ -82,6 +82,7 @@ func NewProxy(envConfig config.Envs, authClient *auth.Client) http.Handler {
 			Host:   envConfig.App.TargetBackend,
 			Path:   r.URL.Path,
 		}
+		fmt.Println("target", urlTarget.String(), urlTarget.Scheme, urlTarget.Host, urlTarget.Path, urlTarget.RequestURI())
 
 		proxy := newReverseProxy(urlTarget, rawToken)
 
