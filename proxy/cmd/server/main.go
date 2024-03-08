@@ -166,7 +166,7 @@ func ipRateLimiterMid(cl *ipRateLimiter) func(next http.Handler) http.Handler {
 
 func logger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(r.RemoteAddr, r.Method, r.URL)
+		fmt.Println(r.RemoteAddr, r.Proto, r.Host, r.RequestURI, r.ContentLength, r.Method, r.URL)
 		next.ServeHTTP(w, r)
 	})
 }
