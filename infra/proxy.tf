@@ -11,7 +11,8 @@ locals {
   ]
 
   proxy_secrets = [
-    "proxy_allowed_domains"
+    "proxy_allowed_domains",
+    "proxy_target_backend",
   ]
 }
 
