@@ -129,7 +129,6 @@ jobs:
           project_id: ${{ secrets.PROJECT_ID }}
           flags: |
             --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
-            --ingress=internal
             --memory=128Mi
             --concurrency=80
             --cpu=1000m
