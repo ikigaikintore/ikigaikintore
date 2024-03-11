@@ -1,0 +1,18 @@
+version: '3'
+services:
+  backend:
+    image: backend
+    ports:
+      - "8999:8999"
+      - "18999:18999"
+    env_file:
+      - backend/.env
+    command: dlv exec /tmp/ikigai.app --headless --listen=:18999 --api-version=2 --accept-multiclient --log --continue
+  proxy:
+    image: proxy
+    ports:
+      - "8081:8080"
+      - "18081:18080"
+    env_file:
+      - proxy/.env
+    command: dlv exec /tmp/proxy.app --headless --listen=:18080 --api-version=2 --accept-multiclient --log --continue

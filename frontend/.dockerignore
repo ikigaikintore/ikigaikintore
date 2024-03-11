@@ -2,9 +2,10 @@
 !src
 !app
 !styles
+!public
 !package-lock.json
 !package.json
-!next.config.mjs
+!next.config.js
 !tsconfig.json
 !tailwind.config.js
 !postcss.config.js

@@ -46,3 +46,21 @@ TBD with some ideas:
 ## Local development
 
 Using docker-compose and [tilt](https://tilt.dev/) for local development. The idea is to have a local environment as close as possible to the production environment.
+
+Ports:
+
+- proxy:
+  - 8080
+  - 18080
+- backend:
+  - 8999
+  - 18999
+- frontend:
+  - 9099:9099
+  - 5001:5001
+  - 8080:8080
+  - 9000:9000
+  - 5000:5000
+  - 8085:8085
+  - 9199:9199
+  - 4000:4000
