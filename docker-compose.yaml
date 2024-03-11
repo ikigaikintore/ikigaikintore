@@ -1,0 +1,15 @@
+version: '3'
+services:
+  backend:
+    image: backend
+    ports:
+      - "8999:8999"
+      - "18999:18999"
+    env_file:
+      - backend/.env
+  proxy:
+    image: proxy
+    ports:
+      - "8081:8080"
+    env_file:
+      - proxy/.env

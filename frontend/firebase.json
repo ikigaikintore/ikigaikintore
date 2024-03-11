@@ -1,38 +1,38 @@
 {
-  "emulators": {
-    "firestore": {
-      "port": 8812
+    "emulators": {
+        "firestore": {
+            "port": 8812
+        },
+        "ui": {
+            "enabled": true
+        },
+        "auth": {
+            "port": 9099
+        },
+        "functions": {
+            "port": 5001
+        }
     },
-    "ui": {
-      "enabled": true
+    "hosting": {
+        "source": ".",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ],
+        "frameworksBackend": {
+            "region": "us-central1"
+        }
     },
-    "auth": {
-      "port": 9099
-    },
-    "functions": {
-      "port": 5001
-    }
-  },
-  "hosting": {
-    "source": ".",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "frameworksBackend": {
-      "region": "us-central1"
-    }
-  },
-  "functions": [
-    {
-      "source": ".",
-      "predeploy": [
-        "npm --prefix \"$PROJECT_DIR\" run lint",
-        "npm --prefix \"$PROJECT_DIR\" install",
-        "npm --prefix \"$PROJECT_DIR\" run build"
-      ],
-      "runtime": "nodejs20"
-    }
-  ]
+    "functions": [
+        {
+            "source": ".",
+            "predeploy": [
+                "npm --prefix \"$PROJECT_DIR\" run lint",
+                "npm --prefix \"$PROJECT_DIR\" install",
+                "npm --prefix \"$PROJECT_DIR\" run build"
+            ],
+            "runtime": "nodejs20"
+        }
+    ]
 }
