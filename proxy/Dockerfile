@@ -13,7 +13,8 @@ WORKDIR /tmp/app
 COPY ./libs /tmp/libs
 COPY ./proxy /tmp/app
 EXPOSE 8080 18080
-RUN go mod download && \
+RUN go install github.com/go-delve/delve/cmd/dlv@latest && \
+    go mod download && \
     CGO_ENABLED=0 GOARCH="amd64" GOOS="linux" go build -o /tmp/proxy.app -gcflags="all=-N -l" /tmp/app/cmd/server/main.go
 CMD ["/tmp/proxy.app"]
 
