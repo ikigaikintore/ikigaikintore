@@ -42,3 +42,7 @@ TBD with some ideas:
 - Communicate with telegram!
 
 ![poc](./assets/poc_view.png)
+
+## Local development
+
+Using docker-compose and [tilt](https://tilt.dev/) for local development. The idea is to have a local environment as close as possible to the production environment.
