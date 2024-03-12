@@ -8,7 +8,7 @@
         "./infra/*"
     ],
     "extends": [
-        "github>renovatebot/.github",
+        "config:base",
         "dependencyDashboard"
     ],
     "labels": [],
