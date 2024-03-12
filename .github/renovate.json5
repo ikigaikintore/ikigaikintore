@@ -8,10 +8,9 @@
         "./infra/*"
     ],
     "extends": [
-        "config:base",
-        "group:recommended",
+        "config:recommended",
         "group:monorepos",
-        ":dependencyDashboard"
+        ":dependencyDashboardApproval"
     ],
     "labels": ["renovate"],
     "timezone": "Asia/Tokyo",
