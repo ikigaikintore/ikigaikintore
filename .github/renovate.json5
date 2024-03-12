@@ -1,13 +1,14 @@
 // https://docs.renovatebot.com/
 {
-    includePaths: [
+    "includePaths": [
         ".github/workflows/*",
         "./backend/*",
         "./frontend/*",
         "./proxy/*",
-        "./infra/*",
+        "./infra/*"
     ],
-    extends: [
+    "extends": [
+        "mergeConfidence:all-badges",
         "workarounds:all",
         ":separateMajorReleases",
         ":combinePatchMinorReleases",
@@ -17,36 +18,50 @@
         ":updateNotScheduled",
         ":automergeDisabled",
         ":ignoreModulesAndTests",
-        ":autodetectPinVersions",
         ":disableRateLimiting",
         ":rebaseStalePrs",
-        "schedule:earlyMondays",
+        "schedule:earlyMondays"
     ],
-    labels: [],
-    timezone: "Asia/Tokyo",
-    packageRules: [
+    "labels": [],
+    "timezone": "Asia/Tokyo",
+    "packageRules": [
         {
-            matchUpdateTypes: ["major"],
-            addLabels: ["renovate/Major"],
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "addLabels": [
+                "renovate/Major"
+            ]
         },
         {
-            matchUpdateTypes: ["patch"],
-            addLabels: ["renovate/Patch"],
+            "matchUpdateTypes": [
+                "patch"
+            ],
+            "addLabels": [
+                "renovate/Patch"
+            ]
         },
         {
-            matchUpdateTypes: ["minor"],
-            addLabels: ["renovate/Minor"],
-        },
+            "matchUpdateTypes": [
+                "minor"
+            ],
+            "addLabels": [
+                "renovate/Minor"
+            ]
+        }
     ],
-    vulnerabilityAlerts: {
-        labels: ["renovate/Security"],
-        assignees: [],
+    "vulnerabilityAlerts": {
+        "labels": [
+            "renovate/Security"
+        ],
+        "assignees": []
     },
-    updateNotScheduled: true,
-    rebaseWhen: "conflicted",
-    digest: {
-        enabled: false,
+    "updateNotScheduled": true,
+    "rebaseWhen": "conflicted",
+    "digest": {
+        "enabled": false
     },
-    assigneesFromCodeOwners: true,
-    branchTopic: "{{{depNameSanitized}}}-{{{newMajor}}}{{#if separateMinorPatch}}{{#if isPatch}}-{{{newMinor}}}{{/if}}{{/if}}-x{{#if isLockfileUpdate}}-lockfile{{/if}}",
+    "assigneesFromCodeOwners": true,
+    "branchTopic": "{{{depNameSanitized}}}-{{{newMajor}}}{{#if separateMinorPatch}}{{#if isPatch}}-{{{newMinor}}}{{/if}}{{/if}}-x{{#if isLockfileUpdate}}-lockfile{{/if}}"
+}
 }
