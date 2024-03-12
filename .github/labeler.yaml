@@ -13,3 +13,19 @@ ci:
   - .github/**
 proxy:
   - proxy/**
+renovate/Major:
+  - backend/**
+  - frontend/**
+  - infra/**
+renovate/Minor:
+  - backend/**
+  - frontend/**
+  - infra/**
+renovate/Patch:
+  - backend/**
+  - frontend/**
+  - infra/**
+renovate/Security:
+  - backend/**
+  - frontend/**
+  - infra/**

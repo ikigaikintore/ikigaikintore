@@ -17,5 +17,17 @@
   description: "ci system"
   color: ededed
 - name: proxy
-  descritpion: "proxy system"
+  description: "proxy system"
   color: 1d76db
+- name: renovate/Major
+  description: "renovate/Major"
+  color: 1e1e1e
+- name: renovate/Minor
+  description: "renovate/Minor"
+  color: 1e1e1e
+- name: renovate/Patch
+  description: "renovate/Patch"
+  color: 1e1e1e
+- name: renovate/Security
+  description: "renovate/Security"
+  color: f00000
