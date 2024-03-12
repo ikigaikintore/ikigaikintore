@@ -9,9 +9,11 @@
     ],
     "extends": [
         "config:base",
+        "group:recommended",
+        "group:monorepos",
         "dependencyDashboard"
     ],
-    "labels": [],
+    "labels": ["renovate"],
     "timezone": "Asia/Tokyo",
     "packageRules": [
         {
@@ -43,7 +45,7 @@
         "labels": [
             "renovate/Security"
         ],
-        "assignees": []
+        "assignees": ["@renovate-bot", "@ervitis"]
     },
     "updateNotScheduled": true,
     "rebaseWhen": "conflicted",
