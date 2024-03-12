@@ -4,6 +4,7 @@
         ".github/workflows/*",
         "./backend/*",
         "./frontend/*",
+        "./proxy/*",
         "./infra/*",
     ],
     extends: [
@@ -19,7 +20,6 @@
         ":autodetectPinVersions",
         ":disableRateLimiting",
         ":rebaseStalePrs",
-        "group:recommended",
         "schedule:earlyMondays",
     ],
     labels: [],
