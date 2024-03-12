@@ -2,5 +2,49 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
-  ]
+  ],
+  "includePaths": [
+    "./.github/workflows/*",
+    "./backend/*",
+    "./frontend/*",
+    "./proxy/*",
+    "./infra/*"
+  ],
+  "labels": ["renovate"],
+  "timezone": "Asia/Tokyo",
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "addLabels": [
+        "renovate/Major"
+      ]
+    },
+    {
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "addLabels": [
+        "renovate/Patch"
+      ]
+    },
+    {
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "addLabels": [
+        "renovate/Minor"
+      ]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": [
+      "renovate/Security"
+    ],
+    "assignees": ["@ervitis"]
+  },
+  "rebaseWhen": "conflicted",
+  "assigneesFromCodeOwners": true,
+  "branchTopic": "{{{depNameSanitized}}}-{{{newMajor}}}{{#if separateMinorPatch}}{{#if isPatch}}-{{{newMinor}}}{{/if}}{{/if}}-x{{#if isLockfileUpdate}}-lockfile{{/if}}"
 }
