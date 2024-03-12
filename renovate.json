@@ -12,6 +12,7 @@
   ],
   "labels": ["renovate"],
   "timezone": "Asia/Tokyo",
+  "dependencyDashboard": false,
   "major": {
     "dependencyDashboardApproval": true
   },
