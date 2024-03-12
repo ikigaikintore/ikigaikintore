@@ -10,7 +10,7 @@
     "extends": [
         "config:recommended",
         "group:monorepos",
-        ":dependencyDashboardApproval"
+        ":dependencyDashboard"
     ],
     "labels": ["renovate"],
     "timezone": "Asia/Tokyo",
