@@ -11,7 +11,7 @@
         "config:base",
         "group:recommended",
         "group:monorepos",
-        "dependencyDashboard"
+        ":dependencyDashboard"
     ],
     "labels": ["renovate"],
     "timezone": "Asia/Tokyo",
