@@ -8,19 +8,8 @@
         "./infra/*"
     ],
     "extends": [
-        "mergeConfidence:all-badges",
-        "workarounds:all",
-        ":separateMajorReleases",
-        ":combinePatchMinorReleases",
-        ":ignoreUnstable",
-        ":prImmediately",
-        ":semanticPrefixFixDepsChoreOthers",
-        ":updateNotScheduled",
-        ":automergeDisabled",
-        ":ignoreModulesAndTests",
-        ":disableRateLimiting",
-        ":rebaseStalePrs",
-        "schedule:earlyMondays"
+        "github>renovatebot/.github",
+        "dependencyDashboard"
     ],
     "labels": [],
     "timezone": "Asia/Tokyo",
