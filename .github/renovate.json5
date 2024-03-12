@@ -58,6 +58,8 @@
     },
     "updateNotScheduled": true,
     "rebaseWhen": "conflicted",
+    "automerge": false,
+    "automergeType": "pr",
     "digest": {
         "enabled": false
     },
