@@ -1,0 +1,86 @@
+name: Libs releaser
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_version_message:
+        description: 'Enter a description'
+        required: true
+        type: string
+      library:
+        description: 'Select the library to release'
+        type: choice
+        required: true
+        options:
+          - 'cors'
+      release_type:
+        description: 'Select the release type'
+        type: choice
+        required: true
+        default: 'patch'
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+
+  create-tag-libs:
+    permissions:
+      contents: write
+
+    runs-on: ubuntu-latest
+
+    env:
+      FOLDER: libs
+
+    outputs:
+      latest_tag: ${{steps.set-tag.outputs.LATEST_TAG}}
+      new_version: ${{steps.create-version.outputs.NEW_VERSION}}
+
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: set-tag
+        run: |
+          git fetch --tags
+          latest_tag=$(git tag --sort=-creatordate | grep ${{ github.event.inputs.library }}-v | head -n 1)
+          echo "LATEST_TAG=${latest_tag}" >> $GITHUB_OUTPUT
+
+      - name: Determine New Version
+        id: create-version
+        if: steps.set-tag.outputs.latest_tag != ''
+        run: |
+          case ${{ github.event.inputs.release_type }} in
+          major)
+            version=$(echo "${{ steps.set-tag.outputs.latest_tag }}" | awk -F. '{printf "v%d.%d.%d\n", $1+1, 0, 0}')
+            ;;
+          minor)
+            version=$(echo "${{ steps.set-tag.outputs.latest_tag }}" | awk -F. '{printf "v%d.%d.%d\n", $1, $2+1, 0}')
+            ;;
+          patch)
+            version=$(echo "${{ steps.set-tag.outputs.latest_tag }}" | awk -F. '{printf "v%d.%d.%d\n", $1, $2, $3+1}')
+            ;;
+          esac
+          echo "NEW_VERSION=${version}" >> $GITHUB_OUTPUT
+
+      - name: Create tag
+        # in this step I want to dispatch the tag assignation to the library
+        # for example, if the library is cors, then the env FOLDER is libs/cors
+        # and from there i will create the tag and push it
+        # i have to check with a ls command or something else and if it fails, the process fail
+        id: dispatch-tag
+        if: hashFiles('${{ env.FOLDER }}/${{ github.event.inputs.destination }}') != ''
+        run: |
+          git tag -a "${{ github.event.inputs.destination }}/v${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
+          git push origin "${{ github.event.inputs.destination }}/v${{ steps.create-version.outputs.new_version }}"
+
+      - name: Fail if no files found
+        if: hashFiles('${{ env.FOLDER }}/${{ github.event.inputs.destination }}') == ''
+        run: |
+          echo "No files found in ${{ env.FOLDER }}/${{ github.event.inputs.destination }}"
+          exit 1
