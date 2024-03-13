@@ -27,6 +27,11 @@ This involves the proxy and the backend.
 
 The frontend uses firebase. It also uses tags for deploying new versions.
 
+### Libs release
+
+Each library can be released independently. The idea is to have a simple release flow, using tags and github actions.
+Using the libs_tagger workflow action, a new tag is created and the library is released in github packages.
+
 ## Tech stack
 
 Backend: Go
