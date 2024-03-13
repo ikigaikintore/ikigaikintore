@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	firebase.google.com/go/v4 v4.13.0
-	github.com/ikigaikintore/ikigaikintore/libs/cors v0.0.0-00010101000000-000000000000
+	github.com/ikigaikintore/ikigaikintore/libs/cors v0.1.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	golang.org/x/time v0.5.0
 )
@@ -50,5 +50,3 @@ require (
 	google.golang.org/grpc v1.62.0 // indirect
 	google.golang.org/protobuf v1.32.0 // indirect
 )
-
-replace github.com/ikigaikintore/ikigaikintore/libs/cors v0.0.0-00010101000000-000000000000 => ../libs/cors
