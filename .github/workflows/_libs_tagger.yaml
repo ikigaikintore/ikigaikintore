@@ -33,6 +33,7 @@ jobs:
 
     env:
       FOLDER: libs
+      DIR_EXISTS: 'false'
 
     outputs:
       latest_tag: ${{steps.set-tag.outputs.LATEST_TAG}}
@@ -44,12 +45,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check if directory exists
+        run: echo "DIR_EXISTS=$(if [ -d '${{ env.FOLDER }}/${{ github.event.inputs.library }}' ]; then echo 'true'; else echo 'false'; fi)" >> $GITHUB_ENV
+
       - run: |
           git config user.email "${{ secrets.BOT_EMAIL }}"
           git config user.name "${{ secrets.BOT_NAME }}"
 
       - name: Get latest tag
         id: set-tag
+        if: env.DIR_EXISTS == 'true'
         run: |
           git fetch --tags
           latest_tag=$(git tag --sort=-creatordate | grep "${{ github.event.inputs.library }}/v" | head -n 1)
@@ -78,13 +83,13 @@ jobs:
         # and from there i will create the tag and push it
         # i have to check with a ls command or something else and if it fails, the process fail
         id: dispatch-tag
-        if: hashFiles('${{ env.FOLDER }}/${{ github.event.inputs.destination }}') != ''
+        if: env.DIR_EXISTS == 'true'
         run: |
           git tag -a "${{ github.event.inputs.library }}/${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
           git push origin "${{ github.event.inputs.library }}/${{ steps.create-version.outputs.new_version }}"
 
       - name: Fail if no files found
-        if: hashFiles('${{ env.FOLDER }}/${{ github.event.inputs.library }}') == ''
+        if: env.DIR_EXISTS == 'false'
         run: |
           echo "No files found in ${{ env.FOLDER }}/${{ github.event.inputs.library }}"
           exit 1
