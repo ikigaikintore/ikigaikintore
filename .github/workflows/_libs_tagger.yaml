@@ -44,6 +44,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - run: |
+          git config user.email "${{ secrets.BOT_EMAIL }}"
+          git config user.name "${{ secrets.BOT_NAME }}"
+
       - name: Get latest tag
         id: set-tag
         run: |
