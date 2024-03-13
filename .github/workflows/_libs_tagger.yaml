@@ -76,17 +76,17 @@ jobs:
         id: dispatch-tag
         if: hashFiles('${{ env.FOLDER }}/${{ github.event.inputs.destination }}') != ''
         run: |
-          git tag -a "${{ github.event.inputs.destination }}/${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
-          git push origin "${{ github.event.inputs.destination }}/${{ steps.create-version.outputs.new_version }}"
+          git tag -a "${{ github.event.inputs.library }}/${{ steps.create-version.outputs.new_version }}" -m "${{ github.event.inputs.tag_version_message }}"
+          git push origin "${{ github.event.inputs.library }}/${{ steps.create-version.outputs.new_version }}"
 
       - name: Fail if no files found
-        if: hashFiles('${{ env.FOLDER }}/${{ github.event.inputs.destination }}') == ''
+        if: hashFiles('${{ env.FOLDER }}/${{ github.event.inputs.library }}') == ''
         run: |
-          echo "No files found in ${{ env.FOLDER }}/${{ github.event.inputs.destination }}"
+          echo "No files found in ${{ env.FOLDER }}/${{ github.event.inputs.library }}"
           exit 1
 
       - name: Rollback
         if: failure() || cancelled()
         run: |
-          git tag -d "${{ github.event.inputs.destination }}/${{ steps.create-version.outputs.new_version }}"
-          git push --delete origin "${{ github.event.inputs.destination }}/${{ steps.create-version.outputs.new_version }}"
+          git tag -d "${{ github.event.inputs.library }}/${{ steps.create-version.outputs.new_version }}"
+          git push --delete origin "${{ github.event.inputs.library }}/${{ steps.create-version.outputs.new_version }}"
