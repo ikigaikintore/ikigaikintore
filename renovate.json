@@ -1,7 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "group:monorepos",
+    "workarounds:all"
   ],
   "includePaths": [
     "./.github/workflows/*",
@@ -16,6 +18,14 @@
   "major": {
     "dependencyDashboardApproval": true
   },
+  "schedule": [
+    "* */3 * * *"
+  ],
+  "additionalBranchPrefix": "renovate/",
+  "automerge": false,
+  "prCreation": "immediate",
+  "updateNotScheduled": true,
+  "pruneStaleBranches": true,
   "packageRules": [
     {
       "matchUpdateTypes": [
