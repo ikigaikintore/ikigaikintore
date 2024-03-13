@@ -48,7 +48,7 @@ jobs:
         id: set-tag
         run: |
           git fetch --tags
-          latest_tag=$(git tag --sort=-creatordate | grep ${{ github.event.inputs.library }}-v | head -n 1)
+          latest_tag=$(git tag --sort=-creatordate | grep "${{ github.event.inputs.library }}/v" | head -n 1)
           echo "LATEST_TAG=${latest_tag}" >> $GITHUB_OUTPUT
 
       - name: Determine New Version
