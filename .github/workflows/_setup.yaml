@@ -2,6 +2,7 @@ name: setup
 
 on:
   pull_request:
+  merge_group:
 
 
 jobs:
@@ -21,3 +22,11 @@ jobs:
       - uses: toshimaru/auto-author-assign@v2.1.0
         with:
           repo-token: ${{ secrets.TOKEN }}
+
+  end:
+    runs-on: ubuntu-latest
+    needs: create-tag-backend
+    if: success()
+    steps:
+      - name: End
+        run: echo "Finish setup"

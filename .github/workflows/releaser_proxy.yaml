@@ -166,3 +166,11 @@ jobs:
               echo "Next successful revision: ${next_successful_revision}"
               gcloud run services update-traffic ${{ env.SERVICE_NAME }} --to-revisions ${next_successful_revision}=100
           fi
+
+  end:
+    runs-on: ubuntu-latest
+    needs: create-tag-backend
+    if: success()
+    steps:
+      - name: End
+        run: echo "Release completed successfully"
