@@ -23,7 +23,6 @@
   "author": "ervitis",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@dotenvx/dotenvx": "^0.14.0",
     "cookie": "^0.6.0",
     "firebase": "^10.8.0",
     "firebase-admin": "^12.0.0",
