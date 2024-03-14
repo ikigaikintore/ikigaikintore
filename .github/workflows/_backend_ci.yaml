@@ -32,7 +32,7 @@ jobs:
 
   check_proxy_vulns:
     runs-on: ubuntu-latest
-    if: needs.check_proxy_changed_files.outputs.is_proxy_changed == 'true'
+    if: needs.check_proxy_changed_files.outputs.is_backend_changed == 'true'
     timeout-minutes: 2
     needs: check_proxy_changed_files
     steps:
@@ -40,8 +40,8 @@ jobs:
       - name: golang vulnchecker
         uses: golang/govulncheck-action@v1
         with:
-          work-dir: ./proxy
-          go-version-file: ./proxy/go.mod
+          work-dir: ./backend
+          go-version-file: ./backend/go.mod
 
   ci:
     runs-on: ubuntu-latest
