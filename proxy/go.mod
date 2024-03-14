@@ -1,6 +1,6 @@
 module github.com/ikigaikintore/ikigaikintore/proxy
 
-go 1.22.0
+go 1.22.1
 
 require (
 	firebase.google.com/go/v4 v4.13.0
