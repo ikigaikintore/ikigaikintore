@@ -1,42 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    ":disableRateLimiting",
-    ":separateMajorReleases",
-    ":combinePatchMinorReleases",
-    ":ignoreUnstable",
-    ":prImmediately",
-    ":semanticPrefixFixDepsChoreOthers",
-    ":updateNotScheduled",
-    ":automergeDisabled",
-    ":ignoreModulesAndTests",
-    ":autodetectPinVersions",
-    ":disableRateLimiting",
-    ":rebaseStalePrs",
-
-    "group:recommended",
+    "config:recommended",
     "group:monorepos",
     "workarounds:all"
   ],
-  "includePaths": [
-    "./.github/workflows/*",
-    "./backend/*",
-    "./frontend/*",
-    "./proxy/*",
-    "./infra/*"
-  ],
-  "labels": ["renovate"],
   "timezone": "Asia/Tokyo",
-  "dependencyDashboard": true,
-  "major": {
-    "dependencyDashboardApproval": true
-  },
-  "schedule": [
-    "* */2 * * *"
-  ],
-  "additionalBranchPrefix": "renovate/",
-  "prCreation": "immediate",
-  "pruneStaleBranches": true,
   "packageRules": [
     {
       "matchUpdateTypes": [
@@ -63,16 +32,9 @@
       ]
     }
   ],
-  "vulnerabilityAlerts": {
-    "labels": [
-      "renovate/Security"
-    ],
-    "assignees": ["@ervitis"]
-  },
   "rebaseWhen": "conflicted",
-  "updateNotScheduled": true,
   "digest": {
-    "enabled": false,
+    "enabled": false
   },
   "assigneesFromCodeOwners": true,
   "branchTopic": "{{{depNameSanitized}}}-{{{newMajor}}}{{#if separateMinorPatch}}{{#if isPatch}}-{{{newMinor}}}{{/if}}{{/if}}-x{{#if isLockfileUpdate}}-lockfile{{/if}}"
