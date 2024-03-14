@@ -99,3 +99,15 @@ jobs:
         run: |
           git tag -d "${{ github.event.inputs.library }}/${{ steps.create-version.outputs.new_version }}"
           git push --delete origin "${{ github.event.inputs.library }}/${{ steps.create-version.outputs.new_version }}"
+
+  end:
+    runs-on: ubuntu-latest
+    needs: create-tag-libs
+    steps:
+      - name: Notify
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "Tag created successfully"
+          else
+            echo "Tag creation failed"
+          fi
