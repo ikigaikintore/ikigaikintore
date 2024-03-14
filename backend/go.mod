@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/deepmap/oapi-codegen/v2 v2.0.0
-	github.com/ikigaikintore/ikigaikintore/libs/cors v0.0.0-00010101000000-000000000000
+	github.com/ikigaikintore/ikigaikintore/libs/cors v0.1.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/oapi-codegen/runtime v1.1.0
 	github.com/twitchtv/twirp v8.1.3+incompatible
