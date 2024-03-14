@@ -1,0 +1,59 @@
+name: ci frontend
+
+on:
+  pull_request:
+    paths:
+      - 'frontend/**'
+
+jobs:
+  check_frontend_changed_files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    outputs:
+      has_changed: ${{ steps.has_changed.outputs.HAS_CHANGES }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+
+      - name: Set has_changed
+        id: has_changed
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          has_changes=${{ contains(env.CHANGED_FILES, 'frontend/') }}
+          echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
+
+  build:
+    runs-on: ubuntu-latest
+    if: needs.check_frontend_changed_files.outputs.has_changed == 'true'
+
+    strategy:
+      matrix:
+        node-version: ['20', '21']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm ci && npm test
+
+      - name: Audit checker
+        run: npm audit --audit-level medium --omit=dev
