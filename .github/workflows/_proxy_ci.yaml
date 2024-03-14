@@ -1,6 +1,7 @@
 name: ci proxy
 
 on:
+  merge_group:
   pull_request:
     paths:
       - 'proxy/**'
