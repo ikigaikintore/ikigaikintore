@@ -1,7 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
+    ":disableRateLimiting",
+    ":separateMajorReleases",
+    ":combinePatchMinorReleases",
+    ":ignoreUnstable",
+    ":prImmediately",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":updateNotScheduled",
+    ":automergeDisabled",
+    ":ignoreModulesAndTests",
+    ":autodetectPinVersions",
+    ":disableRateLimiting",
+    ":rebaseStalePrs",
+
+    "group:recommended",
     "group:monorepos",
     "workarounds:all"
   ],
@@ -23,7 +36,6 @@
   ],
   "additionalBranchPrefix": "renovate/",
   "prCreation": "immediate",
-  "updateNotScheduled": false,
   "pruneStaleBranches": true,
   "packageRules": [
     {
@@ -58,6 +70,10 @@
     "assignees": ["@ervitis"]
   },
   "rebaseWhen": "conflicted",
+  "updateNotScheduled": true,
+  "digest": {
+    "enabled": false,
+  },
   "assigneesFromCodeOwners": true,
   "branchTopic": "{{{depNameSanitized}}}-{{{newMajor}}}{{#if separateMinorPatch}}{{#if isPatch}}-{{{newMinor}}}{{/if}}{{/if}}-x{{#if isLockfileUpdate}}-lockfile{{/if}}"
 }
