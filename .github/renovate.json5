@@ -32,7 +32,7 @@
     "dependencyDashboardApproval": true
   },
   "schedule": [
-    "* */3 * * *"
+    "* */2 * * *"
   ],
   "additionalBranchPrefix": "renovate/",
   "prCreation": "immediate",
