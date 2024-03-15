@@ -13,7 +13,7 @@ WORKDIR /app
 
 CMD find . -name "*.proto" -exec protoc --go_out=:./proto --go_opt=paths=source_relative --twirp_out=:. {} \;
 
-FROM node:21.4 as frontend
+FROM node:21.7 as frontend
 
 WORKDIR /app
 
