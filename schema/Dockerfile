@@ -1,4 +1,4 @@
-FROM golang:1.21 as backend
+FROM golang:1.22 as backend
 
 ARG PROTOCGEN_VERSION="1.31.0"
 ARG PROTOCGENTWIRP_VERSION="8.1.3"
