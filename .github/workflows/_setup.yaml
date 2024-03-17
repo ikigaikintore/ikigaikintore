@@ -25,7 +25,7 @@ jobs:
 
   end:
     runs-on: ubuntu-latest
-    needs: create-tag-backend
+    needs: set_up
     if: success()
     steps:
       - name: End
