@@ -1,31 +1,27 @@
 backend:
-  - backend/**
+  - changed-files:
+    - any-glob-to-any-file: 'backend/**'
+
 frontend:
-  - frontend/**
+  - changed-files:
+    - any-glob-to-any-file: 'frontend/**'
+
 infra:
-  - infra/**
+  - changed-files:
+    - any-glob-to-any-file: 'infra/**'
+
 docs:
-  - docs/**
+  - changed-files:
+    - any-glob-to-any-file: 'docs/**'
+
 schema:
-  - schema/**
-  - backend/internal/output/weather/swagger.v1.yaml
+  - changed-files:
+    - any-glob-to-any-file: ['schema/**', 'backend/internal/output/weather/swagger.v1.yaml']
+
 ci:
-  - .github/**
+  - changed-files:
+    - any-glob-to-any-file: '.github/**'
+
 proxy:
-  - proxy/**
-renovate/Major:
-  - backend/**
-  - frontend/**
-  - infra/**
-renovate/Minor:
-  - backend/**
-  - frontend/**
-  - infra/**
-renovate/Patch:
-  - backend/**
-  - frontend/**
-  - infra/**
-renovate/Security:
-  - backend/**
-  - frontend/**
-  - infra/**
+  - changed-files:
+    - any-glob-to-any-file: 'proxy/**'
