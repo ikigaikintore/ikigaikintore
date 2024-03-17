@@ -1,27 +1,27 @@
-'package backend':
+'backend':
 - changed-files:
   - any-glob-to-any-file: 'backend/**'
 
-'package frontend':
+'frontend':
   - changed-files:
     - any-glob-to-any-file: 'frontend/**'
 
-'package infra':
+'infra':
   - changed-files:
     - any-glob-to-any-file: 'infra/**'
 
-'package docs':
+'docs':
   - changed-files:
     - any-glob-to-any-file: 'docs/**'
 
-'package schema':
+'schema':
   - changed-files:
     - any-glob-to-any-file: ['schema/**', 'backend/internal/output/weather/swagger.v1.yaml']
 
-'package ci':
+'ci':
   - changed-files:
     - any-glob-to-any-file: '.github/**'
 
-'package proxy':
+'proxy':
   - changed-files:
     - any-glob-to-any-file: 'proxy/**'
