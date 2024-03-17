@@ -142,7 +142,7 @@ jobs:
       - name: Delete old images except last three
         if: success()
         run: |
-          IMAGES=$(gcloud artifacts docker images list ${{ secrets.REGION }}-docker.pkg.dev/{{ secrets.PROJECT_ID }}/ikigai/ikigai.app --format=json --sort-by=create_time | jq -r '.[] | .version')
+          IMAGES=$(gcloud artifacts docker images list ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/ikigai.app --format=json --sort-by=create_time | jq -r '.[] | .version')
           NUM_IMAGES=$(echo $IMAGES | wc -l | tr -d ' ')
           
           if [ $NUM_IMAGES -gt 3 ]; then
