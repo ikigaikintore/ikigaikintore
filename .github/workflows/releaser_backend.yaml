@@ -152,7 +152,7 @@ jobs:
           else
             ARR_IMAGES_TO_DELETE=""
           fi
-          for IMAGE in $ARR_IMAGES_TO_DELETE[@]; do
+          for IMAGE in $ARR_IMAGES_TO_DELETE; do
             echo "deleting..."$IMAGE
             gcloud artifacts docker images delete ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/ikigai.app:$IMAGE --quiet
           done
