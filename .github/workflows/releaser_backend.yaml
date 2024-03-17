@@ -139,6 +139,20 @@ jobs:
             --no-allow-unauthenticated
             --verbosity=debug
 
+      - name: Delete old images except last three
+        run: |
+          IMAGES=$(gcloud artifacts docker images list asia-northeast1-docker.pkg.dev/$PROJECT_ID/ikigai/ikigai.app --format=json --sort-by=create_time | jq -r '.[] | .version')
+          NUM_IMAGES=$(echo $IMAGES | wc -l | tr -d ' ')
+          
+          if [ $NUM_IMAGES -gt 3 ]; then
+            IMAGES_TO_DELETE=$(echo $IMAGES | head -n $((NUM_IMAGES-3)) | tr '\n' ' ')
+          else
+            IMAGES_TO_DELETE=""
+          fi
+          for IMAGE in $IMAGES_TO_DELETE; do
+            gcloud container images delete gcr.io/$PROJECT_ID/$REPO_NAME@$IMAGE --quiet
+          done
+
       - name: Rollback
         if: failure() || cancelled()
         run: |
