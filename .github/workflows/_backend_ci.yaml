@@ -31,18 +31,18 @@ jobs:
           has_changes=${{ contains(env.CHANGED_FILES, 'backend/') }}
           echo HAS_CHANGES=${has_changes} >> ${GITHUB_OUTPUT}
 
-  check_proxy_vulns:
+  check_backend_vulns:
     runs-on: ubuntu-latest
-    if: needs.check_proxy_changed_files.outputs.is_proxy_changed == 'true'
+    if: needs.check_backend_changed_files.outputs.is_backend_changed == 'true'
     timeout-minutes: 2
-    needs: check_proxy_changed_files
+    needs: check_backend_changed_files
     steps:
 
       - name: golang vulnchecker
         uses: golang/govulncheck-action@v1
         with:
-          work-dir: ./proxy
-          go-version-file: ./proxy/go.mod
+          work-dir: ./backend
+          go-version-file: ./backend/go.mod
 
   ci:
     runs-on: ubuntu-latest
