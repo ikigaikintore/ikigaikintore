@@ -13,6 +13,7 @@ locals {
   proxy_secrets = [
     "proxy_allowed_domains",
     "proxy_target_backend",
+    "proxy_telegram_bot_token",
   ]
 }
 

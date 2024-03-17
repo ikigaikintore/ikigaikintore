@@ -48,6 +48,22 @@ TBD with some ideas:
 
 ![poc](./assets/poc_view.png)
 
+### Frontend
+
+Using nextjs, building a simple dashboard using web components which communicates with the backend via the proxy.
+
+### Backend
+
+The backend is a simple go application, using the standard library and some external libraries and call other third party services using their APIs.
+
+The endpoints are built using a proto file.
+
+### Proxy
+
+The proxy is the connector between the backend and the frontend. It controls the access and expose the service publicly.
+
+
+
 ## Local development
 
 Using docker-compose and [tilt](https://tilt.dev/) for local development. The idea is to have a local environment as close as possible to the production environment.

@@ -4,10 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"golang.org/x/oauth2/google"
-	"golang.org/x/time/rate"
-	"google.golang.org/api/idtoken"
-	gOpt "google.golang.org/api/option"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -22,8 +18,13 @@ import (
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
+	"golang.org/x/oauth2/google"
+	"golang.org/x/time/rate"
+	"google.golang.org/api/idtoken"
+	gOpt "google.golang.org/api/option"
 
 	"github.com/ikigaikintore/ikigaikintore/libs/cors"
+	"github.com/ikigaikintore/ikigaikintore/proxy/cmd/internal/bot"
 	"github.com/ikigaikintore/ikigaikintore/proxy/cmd/internal/config"
 )
 
@@ -216,6 +217,11 @@ func main() {
 
 	limCli := newIpRateLimiter()
 
+	appBot, err := bot.NewBot(envCfg)
+	if err != nil {
+		log.Println("bot not loaded: ", err)
+	}
+
 	srv := &http.Server{
 		Addr: fmt.Sprintf(":%d", envCfg.Infra.Port),
 		Handler: cors.NewHandler(opts...).Handler(
@@ -228,6 +234,11 @@ func main() {
 	}
 
 	go func() {
+		log.Println("serving telegram bot")
+		appBot.Start()
+	}()
+
+	go func() {
 		log.Println("serving proxy")
 		if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 			panic(err)
@@ -235,6 +246,7 @@ func main() {
 	}()
 
 	<-ch
+	appBot.Stop()
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
