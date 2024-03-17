@@ -126,6 +126,8 @@ jobs:
             NEXT_PUBLIC_USER_AUTH=user_auth:latest
             PROXY_APP_ENV=environment:latest
             PROXY_CORS_ALLOWED_DOMAINS=proxy_allowed_domains:latest
+            PROXY_TELEGRAM_BOT_TOKEN=proxy_telegram_bot_token:latest
+            PROXY_TELEGRAM_WEBHOOK_URL=proxy_telegram_webhook_url:latest
           timeout: 3m
           region: us-central1
           labels: |
