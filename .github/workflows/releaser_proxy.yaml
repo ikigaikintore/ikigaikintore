@@ -143,6 +143,24 @@ jobs:
             --allow-unauthenticated
             --add-custom-audiences=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
 
+      - name: Delete old images except last three
+        if: success()
+        run: |
+          IMAGES=$(gcloud artifacts docker tags list ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }} --format=json --sort-by=create_time | jq -r '.[] | .tag' | cut -d "/" -f 10)
+          NUM_IMAGES=$(echo "${IMAGES}" | wc -l | tr -d ' ')
+          echo "number of images: "${NUM_IMAGES}
+          
+          if [ "$NUM_IMAGES" -gt 3 ]; then
+            IMAGES_TO_DELETE=$(echo ${IMAGES} | head -n $((NUM_IMAGES-3)) | tr '\n' ' ')
+            IFS=' ' && read -ra ARR_IMAGES_TO_DELETE <<< "$IMAGES_TO_DELETE"
+          else
+            ARR_IMAGES_TO_DELETE=""
+          fi
+          for IMAGE in $ARR_IMAGES_TO_DELETE; do
+            echo "deleting..."$IMAGE
+            gcloud artifacts docker images delete ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:$IMAGE --quiet
+          done
+
       - name: Rollback
         if: failure() || cancelled()
         run: |
