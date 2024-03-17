@@ -7,7 +7,7 @@
   ],
   "timezone": "Asia/Tokyo",
   "schedule": [
-    "every day at 9:00am"
+    "before 9am every weekday"
   ],
   "packageRules": [
     {
