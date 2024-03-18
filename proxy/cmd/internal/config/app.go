@@ -11,9 +11,11 @@ type app struct {
 	TargetBackend string `envconfig:"TARGET_BACKEND" default:"localhost:8999"`
 }
 
-type telegram struct {
-	Token            string `envconfig:"BOT_TOKEN"`
-	WebhookListenUrl string `envconfig:"WEBHOOK_URL"`
+type Telegram struct {
+	Token              string `envconfig:"BOT_TOKEN"`
+	WebhookListenUrl   string `envconfig:"WEBHOOK_URL"`
+	WebhookUriPathBase string `envconfig:"WEBHOOK_PATH_BASE"`
+	WebhookUserID      int64  `envconfig:"WEBHOOK_USER_ID"`
 }
 
 type infra struct {
@@ -28,7 +30,7 @@ type Envs struct {
 	Cors     cors
 	App      app
 	Infra    infra
-	Telegram telegram
+	Telegram Telegram
 }
 
 func Load() Envs {
@@ -38,7 +40,7 @@ func Load() Envs {
 	var envApp app
 	envconfig.MustProcess("PROXY_APP", &envApp)
 
-	var telegramBot telegram
+	var telegramBot Telegram
 	envconfig.MustProcess("PROXY_TELEGRAM", &telegramBot)
 
 	var infraData infra
