@@ -84,7 +84,7 @@ jobs:
   end:
     runs-on: ubuntu-latest
     needs: summary_plan
-    if: needs.summary_plan.outputs.is_infra_changed == 'false'
+    if: needs.summary_plan.outputs.is_infra_changed == 'false' || success()
     steps:
       - name: End
         run: echo "No changes to infrastructure files. Exiting."
