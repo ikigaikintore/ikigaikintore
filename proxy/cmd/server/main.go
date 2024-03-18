@@ -105,19 +105,6 @@ func NewProxy(envConfig config.Envs, authClient *auth.Client, botClient bot.List
 
 		proxy.ServeHTTP(w, r)
 	})
-	pr.HandleFunc(fmt.Sprintf("%s %s/*", http.MethodPost, envConfig.Telegram.WebhookUriPathBase), func(w http.ResponseWriter, r *http.Request) {
-		err := botClient.Parser(envConfig, r.Body)
-		if err == nil {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-		log.Println("parsing body: ", err)
-		if errors.Is(err, bot.ErrForbidden) {
-			w.WriteHeader(http.StatusForbidden)
-			return
-		}
-		w.WriteHeader(http.StatusInternalServerError)
-	})
 	return pr
 }
 

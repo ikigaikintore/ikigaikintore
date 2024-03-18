@@ -49,19 +49,14 @@ func NewBot(cfg config.Envs) (Listener, error) {
 		debug = true
 	}
 	bot, err := telebot.NewBot(telebot.Settings{
-		Token:   cfg.Telegram.Token,
-		Client:  &http.Client{Timeout: 10 * time.Second, Transport: http.DefaultTransport},
-		Poller:  &telebot.LongPoller{Timeout: 15 * time.Second},
+		Token:  cfg.Telegram.Token,
+		Client: &http.Client{Timeout: 10 * time.Second, Transport: http.DefaultTransport},
+		Poller: &telebot.LongPoller{
+			Timeout: 5 * time.Second,
+		},
 		Verbose: debug,
 	})
 	if err != nil {
-		return nil, err
-	}
-	if err := bot.SetWebhook(&telebot.Webhook{
-		Endpoint: &telebot.WebhookEndpoint{
-			PublicURL: cfg.Telegram.WebhookListenUrl + cfg.Telegram.WebhookUriPathBase,
-		},
-	}); err != nil {
 		return nil, err
 	}
 	return &botServer{bot: bot}, nil
