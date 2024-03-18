@@ -57,13 +57,15 @@ func NewBot(cfg config.Envs) (Listener, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := bot.SetWebhook(&telebot.Webhook{
-		Endpoint: &telebot.WebhookEndpoint{
-			PublicURL: cfg.Telegram.WebhookListenUrl + "/" + cfg.Telegram.WebhookUriPathBase,
-		},
-	}); err != nil {
-		return nil, err
-	}
+	/*
+		if err := bot.SetWebhook(&telebot.Webhook{
+			Endpoint: &telebot.WebhookEndpoint{
+				PublicURL: cfg.Telegram.WebhookListenUrl + "/" + cfg.Telegram.WebhookUriPathBase,
+			},
+		}); err != nil {
+			return nil, err
+		}
+	*/
 	return &botServer{bot: bot}, nil
 }
 
