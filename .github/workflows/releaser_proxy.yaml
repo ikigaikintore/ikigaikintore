@@ -128,6 +128,8 @@ jobs:
             PROXY_CORS_ALLOWED_DOMAINS=proxy_allowed_domains:latest
             PROXY_TELEGRAM_BOT_TOKEN=proxy_telegram_bot_token:latest
             PROXY_TELEGRAM_WEBHOOK_URL=proxy_telegram_webhook_url:latest
+            PROXY_TELEGRAM_WEBHOOK_PATH_BASE=proxy_telegram_webhook_path_base:latest
+            PROXY_TELEGRAM_WEBHOOK_USER_ID=proxy_telegram_webhook_user_id:latest
           timeout: 3m
           region: us-central1
           labels: |

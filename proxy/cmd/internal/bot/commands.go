@@ -1,11 +1,16 @@
 package bot
 
 import (
-	"github.com/ikigaikintore/ikigaikintore/proxy/cmd/internal/config"
-	"gopkg.in/telebot.v3"
+	"encoding/json"
+	"errors"
+	"io"
 	"log"
 	"net/http"
 	"time"
+
+	"gopkg.in/telebot.v3"
+
+	"github.com/ikigaikintore/ikigaikintore/proxy/cmd/internal/config"
 )
 
 type botServer struct {
@@ -15,6 +20,8 @@ type botServer struct {
 type Listener interface {
 	Start()
 	Stop()
+	Parser(envCfg config.Envs, body io.ReadCloser) error
+	Bot() *telebot.Bot
 }
 
 func (b *botServer) Start() {
@@ -30,6 +37,10 @@ func (b *botServer) Stop() {
 		return
 	}
 	b.bot.Stop()
+}
+
+func (b *botServer) Bot() *telebot.Bot {
+	return b.bot
 }
 
 func NewBot(cfg config.Envs) (Listener, error) {
@@ -65,4 +76,56 @@ func (b *botServer) handlerStart() telebot.HandlerFunc {
 		logErrBot(err)
 		return err
 	}
+}
+
+var ErrForbidden = errors.New("forbidden action for the user")
+
+func (b *botServer) secure(envCfg config.Envs, msg *telebot.Message) error {
+	flag := false
+	flag = flag || msg.Sender.IsBot != true
+	flag = flag || msg.Sender.ID == envCfg.Telegram.WebhookUserID
+
+	if flag {
+		return nil
+	}
+	return ErrForbidden
+}
+
+func (b *botServer) Parser(envCfg config.Envs, body io.ReadCloser) error {
+	rawBody, err := io.ReadAll(body)
+	if err != nil {
+		return err
+	}
+	var cmd *telebot.Update
+	if err := json.Unmarshal(rawBody, cmd); err != nil {
+		return err
+	}
+	if cmd.Message == nil {
+		log.Println("no message, skip")
+		return nil
+	}
+	if cmd.Message.IsService() {
+		log.Println("service, skip")
+		return nil
+	}
+	if cmd.Message.IsReply() {
+		log.Println("reply, skip")
+		return nil
+	}
+	isCommand := func(msg *telebot.Message) bool {
+		for _, v := range msg.Entities {
+			if v.Type == telebot.EntityCommand {
+				return true
+			}
+		}
+		return false
+	}
+	if !isCommand(cmd.Message) {
+		log.Println("no command, skip")
+	}
+	if err := b.secure(envCfg, cmd.Message); err != nil {
+		return err
+	}
+
+	return nil
 }

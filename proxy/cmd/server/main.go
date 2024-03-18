@@ -57,7 +57,7 @@ func newReverseProxy(target *url.URL, token string) *httputil.ReverseProxy {
 	return &httputil.ReverseProxy{Director: director, Transport: http.DefaultTransport}
 }
 
-func NewProxy(envConfig config.Envs, authClient *auth.Client) http.Handler {
+func NewProxy(envConfig config.Envs, authClient *auth.Client, botClient bot.Listener) http.Handler {
 	pr := http.NewServeMux()
 	pr.HandleFunc("/v1/*", func(w http.ResponseWriter, r *http.Request) {
 		validateToken := func(r *http.Request, rawToken string) bool {
@@ -104,6 +104,19 @@ func NewProxy(envConfig config.Envs, authClient *auth.Client) http.Handler {
 		proxy := newReverseProxy(urlTarget, rawToken)
 
 		proxy.ServeHTTP(w, r)
+	})
+	pr.HandleFunc(envConfig.Telegram.WebhookUriPathBase, func(w http.ResponseWriter, r *http.Request) {
+		err := botClient.Parser(envConfig, r.Body)
+		if err == nil {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		log.Println("parsing body: ", err)
+		if errors.Is(err, bot.ErrForbidden) {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+		w.WriteHeader(http.StatusInternalServerError)
 	})
 	return pr
 }
@@ -225,7 +238,7 @@ func main() {
 	srv := &http.Server{
 		Addr: fmt.Sprintf(":%d", envCfg.Infra.Port),
 		Handler: cors.NewHandler(opts...).Handler(
-			ipRateLimiterMid(limCli)(logger(NewProxy(envCfg, authClient))),
+			ipRateLimiterMid(limCli)(logger(NewProxy(envCfg, authClient, appBot))),
 		),
 		IdleTimeout:       time.Minute,
 		ReadHeaderTimeout: 10 * time.Second,
