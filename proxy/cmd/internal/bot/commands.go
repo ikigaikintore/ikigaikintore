@@ -96,12 +96,9 @@ func (b *botServer) secure(envCfg config.Envs, msg *telebot.Message) error {
 }
 
 func (b *botServer) Parser(envCfg config.Envs, body io.ReadCloser) error {
-	rawBody, err := io.ReadAll(body)
-	if err != nil {
-		return err
-	}
-	var cmd *telebot.Update
-	if err := json.Unmarshal(rawBody, cmd); err != nil {
+	var cmd telebot.Update
+	if err := json.NewDecoder(body).Decode(&cmd); err != nil {
+		log.Println("err decoding body: ", err)
 		return err
 	}
 	if cmd.Message == nil {
