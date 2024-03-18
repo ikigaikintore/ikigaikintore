@@ -105,7 +105,7 @@ func NewProxy(envConfig config.Envs, authClient *auth.Client, botClient bot.List
 
 		proxy.ServeHTTP(w, r)
 	})
-	pr.HandleFunc(envConfig.Telegram.WebhookUriPathBase, func(w http.ResponseWriter, r *http.Request) {
+	pr.HandleFunc(fmt.Sprintf("%s %s/*", http.MethodPost, envConfig.Telegram.WebhookUriPathBase), func(w http.ResponseWriter, r *http.Request) {
 		err := botClient.Parser(envConfig, r.Body)
 		if err == nil {
 			w.WriteHeader(http.StatusOK)
