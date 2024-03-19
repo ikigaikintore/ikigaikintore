@@ -126,8 +126,8 @@ jobs:
             PROXY_BOT_APP_ENV=prd
             PROXY_BOT_TELEGRAM_WEBHOOK_PATH_BASE=${{ secrets.TELEGRAM_WEBHOOK_PATH_BASE }}
             PROXY_BOT_TELEGRAM_WEBHOOK_URL=${{ secrets.TELEGRAM_WEBHOOK_URL }}
+            NEXT_PUBLIC_USER_AUTH=${{ secrets.NEXT_PUBLIC_USER_AUTH }}
           secrets: |
-            NEXT_PUBLIC_USER_AUTH=user_auth:latest
             PROXY_BOT_CORS_ALLOWED_DOMAINS=proxy_allowed_domains:latest
             PROXY_BOT_TELEGRAM_BOT_TOKEN=proxy_telegram_bot_token:latest
             PROXY_BOT_TELEGRAM_WEBHOOK_USER_ID=proxy_telegram_webhook_user_id:latest
