@@ -17,18 +17,18 @@ locals {
   ]
 }
 
-resource "google_project_iam_member" "telegram-sa-roles" {
-  member   = "serviceAccount:${google_service_account.telegram-sa.email}"
-  project  = var.project_id
-  for_each = toset(local.telegram_sa_roles)
-  role     = each.value
-}
-
-resource "google_secret_manager_secret" "telegram-sa-secret" {
-  secret_id = each.value
-  project   = var.project_id
-  for_each  = toset(local.telegram_secrets)
-  replication {
-    auto {}
-  }
-}
+# resource "google_project_iam_member" "telegram-sa-roles" {
+#   member   = "serviceAccount:${google_service_account.telegram-sa.email}"
+#   project  = var.project_id
+#   for_each = toset(local.telegram_sa_roles)
+#   role     = each.value
+# }
+#
+# resource "google_secret_manager_secret" "telegram-sa-secret" {
+#   secret_id = each.value
+#   project   = var.project_id
+#   for_each  = toset(local.telegram_secrets)
+#   replication {
+#     auto {}
+#   }
+# }
