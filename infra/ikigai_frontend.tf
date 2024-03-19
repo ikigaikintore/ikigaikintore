@@ -20,7 +20,6 @@ locals {
     "firebase_messaging_sender_id",
     "firebase_app_id",
     "base_endpoint",
-    "environment",
     "user_auth",
   ]
 

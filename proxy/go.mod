@@ -49,7 +49,6 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240311132316-a219d84964c2 // indirect
 	google.golang.org/grpc v1.62.1 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
-	gopkg.in/telebot.v3 v3.2.1 // indirect
 )
 
 replace github.com/ikigaikintore/ikigaikintore/libs/cors v0.1.0 => ../libs/cors
