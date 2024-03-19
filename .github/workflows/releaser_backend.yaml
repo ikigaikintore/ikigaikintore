@@ -119,9 +119,10 @@ jobs:
         with:
           service: ${{ secrets.BACKEND_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+          env_vars: |
+            BACKEND_APP_ENV=prd
           secrets: |
             OPENWEATHER_API_KEY=weather_api_key:latest
-            BACKEND_APP_ENV=environment:latest
           timeout: 5m
           region: us-central1
           labels: |
