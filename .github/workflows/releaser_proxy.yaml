@@ -141,7 +141,6 @@ jobs:
             --max-instances=3
             --port=8080
             --no-cpu-boost
-            --no-cpu-throttling
             --allow-unauthenticated
             --add-custom-audiences=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
 
