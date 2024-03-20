@@ -12,4 +12,8 @@ generate: ## Generate automated code
 	docker build --target frontend -t frontend-twirp-compiler:latest . && \
 	docker run -v `pwd`:/app frontend-twirp-compiler:latest && \
 	rm -rf ../frontend/src/api/* && \
-	mv *.pb.ts ../frontend/src/api/
+	mv *.pb.ts ../frontend/src/api/ && \
+	docker run -v `pwd`:/defs namely/protoc-all -f ./*.proto -l go && \
+	cp gen/pb-go/proto/*_grpc.pb.go ../backend/pkg/proto/ && \
+	cp gen/pb-go/proto/*.pb.go ../proxy_bot/internal/output/backend/ && \
+	rm -rf gen
