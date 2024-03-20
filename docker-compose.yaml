@@ -23,4 +23,4 @@ services:
       - "17080:17080"
     env_file:
       - proxy_bot/.env
-    command: dlv exec /tmp/proxy_bot.app --headless --listen=:18080 --api-version=2 --accept-multiclient --log --continue
+    command: dlv exec /tmp/proxy_bot.app --headless --listen=:17080 --api-version=2 --accept-multiclient --log --continue
