@@ -114,13 +114,14 @@ jobs:
         run: |
           docker push ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
 
-      - name: Deploy to Cloud Run
+      - name: Deploy to Cloud Run http
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ secrets.BACKEND_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
           env_vars: |
             BACKEND_APP_ENV=prd
+            BACKEND_APP_TARGET=http
           secrets: |
             OPENWEATHER_API_KEY=weather_api_key:latest
           timeout: 5m
@@ -138,7 +139,32 @@ jobs:
             --port=8080
             --no-cpu-boost
             --no-allow-unauthenticated
-            --verbosity=debug
+
+      - name: Deploy to Cloud Run grpc
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ secrets.BACKEND_SERVICE_NAME }}grpc
+          image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
+          env_vars: |
+            BACKEND_APP_ENV=prd
+            BACKEND_APP_TARGET=grpc
+          secrets: |
+            OPENWEATHER_API_KEY=weather_api_key:latest
+          timeout: 5m
+          region: us-central1
+          labels: |
+            app=${{ secrets.BACKEND_SERVICE_NAME }}grpc
+          project_id: ${{ secrets.PROJECT_ID }}
+          flags: |
+            --service-account=${{ secrets.BACKEND_SERVICE_ACCOUNT }}
+            --memory=128Mi
+            --concurrency=80
+            --cpu=1000m
+            --min-instances=0
+            --max-instances=3
+            --port=8080
+            --no-cpu-boost
+            --no-allow-unauthenticated
 
       - name: Delete old images except last three
         if: success()
