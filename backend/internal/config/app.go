@@ -3,7 +3,8 @@ package config
 import "github.com/kelseyhightower/envconfig"
 
 type app struct {
-	Env string `envconfig:"ENV" default:"dev"`
+	Env    string `envconfig:"ENV" default:"dev"`
+	Target string `envconfig:"TARGET"`
 }
 
 type infra struct {
@@ -12,6 +13,14 @@ type infra struct {
 
 func (a app) IsDev() bool {
 	return a.Env == "dev"
+}
+
+func (a app) IsHTTP() bool {
+	return a.Target == "http"
+}
+
+func (a app) IsGRPC() bool {
+	return a.Target == "grpc"
 }
 
 type Envs struct {
