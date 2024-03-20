@@ -10,7 +10,7 @@ FROM golang:${GO_VERSION} as dev
 WORKDIR /tmp/app
 COPY ./libs /tmp/libs
 COPY ./backend /tmp/app
-EXPOSE 8999 18999
+EXPOSE 8999 18999 9000
 RUN go install github.com/go-delve/delve/cmd/dlv@latest && \
     go mod download && \
     CGO_ENABLED=0 GOARCH="amd64" GOOS="linux" go build -o /tmp/ikigai.app -gcflags="all=-N -l" /tmp/app/cmd/server/main.go

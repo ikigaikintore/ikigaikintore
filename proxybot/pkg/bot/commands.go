@@ -2,7 +2,7 @@ package bot
 
 import (
 	"errors"
-	"github.com/ikigaikintore/ikigaikintore/proxy_bot/config"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/config"
 	"io"
 	"log"
 )

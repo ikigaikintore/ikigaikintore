@@ -4,10 +4,12 @@ services:
     image: backend
     ports:
       - "8999:8999"
+      - "9000:9000"
       - "18999:18999"
     env_file:
       - backend/.env
     command: dlv exec /tmp/ikigai.app --headless --listen=:18999 --api-version=2 --accept-multiclient --log --continue
+
   proxy:
     image: proxy
     ports:
@@ -16,11 +18,12 @@ services:
     env_file:
       - proxy/.env
     command: dlv exec /tmp/proxy.app --headless --listen=:18080 --api-version=2 --accept-multiclient --log --continue
-  proxy_bot:
-    image: proxy_bot
+
+  proxybot:
+    image: proxybot
     ports:
       - "7080:8080"
       - "17080:17080"
     env_file:
-      - proxy_bot/.env
-    command: dlv exec /tmp/proxy_bot.app --headless --listen=:17080 --api-version=2 --accept-multiclient --log --continue
+      - proxybot/.env
+    command: dlv exec /tmp/proxybot.app --headless --listen=:17080 --api-version=2 --accept-multiclient --log --continue
