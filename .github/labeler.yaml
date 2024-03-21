@@ -25,3 +25,7 @@
 'proxy':
   - changed-files:
     - any-glob-to-any-file: 'proxy/**'
+
+'proxybot':
+  - changed-files:
+    - any-glob-to-any-file: 'proxybot/**'

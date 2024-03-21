@@ -19,6 +19,9 @@
 - name: proxy
   description: "proxy system"
   color: 1d76db
+- name: proxybot
+  description: "proxy telegram system"
+  color: 1d76db
 - name: renovate/Major
   description: "renovate/Major"
   color: 1e1e1e
