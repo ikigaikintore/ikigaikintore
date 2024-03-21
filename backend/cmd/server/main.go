@@ -42,7 +42,6 @@ func NewGRPCAppServer(envCfg config.Envs) Server {
 	srv := grpc.NewServer()
 	proto.RegisterWeatherServer(srv, grpc2.NewWeatherServer())
 	port := envCfg.Infra.Port
-	fmt.Println(port)
 	if envCfg.App.IsDev() {
 		port += 1
 	}
@@ -72,10 +71,12 @@ func main() {
 
 	envCfg := config.Load()
 
-	httpSrv := NewHTTPAppServer(envCfg)
-	grpcSrv := NewGRPCAppServer(envCfg)
+	var (
+		httpSrv, grpcSrv Server
+	)
 
 	if envCfg.App.IsHTTP() {
+		httpSrv = NewHTTPAppServer(envCfg)
 		go func() {
 			log.Println("serving http in", envCfg.Infra.Port)
 			if err := httpSrv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
@@ -84,6 +85,7 @@ func main() {
 		}()
 	}
 	if envCfg.App.IsGRPC() {
+		grpcSrv = NewGRPCAppServer(envCfg)
 		go func() {
 			log.Println("serving grpc in", envCfg.Infra.Port+1)
 			if err := grpcSrv.ListenAndServe(); err != nil {
@@ -93,6 +95,8 @@ func main() {
 	}
 
 	if envCfg.App.IsDev() {
+		httpSrv = NewHTTPAppServer(envCfg)
+		grpcSrv = NewGRPCAppServer(envCfg)
 		go func() {
 			log.Println("serving http in", envCfg.Infra.Port)
 			if err := httpSrv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
