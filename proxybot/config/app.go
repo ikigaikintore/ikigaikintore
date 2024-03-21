@@ -4,7 +4,7 @@ import "github.com/kelseyhightower/envconfig"
 
 type app struct {
 	Env           string `envconfig:"ENV" default:"dev"`
-	TargetBackend string `envconfig:"TARGET_BACKEND" default:"localhost:8999"`
+	TargetBackend string `envconfig:"TARGET_BACKEND" default:"backend:8999"`
 }
 
 type Telegram struct {

@@ -2,4 +2,4 @@
 !cmd
 !go.mod
 !go.sum
-!tmp/proxy_bot.app*
+!tmp/proxybot.app*
