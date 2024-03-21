@@ -12,8 +12,6 @@ locals {
 
   telegram_secrets = [
     "proxy_telegram_allowed_domains",
-    "proxy_telegram_bot_token",
-    "proxy_telegram_webhook_user_id",
   ]
 }
 

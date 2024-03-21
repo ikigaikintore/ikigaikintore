@@ -128,8 +128,8 @@ jobs:
             PROXY_BOT_TELEGRAM_WEBHOOK_URL=${{ secrets.TELEGRAM_WEBHOOK_URL }}
             NEXT_PUBLIC_USER_AUTH=${{ secrets.NEXT_PUBLIC_USER_AUTH }}
             PROXY_BOT_TELEGRAM_SECRET_TOKEN=${{ secrets.PROXY_BOT_TELEGRAM_SECRET_TOKEN }}
-          secrets: |
-            PROXY_BOT_TELEGRAM_WEBHOOK_USER_ID=proxy_telegram_webhook_user_id:latest
+            PROXY_BOT_TELEGRAM_WEBHOOK_USER_ID=${{ secrets.PROXY_BOT_TELEGRAM_WEBHOOK_USER_ID }}
+            PROXY_BOT_TELEGRAM_BOT_TOKEN=${{ secrets.PROXY_BOT_TELEGRAM_BOT_TOKEN }}
           timeout: 3m
           region: us-central1
           labels: |
