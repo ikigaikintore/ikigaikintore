@@ -39,7 +39,7 @@ func backendClient(envs config.Envs) *grpc.ClientConn {
 	if len(strings.Split(addr, ":")) < 2 && !envs.App.IsDev() {
 		addr = addr + ":443"
 	}
-	conn, err := grpc.Dial(envs.App.TargetBackend, grpc.WithTransportCredentials(cred))
+	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(cred))
 	if err != nil {
 		panic(err)
 	}
