@@ -1,5 +1,7 @@
 *
 !cmd
+!config
+!pkg
 !go.mod
 !go.sum
 !tmp/proxybot.app*
