@@ -37,7 +37,11 @@ func tokenSetInterceptor() grpc.UnaryClientInterceptor {
 			fmt.Println("cannot find credentials: ", err)
 			return err
 		}
-		tSource, err := idtoken.NewTokenSource(ctx, cc.Target(), gOpt.WithCredentials(creds))
+		target := strings.Split(cc.Target(), ":")[0]
+		if !strings.HasPrefix(target, "https://") {
+			target = "https://" + target
+		}
+		tSource, err := idtoken.NewTokenSource(ctx, target, gOpt.WithCredentials(creds))
 		if err != nil {
 			fmt.Println("error creating token source:", err)
 			return err
@@ -52,9 +56,16 @@ func tokenSetInterceptor() grpc.UnaryClientInterceptor {
 	}
 }
 
+func loggerInterceptor() grpc.UnaryClientInterceptor {
+	return func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		fmt.Println(method, cc.Target(), ctx)
+		return invoker(ctx, method, req, reply, cc, opts...)
+	}
+}
+
 func backendClient(envs config.Envs) *grpc.ClientConn {
 	cred := insecure.NewCredentials()
-	var interceptors []grpc.UnaryClientInterceptor
+	interceptors := []grpc.UnaryClientInterceptor{loggerInterceptor()}
 	if !envs.App.IsDev() {
 		certPool, err := x509.SystemCertPool()
 		if err != nil {
