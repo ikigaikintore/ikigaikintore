@@ -72,7 +72,7 @@ func (w *tunnelWebhook) Listener() net.Listener {
 	return w.tun
 }
 func (w *tunnelWebhook) HasListener() bool {
-	return true
+	return w.tun != nil
 }
 func (w *tunnelWebhook) Port() string {
 	return ""
@@ -81,6 +81,7 @@ func (w *tunnelWebhook) Port() string {
 type cloudRunWebhook struct {
 	uri  string
 	port string
+	lis  net.Listener
 }
 
 func newCloudRunWebhook(uri, port string) Webhooker {
@@ -93,10 +94,14 @@ func (w *cloudRunWebhook) URL() string {
 	return w.uri
 }
 func (w *cloudRunWebhook) Listener() net.Listener {
-	return nil
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%v", w.port))
+	if err != nil {
+		fmt.Println("litener err: ", err)
+	}
+	return lis
 }
 func (w *cloudRunWebhook) HasListener() bool {
-	return false
+	return w.lis != nil
 }
 func (w *cloudRunWebhook) Port() string {
 	return w.port
@@ -157,9 +162,6 @@ func main() {
 				SecretToken: envs.Telegram.SecretToken,
 			},
 			StartFunc: func(_ string) error {
-				if !webhook.HasListener() {
-					return nil
-				}
 				return srv.Serve(webhook.Listener())
 			},
 		}),
