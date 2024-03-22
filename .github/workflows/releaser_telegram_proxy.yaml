@@ -130,6 +130,7 @@ jobs:
             PROXY_BOT_TELEGRAM_SECRET_TOKEN=${{ secrets.PROXY_BOT_TELEGRAM_SECRET_TOKEN }}
             PROXY_BOT_TELEGRAM_WEBHOOK_USER_ID=${{ secrets.PROXY_BOT_TELEGRAM_WEBHOOK_USER_ID }}
             PROXY_BOT_TELEGRAM_BOT_TOKEN=${{ secrets.PROXY_BOT_TELEGRAM_BOT_TOKEN }}
+            PROXY_BOT_APP_TARGET_BACKEND=${{ secrets.TARGET_BACKEND }}
           timeout: 3m
           region: us-central1
           labels: |
