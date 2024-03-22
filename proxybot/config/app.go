@@ -4,7 +4,7 @@ import "github.com/kelseyhightower/envconfig"
 
 type app struct {
 	Env           string `envconfig:"ENV" default:"dev"`
-	TargetBackend string `envconfig:"TARGET_BACKEND" default:"backend:8999"`
+	TargetBackend string `envconfig:"TARGET_BACKEND" default:"0.0.0.0:9000"`
 }
 
 type Telegram struct {
@@ -16,7 +16,7 @@ type Telegram struct {
 }
 
 type infra struct {
-	Port int `envconfig:"PORT" default:"7997"`
+	Port int `envconfig:"PORT" default:"8080"`
 }
 
 func (a app) IsDev() bool {

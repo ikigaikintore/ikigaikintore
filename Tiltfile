@@ -14,12 +14,13 @@ def proxybot():
             '!proxybot/config',
             '!proxybot/pkg',
             '!libs',
+            '!proxybot/.env',
         ],
         live_update=[
             sync('proxybot', '/tmp/proxybot'),
             run('go mod download', trigger=['proxybot/go.mod', 'proxybot/go.sum']),
             run('CGO_ENABLED=0 GOARCH="amd64" GOOS="linux" go build -o /tmp/proxybot.app -gcflags="all=-N -l" cmd/server/main.go'),
-            restart_container()
+            restart_container(),
        ]
     )
     dc_resource('proxybot',

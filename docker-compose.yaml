@@ -22,7 +22,7 @@ services:
   proxybot:
     image: proxybot
     ports:
-      - "7080:8080"
+      - "8080:8080"
       - "17080:17080"
     env_file:
       - proxybot/.env
