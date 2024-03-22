@@ -122,7 +122,6 @@ jobs:
           service: ${{ secrets.PROXY_BOT_SERVICE_NAME }}
           image: ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/ikigai/${{ env.APP_NAME }}:${{ steps.create-version.outputs.new_version }}
           env_vars: |
-            PROXY_APP_TARGET_BACKEND=${{ secrets.TARGET_BACKEND_GRPC }}
             PROXY_BOT_APP_ENV=prd
             PROXY_BOT_TELEGRAM_WEBHOOK_PATH_BASE=${{ secrets.TELEGRAM_WEBHOOK_PATH_BASE }}
             PROXY_BOT_TELEGRAM_WEBHOOK_URL=${{ secrets.PROXY_BOT_TELEGRAM_WEBHOOK_URL }}
@@ -130,7 +129,7 @@ jobs:
             PROXY_BOT_TELEGRAM_SECRET_TOKEN=${{ secrets.PROXY_BOT_TELEGRAM_SECRET_TOKEN }}
             PROXY_BOT_TELEGRAM_WEBHOOK_USER_ID=${{ secrets.PROXY_BOT_TELEGRAM_WEBHOOK_USER_ID }}
             PROXY_BOT_TELEGRAM_BOT_TOKEN=${{ secrets.PROXY_BOT_TELEGRAM_BOT_TOKEN }}
-            PROXY_BOT_APP_TARGET_BACKEND=${{ secrets.TARGET_BACKEND }}
+            PROXY_BOT_APP_TARGET_BACKEND=${{ secrets.TARGET_BACKEND_GRPC }}
           timeout: 3m
           region: us-central1
           labels: |
