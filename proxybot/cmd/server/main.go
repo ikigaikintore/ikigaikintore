@@ -14,9 +14,13 @@ import (
 	"github.com/valyala/fasthttp"
 	"golang.ngrok.com/ngrok"
 	config2 "golang.ngrok.com/ngrok/config"
+	"golang.org/x/oauth2/google"
+	"google.golang.org/api/idtoken"
+	gOpt "google.golang.org/api/option"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
+	grpc_metadata "google.golang.org/grpc/metadata"
 	"log"
 	"net"
 	"os"
@@ -26,20 +30,48 @@ import (
 	"time"
 )
 
+func tokenSetInterceptor() grpc.UnaryClientInterceptor {
+	return func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		creds, err := google.FindDefaultCredentials(ctx)
+		if err != nil {
+			fmt.Println("cannot find credentials: ", err)
+			return err
+		}
+		tSource, err := idtoken.NewTokenSource(ctx, cc.Target(), gOpt.WithCredentials(creds))
+		if err != nil {
+			fmt.Println("error creating token source:", err)
+			return err
+		}
+		token, err := tSource.Token()
+		if err != nil {
+			fmt.Println("cannot create token: ", err)
+			return err
+		}
+		ctx = grpc_metadata.AppendToOutgoingContext(ctx, "authorization", "Bearer "+token.AccessToken)
+		return invoker(ctx, method, req, reply, cc, opts...)
+	}
+}
+
 func backendClient(envs config.Envs) *grpc.ClientConn {
 	cred := insecure.NewCredentials()
+	var interceptors []grpc.UnaryClientInterceptor
 	if !envs.App.IsDev() {
 		certPool, err := x509.SystemCertPool()
 		if err != nil {
 			panic(err)
 		}
 		cred = credentials.NewTLS(&tls.Config{RootCAs: certPool, MinVersion: tls.VersionTLS13})
+		interceptors = append(interceptors, tokenSetInterceptor())
 	}
 	addr := envs.App.TargetBackend
 	if len(strings.Split(addr, ":")) < 2 && !envs.App.IsDev() {
 		addr = addr + ":443"
 	}
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(cred))
+	conn, err := grpc.Dial(
+		addr,
+		grpc.WithTransportCredentials(cred),
+		grpc.WithChainUnaryInterceptor(interceptors...),
+	)
 	if err != nil {
 		panic(err)
 	}
