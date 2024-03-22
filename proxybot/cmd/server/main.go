@@ -21,6 +21,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -33,6 +34,10 @@ func backendClient(envs config.Envs) *grpc.ClientConn {
 			panic(err)
 		}
 		cred = credentials.NewTLS(&tls.Config{RootCAs: certPool, MinVersion: tls.VersionTLS13})
+	}
+	addr := envs.App.TargetBackend
+	if len(strings.Split(addr, ":")) < 2 && !envs.App.IsDev() {
+		addr = addr + ":443"
 	}
 	conn, err := grpc.Dial(envs.App.TargetBackend, grpc.WithTransportCredentials(cred))
 	if err != nil {
