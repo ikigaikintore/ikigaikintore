@@ -154,7 +154,7 @@ jobs:
           NUM_IMAGES=$(echo "${IMAGES}" | wc -l | tr -d ' ')
           echo "number of images: "${NUM_IMAGES}
           
-          if [ "$NUM_IMAGES" -gt 3 ]; then
+          if [ "$NUM_IMAGES" -gt 5 ]; then
             IMAGES_TO_DELETE=$(echo ${IMAGES} | head -n $((NUM_IMAGES-3)) | tr '\n' ' ')
             IFS=' ' && read -ra ARR_IMAGES_TO_DELETE <<< "$IMAGES_TO_DELETE"
           else
