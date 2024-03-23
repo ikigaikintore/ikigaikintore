@@ -8,7 +8,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/config"
 	bot2 "github.com/ikigaikintore/ikigaikintore/proxybot/pkg/bot"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service"
@@ -36,7 +35,7 @@ func main() {
 	telegramBot.ResetWebhook()
 
 	handlers := []bot2.Command{
-		bot2.NewHandlerTodayWeather(proto.NewWeatherClient(conn)),
+		bot2.NewHandlerTodayWeather(service.NewWeatherClient(conn)),
 	}
 
 	bh, err := telegramBot.Setup()

@@ -3,16 +3,16 @@ package bot
 import (
 	"log"
 
-	"github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service"
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
 )
 
-func NewHandlerTodayWeather(cli proto.WeatherClient) Command {
+func NewHandlerTodayWeather(cli service.WeatherClient) Command {
 	return &cmdHandler{
 		fn: func(bot *telego.Bot, update telego.Update) {
-			resp, err := cli.GetWeather(update.Context(), &proto.WeatherRequest{WeatherFilter: &proto.WeatherFilter{Location: "Tokyo"}})
+			resp, err := cli.GetWeather(update.Context(), &service.WeatherRequest{WeatherFilter: &service.WeatherFilter{Location: "Tokyo"}})
 			if err != nil {
 				log.Println(err)
 				return
