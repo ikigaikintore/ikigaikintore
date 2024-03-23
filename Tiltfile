@@ -1,33 +1,6 @@
 load('ext://min_tilt_version', 'min_tilt_version')
 min_tilt_version('0.33.11')
 
-def proxybot():
-    docker_build('proxybot', '.',
-        dockerfile='proxybot/Dockerfile',
-        only=['libs', 'proxybot'],
-        target='dev',
-        ignore=[
-            '*',
-            '!proxybot/go.mod',
-            '!proxybot/go.sum',
-            '!proxybot/cmd',
-            '!proxybot/config',
-            '!proxybot/pkg',
-            '!libs',
-            '!proxybot/.env',
-        ],
-        live_update=[
-            sync('proxybot', '/tmp/proxybot'),
-            run('go mod download', trigger=['proxybot/go.mod', 'proxybot/go.sum']),
-            run('CGO_ENABLED=0 GOARCH="amd64" GOOS="linux" go build -o /tmp/proxybot.app -gcflags="all=-N -l" cmd/server/main.go'),
-            restart_container(),
-       ]
-    )
-    dc_resource('proxybot',
-        trigger_mode=TRIGGER_MODE_AUTO,
-        auto_init=True,
-    )
-
 def proxy():
     docker_build('proxy', '.',
         dockerfile='proxy/Dockerfile',
@@ -83,4 +56,3 @@ def backend():
 docker_compose('./docker-compose.yaml')
 proxy()
 backend()
-proxybot()
