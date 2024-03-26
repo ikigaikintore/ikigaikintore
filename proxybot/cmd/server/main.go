@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -24,7 +26,7 @@ func main() {
 		_ = conn.Close()
 	}()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 6*time.Second)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	webhook := bot2.WebhookerFactory(ctx, envs)
@@ -47,8 +49,8 @@ func main() {
 	}
 
 	go func() {
-		if err := telegramBot.Start(); err != nil {
-			log.Panic(err)
+		if err := telegramBot.Start(); !errors.Is(err, http.ErrServerClosed) {
+			log.Println(err)
 		}
 	}()
 	go func() {
