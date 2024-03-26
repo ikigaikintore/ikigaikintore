@@ -32,7 +32,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	telegramBot.ResetWebhook()
 
 	handlers := []bot2.Command{
 		bot2.NewHandlerTodayWeather(service.NewWeatherClient(conn)),
