@@ -83,4 +83,4 @@ def backend():
 docker_compose('./docker-compose.yaml')
 proxy()
 backend()
-proxybot()
+# proxybot()

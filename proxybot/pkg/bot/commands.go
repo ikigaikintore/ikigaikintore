@@ -1,51 +1,25 @@
 package bot
 
 import (
-	"errors"
-	"github.com/ikigaikintore/ikigaikintore/proxybot/config"
-	"io"
-	"log"
+	th "github.com/mymmrac/telego/telegohandler"
 )
 
-type botServer struct {
+type Command interface {
+	Handler() th.Handler
+	Predicates() []th.Predicate
 }
 
-type Listener interface {
-	Start()
-	Stop()
-	Parser(envCfg config.Envs, body io.ReadCloser) error
+type CommandHandler func() Command
+
+type cmdHandler struct {
+	fn   th.Handler
+	cmds []th.Predicate
 }
 
-func (b *botServer) Start() {
+func (ch cmdHandler) Handler() th.Handler {
+	return ch.fn
 }
 
-func (b *botServer) Stop() {
-}
-
-func NewBot(cfg config.Envs) (Listener, error) {
-	if cfg.App.IsDev() {
-	}
-	return &botServer{}, nil
-}
-
-func logErrBot(err error) {
-	if err == nil {
-		return
-	}
-	log.Println(err)
-}
-
-func (b *botServer) handlerStart() {
-
-}
-
-var ErrForbidden = errors.New("forbidden action for the user")
-
-func (b *botServer) secure(envCfg config.Envs) error {
-	return ErrForbidden
-}
-
-func (b *botServer) Parser(envCfg config.Envs, body io.ReadCloser) error {
-
-	return nil
+func (ch cmdHandler) Predicates() []th.Predicate {
+	return ch.cmds
 }

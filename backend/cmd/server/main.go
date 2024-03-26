@@ -4,9 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	grpc2 "github.com/ikigaikintore/ikigaikintore/backend/internal/input/grpc"
-	"github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
-	"google.golang.org/grpc"
 	"log"
 	"net"
 	"net/http"
@@ -16,7 +13,10 @@ import (
 	"time"
 
 	"github.com/ikigaikintore/ikigaikintore/backend/internal/config"
+	grpc2 "github.com/ikigaikintore/ikigaikintore/backend/internal/input/grpc"
 	"github.com/ikigaikintore/ikigaikintore/backend/internal/input/twirp"
+	"github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
+	"google.golang.org/grpc"
 )
 
 type Server interface {
