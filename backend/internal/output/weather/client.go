@@ -96,6 +96,7 @@ func (c client) GetCurrentWeather(ctx context.Context) (*Weather, error) {
 }
 
 func (c client) GetForecastWeather(ctx context.Context) (ListWeather, error) {
+	units := GetForecast3HourParamsUnitsMetric
 	resp, err := c.c.GetForecast3HourWithResponse(
 		ctx,
 		&GetForecast3HourParams{
@@ -103,6 +104,7 @@ func (c client) GetForecastWeather(ctx context.Context) (ListWeather, error) {
 			Lon:   139.73,
 			Cnt:   12,
 			Appid: os.Getenv("OPENWEATHER_API_KEY"),
+			Units: &units,
 		},
 	)
 	if err != nil {
