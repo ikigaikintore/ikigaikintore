@@ -34,9 +34,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	weatherClient := service.NewWeatherClient(conn)
 
 	handlers := []bot2.Command{
-		bot2.NewHandlerTodayWeather(service.NewWeatherClient(conn)),
+		bot2.NewHandlerTodayWeather(weatherClient),
+		bot2.NewHandlerFuture(weatherClient),
 	}
 
 	bh, err := telegramBot.Setup()
