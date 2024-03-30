@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/domain"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service"
 	"github.com/mymmrac/telego"
@@ -50,5 +51,14 @@ func NewHandlerFuture(cli service.WeatherClient) Command {
 			)
 		},
 		cmds: []th.Predicate{th.CommandEqualArgv("weather", "3h")},
+	}
+}
+
+func NewHandlerLocation() Command {
+	return &cmdHandler{
+		fn: func(bot *telego.Bot, update telego.Update) {
+			fmt.Println(update.Message.Location)
+		},
+		cmds: []th.Predicate{th.CommandEqual("location")},
 	}
 }
