@@ -36,9 +36,14 @@ func main() {
 	}
 	weatherClient := service.NewWeatherClient(conn)
 
-	handlers := []bot2.Command{
+	commands := []bot2.CommandUpdate{
 		bot2.NewHandlerTodayWeather(weatherClient),
 		bot2.NewHandlerFuture(weatherClient),
+		bot2.NewHandlerLocation(),
+	}
+
+	messageHandlers := []bot2.CommandMessage{
+		bot2.NewHandlerResponseLocation(),
 	}
 
 	bh, err := telegramBot.Setup()
@@ -46,8 +51,11 @@ func main() {
 		panic(err)
 	}
 
-	for _, handle := range handlers {
+	for _, handle := range commands {
 		bh.Handle(handle.Handler(), handle.Predicates()...)
+	}
+	for _, handle := range messageHandlers {
+		bh.HandleMessageCtx(handle.Handler(), handle.Predicates()...)
 	}
 
 	go func() {

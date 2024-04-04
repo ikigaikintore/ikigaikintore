@@ -4,22 +4,38 @@ import (
 	th "github.com/mymmrac/telego/telegohandler"
 )
 
-type Command interface {
+type CommandMessage interface {
+	Handler() th.MessageHandlerCtx
+	Predicates() []th.Predicate
+}
+
+type CommandUpdate interface {
 	Handler() th.Handler
 	Predicates() []th.Predicate
 }
 
-type CommandHandler func() Command
-
-type cmdHandler struct {
+type cmdUpdateHandler struct {
 	fn   th.Handler
 	cmds []th.Predicate
 }
 
-func (ch cmdHandler) Handler() th.Handler {
+func (ch cmdUpdateHandler) Handler() th.Handler {
 	return ch.fn
 }
 
-func (ch cmdHandler) Predicates() []th.Predicate {
+func (ch cmdUpdateHandler) Predicates() []th.Predicate {
+	return ch.cmds
+}
+
+type cmdMessageHandler struct {
+	fn   th.MessageHandlerCtx
+	cmds []th.Predicate
+}
+
+func (ch cmdMessageHandler) Handler() th.MessageHandlerCtx {
+	return ch.fn
+}
+
+func (ch cmdMessageHandler) Predicates() []th.Predicate {
 	return ch.cmds
 }

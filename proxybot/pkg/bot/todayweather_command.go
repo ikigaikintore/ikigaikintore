@@ -1,7 +1,7 @@
 package bot
 
 import (
-	"fmt"
+	"context"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/domain"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service"
 	"github.com/mymmrac/telego"
@@ -10,8 +10,8 @@ import (
 	"log"
 )
 
-func NewHandlerTodayWeather(cli service.WeatherClient) Command {
-	return &cmdHandler{
+func NewHandlerTodayWeather(cli service.WeatherClient) CommandUpdate {
+	return &cmdUpdateHandler{
 		fn: func(bot *telego.Bot, update telego.Update) {
 			respWeather, err := cli.GetWeather(update.Context(), &service.WeatherRequest{WeatherFilter: &service.WeatherFilter{Location: "Tokyo"}})
 			if err != nil {
@@ -30,8 +30,8 @@ func NewHandlerTodayWeather(cli service.WeatherClient) Command {
 	}
 }
 
-func NewHandlerFuture(cli service.WeatherClient) Command {
-	return &cmdHandler{
+func NewHandlerFuture(cli service.WeatherClient) CommandUpdate {
+	return &cmdUpdateHandler{
 		fn: func(bot *telego.Bot, update telego.Update) {
 			respWeather, err := cli.GetWeather(update.Context(), &service.WeatherRequest{WeatherFilter: &service.WeatherFilter{Location: "Tokyo"}})
 			if err != nil {
@@ -54,11 +54,40 @@ func NewHandlerFuture(cli service.WeatherClient) Command {
 	}
 }
 
-func NewHandlerLocation() Command {
-	return &cmdHandler{
+func NewHandlerLocation() CommandUpdate {
+	return &cmdUpdateHandler{
 		fn: func(bot *telego.Bot, update telego.Update) {
-			fmt.Println(update.Message.Location)
+			_, _ = bot.SendMessage(
+				tu.Message(
+					tu.ID(update.Message.Chat.ID),
+					"send me your location",
+				).
+					WithDisableNotification().
+					WithReplyMarkup(
+						tu.Keyboard(
+							tu.KeyboardRow(
+								tu.KeyboardButton("Send location").
+									WithRequestLocation(),
+							),
+						).
+							WithOneTimeKeyboard(),
+					),
+			)
 		},
 		cmds: []th.Predicate{th.CommandEqual("location")},
+	}
+}
+
+// add cache here to save temporally the location
+// as default, i will return the weather from tokyo
+
+func NewHandlerResponseLocation() CommandMessage {
+	return &cmdMessageHandler{
+		fn: func(ctx context.Context, bot *telego.Bot, message telego.Message) {
+			if message.Location != nil {
+
+			}
+		},
+		cmds: []th.Predicate{th.AnyEditedMessageWithFrom()},
 	}
 }
