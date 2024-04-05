@@ -8,7 +8,7 @@ require (
 	github.com/mymmrac/telego v0.29.2
 	github.com/valyala/fasthttp v1.52.0
 	golang.ngrok.com/ngrok v1.9.1
-	golang.org/x/oauth2 v0.18.0
+	golang.org/x/oauth2 v0.19.0
 	google.golang.org/api v0.172.0
 	google.golang.org/grpc v1.63.0
 	google.golang.org/protobuf v1.33.0
