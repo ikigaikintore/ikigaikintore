@@ -6,7 +6,7 @@ require (
 	firebase.google.com/go/v4 v4.13.0
 	github.com/ikigaikintore/ikigaikintore/libs/cors v0.1.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	golang.org/x/oauth2 v0.18.0
+	golang.org/x/oauth2 v0.19.0
 	golang.org/x/time v0.5.0
 	google.golang.org/api v0.172.0
 )
