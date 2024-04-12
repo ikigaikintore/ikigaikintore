@@ -19,7 +19,7 @@ func NewHandlerTodayWeather(cli service.WeatherClient) CommandUpdate {
 			location = domain.TokyoLocation()
 			locationRaw, exists := storage.GlobalCache.Get("location")
 			if exists {
-				location = locationRaw.(domain.Location)
+				location = locationRaw
 			}
 			respWeather, err := cli.GetWeather(
 				update.Context(),
@@ -51,7 +51,7 @@ func NewHandlerFuture(cli service.WeatherClient) CommandUpdate {
 			location = domain.TokyoLocation()
 			locationRaw, exists := storage.GlobalCache.Get("location")
 			if exists {
-				location = locationRaw.(domain.Location)
+				location = locationRaw
 			}
 			respWeather, err := cli.GetWeather(
 				update.Context(),

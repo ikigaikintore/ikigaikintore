@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/domain"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/storage"
 	"log"
 	"net/http"
 	"os"
@@ -50,6 +52,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	storage.GlobalCache = storage.NewCache[domain.Location]()
 
 	for _, handle := range commands {
 		bh.Handle(handle.Handler(), handle.Predicates()...)

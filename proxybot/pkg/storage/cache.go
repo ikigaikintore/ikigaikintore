@@ -1,10 +1,13 @@
 package storage
 
-import "sync"
+import (
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/domain"
+	"sync"
+)
 
-var GlobalCache cache
+var GlobalCache Cache[domain.Location]
 
-type cache struct {
+type cache[T any] struct {
 	data map[string]any
 	mtx  *sync.RWMutex
 }
@@ -14,21 +17,24 @@ type Cache[T any] interface {
 	Set(string, T)
 }
 
-func NewCache() Cache[any] {
-	return &cache{
+func NewCache[T any]() Cache[T] {
+	return &cache[T]{
 		data: make(map[string]any),
-		mtx:  new(sync.RWMutex),
+		mtx:  &sync.RWMutex{},
 	}
 }
 
-func (c *cache) Get(key string) (any, bool) {
-	if v, hit := c.data[key]; hit {
-		return v, true
+func (c *cache[T]) Get(key string) (T, bool) {
+	var zero T
+	raw, hit := c.data[key]
+	v, ok := raw.(T)
+	if !ok {
+		return zero, hit
 	}
-	return nil, false
+	return v, hit
 }
 
-func (c *cache) Set(key string, value any) {
+func (c *cache[T]) Set(key string, value T) {
 	c.mtx.Lock()
 	c.data[key] = value
 	c.mtx.Unlock()
