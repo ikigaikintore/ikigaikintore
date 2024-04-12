@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service"
+	service "github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service/proto"
 	"strconv"
 	"time"
 )
@@ -58,4 +58,16 @@ func (p Point) String() string {
 		strconv.FormatInt(int64(p.Humidity), 10) + "% " +
 		strconv.FormatFloat(p.TemperatureRange.Min, 'f', 1, 64) + "C~" +
 		strconv.FormatFloat(p.TemperatureRange.Max, 'f', 1, 64) + "C"
+}
+
+type Location struct {
+	Longitude float64
+	Latitude  float64
+}
+
+func TokyoLocation() Location {
+	return Location{
+		Longitude: 139.839478,
+		Latitude:  35.652832,
+	}
 }

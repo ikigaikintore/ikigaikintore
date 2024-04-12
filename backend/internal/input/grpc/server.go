@@ -2,20 +2,21 @@ package grpc
 
 import (
 	"context"
+
+	"github.com/ikigaikintore/ikigaikintore/backend/internal/input/common"
 	"github.com/ikigaikintore/ikigaikintore/backend/pkg/proto"
-	"github.com/ikigaikintore/ikigaikintore/backend/pkg/usecase"
 )
 
 type WeatherServer proto.WeatherServer
 
 type weatherServer struct {
-	weatherService usecase.WeatherService
+	common common.Handler
 }
 
 func (w weatherServer) GetWeather(ctx context.Context, request *proto.WeatherRequest) (*proto.WeatherReply, error) {
-	return w.weatherService.GetWeather(ctx, request)
+	return w.common.GetWeather(ctx, request)
 }
 
 func NewWeatherServer() WeatherServer {
-	return &weatherServer{weatherService: usecase.NewWeatherService()}
+	return &weatherServer{common: common.NewHandler()}
 }

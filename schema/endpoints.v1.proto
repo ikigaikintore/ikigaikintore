@@ -8,8 +8,14 @@ service Weather {
   rpc GetWeather(WeatherRequest) returns (WeatherReply);
 }
 
+message Location {
+
+}
+
 message WeatherFilter {
-  string location = 1;
+  optional string locationCityName = 1;
+  double latitude = 2;
+  double longitude = 3;
 }
 
 message WeatherRequest {

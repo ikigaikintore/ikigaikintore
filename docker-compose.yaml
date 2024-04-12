@@ -13,17 +13,17 @@ services:
   proxy:
     image: proxy
     ports:
-      - "8081:8080"
+      - "8997:8997"
       - "18081:18080"
     env_file:
       - proxy/.env
     command: dlv exec /tmp/proxy.app --headless --listen=:18080 --api-version=2 --accept-multiclient --log --continue
 
-  proxybot:
-    image: proxybot
-    ports:
-      - "8080:8080"
-      - "17080:17080"
-    env_file:
-      - proxybot/.env
-    command: dlv exec /tmp/proxybot.app --headless --listen=:17080 --api-version=2 --accept-multiclient --log --continue
+  #proxybot:
+  #  image: proxybot
+  #  ports:
+  #    - "8080:8080"
+  #    - "17080:17080"
+  #  env_file:
+  #    - proxybot/.env
+  #  command: dlv exec /tmp/proxybot.app --headless --listen=:17080 --api-version=2 --accept-multiclient --log --continue

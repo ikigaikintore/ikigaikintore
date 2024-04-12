@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/domain"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/storage"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +15,7 @@ import (
 	"github.com/ikigaikintore/ikigaikintore/proxybot/config"
 	bot2 "github.com/ikigaikintore/ikigaikintore/proxybot/pkg/bot"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service/proto"
 )
 
 func main() {
@@ -34,11 +37,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	weatherClient := service.NewWeatherClient(conn)
-
-	handlers := []bot2.Command{
+	weatherClient := proto.NewWeatherClient(conn)
+	commands := []bot2.CommandUpdate{
 		bot2.NewHandlerTodayWeather(weatherClient),
 		bot2.NewHandlerFuture(weatherClient),
+		bot2.NewHandlerLocation(),
+	}
+
+	messageHandlers := []bot2.CommandMessage{
+		bot2.NewHandlerResponseLocation(),
 	}
 
 	bh, err := telegramBot.Setup()
@@ -46,8 +53,13 @@ func main() {
 		panic(err)
 	}
 
-	for _, handle := range handlers {
+	storage.GlobalCache = storage.NewCache[domain.Location]()
+
+	for _, handle := range commands {
 		bh.Handle(handle.Handler(), handle.Predicates()...)
+	}
+	for _, handle := range messageHandlers {
+		bh.HandleMessageCtx(handle.Handler(), handle.Predicates()...)
 	}
 
 	go func() {

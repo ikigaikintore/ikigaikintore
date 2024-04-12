@@ -15,5 +15,5 @@ generate: ## Generate automated code
 	mv *.pb.ts ../frontend/src/api/ && \
 	docker run -v `pwd`:/defs namely/protoc-all -f ./*.proto -l go && \
 	cp gen/pb-go/proto/*_grpc.pb.go ../backend/pkg/proto/ && \
-	cp gen/pb-go/proto/*.pb.go ../proxy_bot/internal/output/backend/ && \
+	cp gen/pb-go/proto/*.pb.go ../proxybot/pkg/service/ && \
 	rm -rf gen
