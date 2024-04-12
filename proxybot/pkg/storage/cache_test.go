@@ -38,12 +38,9 @@ func Test_cache_Get(t *testing.T) {
 				},
 			},
 			args: args{key: "location"},
-			want: struct {
-				lat  float64
-				long float64
-			}{
-				lat:  21.908790,
-				long: 123.987987,
+			want: domain.Location{
+				Latitude:  21.908790,
+				Longitude: 123.987987,
 			},
 			want1: true,
 		},
