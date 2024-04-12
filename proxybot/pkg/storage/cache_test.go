@@ -54,7 +54,7 @@ func Test_cache_Get(t *testing.T) {
 				},
 			},
 			args:  args{key: "location"},
-			want:  nil,
+			want:  domain.Location{},
 			want1: false,
 		},
 	}
