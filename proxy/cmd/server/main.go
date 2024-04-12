@@ -228,7 +228,7 @@ func main() {
 	}
 
 	go func() {
-		log.Println("serving proxy")
+		log.Printf("serving proxy on %v", envCfg.Infra.Port)
 		if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 			panic(err)
 		}

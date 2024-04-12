@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -55,8 +54,8 @@ func (w Weather) GetWindSpeed() float64 {
 }
 
 type ClientRequest interface {
-	GetCurrentWeather(context.Context) (*Weather, error)
-	GetForecastWeather(context.Context) (ListWeather, error)
+	GetCurrentWeather(context.Context, *GetCurrentParams) (*Weather, error)
+	GetForecastWeather(context.Context, *GetForecast3HourParams) (ListWeather, error)
 }
 
 func NewClientRequest() ClientRequest {
@@ -64,15 +63,14 @@ func NewClientRequest() ClientRequest {
 	return &client{c: c}
 }
 
-func (c client) GetCurrentWeather(ctx context.Context) (*Weather, error) {
-	units := GetCurrentParamsUnitsMetric
+func (c client) GetCurrentWeather(ctx context.Context, req *GetCurrentParams) (*Weather, error) {
 	resp, err := c.c.GetCurrentWithResponse(
 		ctx,
 		&GetCurrentParams{
-			Appid: os.Getenv("OPENWEATHER_API_KEY"),
-			Lat:   35.71,
-			Lon:   139.73,
-			Units: &units,
+			Appid: req.Appid,
+			Lat:   req.Lat,
+			Lon:   req.Lon,
+			Units: req.Units,
 		},
 	)
 	if err != nil {
@@ -95,16 +93,15 @@ func (c client) GetCurrentWeather(ctx context.Context) (*Weather, error) {
 	}, nil
 }
 
-func (c client) GetForecastWeather(ctx context.Context) (ListWeather, error) {
-	units := GetForecast3HourParamsUnitsMetric
+func (c client) GetForecastWeather(ctx context.Context, req *GetForecast3HourParams) (ListWeather, error) {
 	resp, err := c.c.GetForecast3HourWithResponse(
 		ctx,
 		&GetForecast3HourParams{
-			Lat:   35.71,
-			Lon:   139.73,
-			Cnt:   12,
-			Appid: os.Getenv("OPENWEATHER_API_KEY"),
-			Units: &units,
+			Lat:   req.Lat,
+			Lon:   req.Lon,
+			Cnt:   req.Cnt,
+			Appid: req.Appid,
+			Units: req.Units,
 		},
 	)
 	if err != nil {

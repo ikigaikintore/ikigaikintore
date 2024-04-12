@@ -18,12 +18,15 @@
     "sourceType": "module"
     // Allows for the use of imports
   },
-  "plugins": ["import"],
+  "plugins": ["import", "react-hooks"],
   "rules": {
+    "max-len": ["error", {"code": 120}],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "object-curly-spacing": ["error", "always"],
     "@typescript-eslint/object-curly-spacing": ["error", "always"],
     "semi": "off",
-    "indent": ["error", 2],
+    "indent": ["error", 4],
     "@typescript-eslint/semi": ["error", "never"],
     "quotes": ["error", "double"],
     "import/no-extraneous-dependencies": [

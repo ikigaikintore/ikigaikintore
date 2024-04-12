@@ -4,7 +4,7 @@
 // - protoc             v3.21.6
 // source: endpoints.v1.proto
 
-package service
+package proto
 
 import (
 	context "context"

@@ -33,8 +33,12 @@ export type WeatherType =
   | "CLEAR"
   | "CLOUDS";
 
+export interface Location {}
+
 export interface WeatherFilter {
-  location: string;
+  locationCityName?: string | null | undefined;
+  latitude: number;
+  longitude: number;
 }
 
 export interface WeatherRequest {
@@ -267,6 +271,51 @@ export const WeatherType = {
   },
 } as const;
 
+export const Location = {
+  /**
+   * Serializes Location to protobuf.
+   */
+  encode: function (_msg?: PartialDeep<Location>): Uint8Array {
+    return new Uint8Array();
+  },
+
+  /**
+   * Deserializes Location from protobuf.
+   */
+  decode: function (_bytes?: ByteSource): Location {
+    return {};
+  },
+
+  /**
+   * Initializes Location with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<Location>): Location {
+    return {
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    _msg: PartialDeep<Location>,
+    writer: protoscript.BinaryWriter,
+  ): protoscript.BinaryWriter {
+    return writer;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (
+    _msg: Location,
+    _reader: protoscript.BinaryReader,
+  ): Location {
+    return _msg;
+  },
+};
+
 export const WeatherFilter = {
   /**
    * Serializes WeatherFilter to protobuf.
@@ -293,7 +342,9 @@ export const WeatherFilter = {
    */
   initialize: function (msg?: Partial<WeatherFilter>): WeatherFilter {
     return {
-      location: "",
+      locationCityName: undefined,
+      latitude: 0,
+      longitude: 0,
       ...msg,
     };
   },
@@ -305,8 +356,14 @@ export const WeatherFilter = {
     msg: PartialDeep<WeatherFilter>,
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
-    if (msg.location) {
-      writer.writeString(1, msg.location);
+    if (msg.locationCityName != undefined) {
+      writer.writeString(1, msg.locationCityName);
+    }
+    if (msg.latitude) {
+      writer.writeDouble(2, msg.latitude);
+    }
+    if (msg.longitude) {
+      writer.writeDouble(3, msg.longitude);
     }
     return writer;
   },
@@ -322,7 +379,15 @@ export const WeatherFilter = {
       const field = reader.getFieldNumber();
       switch (field) {
         case 1: {
-          msg.location = reader.readString();
+          msg.locationCityName = reader.readString();
+          break;
+        }
+        case 2: {
+          msg.latitude = reader.readDouble();
+          break;
+        }
+        case 3: {
+          msg.longitude = reader.readDouble();
           break;
         }
         default: {
@@ -926,6 +991,47 @@ export const WeatherTypeJSON = {
   },
 } as const;
 
+export const LocationJSON = {
+  /**
+   * Serializes Location to JSON.
+   */
+  encode: function (_msg?: PartialDeep<Location>): string {
+    return "{}";
+  },
+
+  /**
+   * Deserializes Location from JSON.
+   */
+  decode: function (_json?: string): Location {
+    return {};
+  },
+
+  /**
+   * Initializes Location with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<Location>): Location {
+    return {
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    _msg: PartialDeep<Location>,
+  ): Record<string, unknown> {
+    return {};
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (msg: Location, _json: any): Location {
+    return msg;
+  },
+};
+
 export const WeatherFilterJSON = {
   /**
    * Serializes WeatherFilter to JSON.
@@ -949,7 +1055,9 @@ export const WeatherFilterJSON = {
    */
   initialize: function (msg?: Partial<WeatherFilter>): WeatherFilter {
     return {
-      location: "",
+      locationCityName: undefined,
+      latitude: 0,
+      longitude: 0,
       ...msg,
     };
   },
@@ -961,8 +1069,14 @@ export const WeatherFilterJSON = {
     msg: PartialDeep<WeatherFilter>,
   ): Record<string, unknown> {
     const json: Record<string, unknown> = {};
-    if (msg.location) {
-      json["location"] = msg.location;
+    if (msg.locationCityName != undefined) {
+      json["locationCityName"] = msg.locationCityName;
+    }
+    if (msg.latitude) {
+      json["latitude"] = msg.latitude;
+    }
+    if (msg.longitude) {
+      json["longitude"] = msg.longitude;
     }
     return json;
   },
@@ -971,9 +1085,17 @@ export const WeatherFilterJSON = {
    * @private
    */
   _readMessage: function (msg: WeatherFilter, json: any): WeatherFilter {
-    const _location_ = json["location"];
-    if (_location_) {
-      msg.location = _location_;
+    const _locationCityName_ = json["locationCityName"];
+    if (_locationCityName_) {
+      msg.locationCityName = _locationCityName_;
+    }
+    const _latitude_ = json["latitude"];
+    if (_latitude_) {
+      msg.latitude = protoscript.parseDouble(_latitude_);
+    }
+    const _longitude_ = json["longitude"];
+    if (_longitude_) {
+      msg.longitude = protoscript.parseDouble(_longitude_);
     }
     return msg;
   },

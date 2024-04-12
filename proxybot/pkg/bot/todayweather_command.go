@@ -3,17 +3,31 @@ package bot
 import (
 	"context"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/domain"
-	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service"
+	service "github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service/proto"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/storage"
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
 	"log"
+	"strings"
 )
 
 func NewHandlerTodayWeather(cli service.WeatherClient) CommandUpdate {
+	var location domain.Location
 	return &cmdUpdateHandler{
 		fn: func(bot *telego.Bot, update telego.Update) {
-			respWeather, err := cli.GetWeather(update.Context(), &service.WeatherRequest{WeatherFilter: &service.WeatherFilter{Location: "Tokyo"}})
+			location = domain.TokyoLocation()
+			locationRaw, exists := storage.GlobalCache.Get("location")
+			if exists {
+				location = locationRaw.(domain.Location)
+			}
+			respWeather, err := cli.GetWeather(
+				update.Context(),
+				&service.WeatherRequest{WeatherFilter: &service.WeatherFilter{
+					Latitude:  location.Latitude,
+					Longitude: location.Longitude,
+				}},
+			)
 			if err != nil {
 				log.Println(err)
 				return
@@ -31,9 +45,21 @@ func NewHandlerTodayWeather(cli service.WeatherClient) CommandUpdate {
 }
 
 func NewHandlerFuture(cli service.WeatherClient) CommandUpdate {
+	var location domain.Location
 	return &cmdUpdateHandler{
 		fn: func(bot *telego.Bot, update telego.Update) {
-			respWeather, err := cli.GetWeather(update.Context(), &service.WeatherRequest{WeatherFilter: &service.WeatherFilter{Location: "Tokyo"}})
+			location = domain.TokyoLocation()
+			locationRaw, exists := storage.GlobalCache.Get("location")
+			if exists {
+				location = locationRaw.(domain.Location)
+			}
+			respWeather, err := cli.GetWeather(
+				update.Context(),
+				&service.WeatherRequest{WeatherFilter: &service.WeatherFilter{
+					Latitude:  location.Latitude,
+					Longitude: location.Longitude,
+				}},
+			)
 			if err != nil {
 				log.Println(err)
 				return
@@ -85,9 +111,16 @@ func NewHandlerResponseLocation() CommandMessage {
 	return &cmdMessageHandler{
 		fn: func(ctx context.Context, bot *telego.Bot, message telego.Message) {
 			if message.Location != nil {
-
+				if message.ReplyToMessage != nil {
+					if strings.Contains(message.ReplyToMessage.Text, "location") {
+						storage.GlobalCache.Set("location", domain.Location{
+							Longitude: message.Location.Longitude,
+							Latitude:  message.Location.Latitude,
+						})
+					}
+				}
 			}
 		},
-		cmds: []th.Predicate{th.AnyEditedMessageWithFrom()},
+		cmds: []th.Predicate{th.AnyMessageWithFrom()},
 	}
 }

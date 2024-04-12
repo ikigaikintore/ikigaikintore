@@ -13,6 +13,7 @@ import (
 	"github.com/ikigaikintore/ikigaikintore/proxybot/config"
 	bot2 "github.com/ikigaikintore/ikigaikintore/proxybot/pkg/bot"
 	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service"
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/service/proto"
 )
 
 func main() {
@@ -34,8 +35,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	weatherClient := service.NewWeatherClient(conn)
-
+	weatherClient := proto.NewWeatherClient(conn)
 	commands := []bot2.CommandUpdate{
 		bot2.NewHandlerTodayWeather(weatherClient),
 		bot2.NewHandlerFuture(weatherClient),
