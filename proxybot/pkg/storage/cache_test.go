@@ -1,12 +1,13 @@
 package storage
 
 import (
+	"github.com/ikigaikintore/ikigaikintore/proxybot/pkg/domain"
 	"reflect"
 	"testing"
 )
 
 func TestNewCache(t *testing.T) {
-	newCache := NewCache()
+	newCache := NewCache[domain.Location]()
 	if newCache == nil {
 		t.Error("newCache is nil")
 	}
@@ -15,7 +16,7 @@ func TestNewCache(t *testing.T) {
 func Test_cache_Get(t *testing.T) {
 	type fields struct {
 		key  string
-		data any
+		data domain.Location
 	}
 	type args struct {
 		key string
@@ -31,12 +32,9 @@ func Test_cache_Get(t *testing.T) {
 			name: "set and get data hit",
 			fields: fields{
 				key: "location",
-				data: struct {
-					lat  float64
-					long float64
-				}{
-					lat:  21.908790,
-					long: 123.987987,
+				data: domain.Location{
+					Latitude:  21.908790,
+					Longitude: 123.987987,
 				},
 			},
 			args: args{key: "location"},
@@ -53,12 +51,9 @@ func Test_cache_Get(t *testing.T) {
 			name: "get data no hit",
 			fields: fields{
 				key: "location1",
-				data: struct {
-					lat  float64
-					long float64
-				}{
-					lat:  21.908790,
-					long: 123.987987,
+				data: domain.Location{
+					Latitude:  21.908790,
+					Longitude: 123.987987,
 				},
 			},
 			args:  args{key: "location"},
@@ -68,7 +63,7 @@ func Test_cache_Get(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := NewCache()
+			c := NewCache[domain.Location]()
 			c.Set(tt.fields.key, tt.fields.data)
 			got, got1 := c.Get(tt.args.key)
 			if !reflect.DeepEqual(got, tt.want) {
