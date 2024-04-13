@@ -26,6 +26,7 @@ locals {
     "identitytoolkit.googleapis.com",
     "firestore.googleapis.com",
     "serviceusage.googleapis.com",
+    "eventarc.googleapis.com",
   ]
 }
 
