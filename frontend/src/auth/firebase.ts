@@ -1,53 +1,56 @@
 import React from "react"
 
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  signOut,
-  connectAuthEmulator,
-} from "firebase/auth"
+import { Auth, connectAuthEmulator, GoogleAuthProvider, signInWithPopup, signOut, } from "firebase/auth"
 
 import { auth } from "./init"
 
-import { useConfig } from "@/src/config/use-config"
+import { Config } from "@/src/config/use-config"
 
 export const useFirebase = () => {
-  const { isLocal, emulatorHost, emails } = useConfig()
+    const { isLocal, emulatorHost, emails } = Config()
 
-  React.useEffect(() => {
-    if (isLocal()) {
-      connectAuthEmulator(auth, emulatorHost())
+    const setupEmulators = React.useCallback(async (auth: Auth) => {
+        await fetch(emulatorHost())
+        connectAuthEmulator(auth, emulatorHost(), { disableWarnings: true })
+    }, [emulatorHost])
+
+    React.useEffect(() => {
+        if (isLocal()) {
+            setupEmulators(auth).then(() => console.log("loaded")).catch(e => console.error(e))
+        }
+    }, [emulatorHost, isLocal, setupEmulators])
+
+    const signInUser = React.useCallback(async () => {
+        try {
+            const resp = await signInWithPopup(auth, new GoogleAuthProvider())
+            if (!resp || !resp.user) {
+                console.error("No response from Google")
+                return
+            }
+            if (resp.user.isAnonymous || !resp.user.email) {
+                console.error("Not authorized")
+                return
+            }
+            if (!emails.includes(resp.user.email)) {
+                console.error("Email not authorized")
+                return
+            }
+        } catch (err) {
+            console.error(`Error signing ${err}`)
+        }
+    }, [emails])
+
+    const signOutUser = React.useCallback(async () => {
+        try {
+            await signOut(auth)
+        } catch (err) {
+            console.error(`Error signing out ${err}`)
+        }
+    }, [])
+
+    return {
+        auth,
+        signInUser,
+        signOutUser,
     }
-  }, [auth])
-
-  const signInUser = React.useCallback(async () => {
-    try {
-      const resp = await signInWithPopup(auth, new GoogleAuthProvider())
-      if (!resp || !resp.user) {
-        throw new Error("No response from Google")
-      }
-      if (resp.user.isAnonymous || !resp.user.email) {
-        throw new Error("Not authorized")
-      }
-      if (!emails.includes(resp.user.email)) {
-        throw new Error("Email not authorized")
-      }
-    } catch (err) {
-      console.error(`Error signing ${err}`)
-    }
-  }, [auth, emails])
-
-  const signOutUser = React.useCallback(async () => {
-    try {
-      await signOut(auth)
-    } catch (err) {
-      console.error(`Error signing out ${err}`)
-    }
-  }, [signOut, auth])
-
-  return {
-    auth,
-    signInUser,
-    signOutUser,
-  }
 }

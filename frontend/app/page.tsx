@@ -7,31 +7,31 @@ import { useAuth } from "@/src/auth/use-auth"
 import * as WeatherCard from "@/src/cards/weather"
 
 export default function Page() {
-  const { user, signInUser, signOutUser } = useAuth()
+    const { user, signInUser, signOutUser } = useAuth()
 
-  return (
-    <AuthProvider>
-      <AppPage>
-        <MainMenu>
-          <AuthButtons>
-            {user ? (
-              <button onClick={signOutUser}>Sign out</button>
-            ) : (
-              <button onClick={signInUser}>Sign in</button>
-            )}
-          </AuthButtons>
-        </MainMenu>
-        {user ? (
-          <MainBody>
-            <LinkSection>Link elements</LinkSection>
-            <CardComponents>
-              <WeatherCard.Component />
-            </CardComponents>
-          </MainBody>
-        ) : (<div></div>)}
-      </AppPage>
-    </AuthProvider>
-  )
+    return (
+        <AuthProvider>
+            <AppPage>
+                <MainMenu>
+                    <AuthButtons>
+                        {user ? (
+                            <button onClick={signOutUser}>Sign out</button>
+                        ) : (
+                            <button onClick={signInUser}>Sign in</button>
+                        )}
+                    </AuthButtons>
+                </MainMenu>
+                {user ? (
+                    <MainBody>
+                        <LinkSection>Link elements</LinkSection>
+                        <CardComponents>
+                            <WeatherCard.Component />
+                        </CardComponents>
+                    </MainBody>
+                ) : (<div></div>)}
+            </AppPage>
+        </AuthProvider>
+    )
 }
 
 const AppPage = styled.section`

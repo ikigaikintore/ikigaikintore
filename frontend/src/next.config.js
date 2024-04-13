@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  styledComponents: true,
-  distDir: "../.next",
+    styledComponents: true,
+    distDir: "../.next",
 }
 
 module.exports = nextConfig

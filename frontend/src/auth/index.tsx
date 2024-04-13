@@ -5,15 +5,15 @@ import { AuthContextType, useAuth } from "./use-auth"
 const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const value = useAuth()
+    const value = useAuth()
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export const useAuthContext = () => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error("useAuthContext must be used within an AuthProvider")
-  }
-  return context
+    const context = useContext(AuthContext)
+    if (!context) {
+        throw new Error("useAuthContext must be used within an AuthProvider")
+    }
+    return context
 }
