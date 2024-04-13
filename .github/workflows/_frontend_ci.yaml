@@ -1,6 +1,7 @@
 name: ci frontend
 
 on:
+  merge_group:
   pull_request:
     paths:
       - 'frontend/**'
