@@ -52,6 +52,7 @@ locals {
     "roles/iam.workloadIdentityUser",
     "roles/storage.admin",
     "roles/iam.serviceAccountUser",
+    "roles/cloudfunctions.admin",
   ]
 }
 
