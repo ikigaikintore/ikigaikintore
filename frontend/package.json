@@ -4,9 +4,9 @@
   "description": "",
   "main": "firebaseFunctions.js",
   "scripts": {
-    "dev": "next dev src/",
-    "build": "next build src/",
-    "start": "next start src/",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "test": "echo \"Error: no test specified\"",
