@@ -8,13 +8,13 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	golang.org/x/oauth2 v0.19.0
 	golang.org/x/time v0.5.0
-	google.golang.org/api v0.176.0
+	google.golang.org/api v0.176.1
 )
 
 require (
 	cloud.google.com/go v0.112.2 // indirect
-	cloud.google.com/go/auth v0.2.2 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.1 // indirect
+	cloud.google.com/go/auth v0.3.0 // indirect
+	cloud.google.com/go/auth/oauth2adapt v0.2.2 // indirect
 	cloud.google.com/go/compute v1.25.1 // indirect
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	cloud.google.com/go/firestore v1.15.0 // indirect
