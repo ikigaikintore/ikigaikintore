@@ -44,7 +44,7 @@ jobs:
         env:
           TFCMT_VERSION: v4.8.0
 
-      - uses: hashicorp/setup-terraform@v3.1.0
+      - uses: hashicorp/setup-terraform@v3.1.1
         with:
           terraform_version: 1.6.6
 
