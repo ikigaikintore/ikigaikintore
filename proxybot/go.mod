@@ -9,7 +9,7 @@ require (
 	github.com/valyala/fasthttp v1.52.0
 	golang.ngrok.com/ngrok v1.9.1
 	golang.org/x/oauth2 v0.20.0
-	google.golang.org/api v0.177.0
+	google.golang.org/api v0.178.0
 	google.golang.org/grpc v1.63.2
 	google.golang.org/protobuf v1.34.1
 )
