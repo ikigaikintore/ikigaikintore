@@ -1,12 +1,12 @@
 module github.com/ikigaikintore/ikigaikintore/proxybot
 
-go 1.22.2
+go 1.22.3
 
 require (
-	github.com/fasthttp/router v1.5.0
+	github.com/fasthttp/router v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/mymmrac/telego v0.29.2
-	github.com/valyala/fasthttp v1.52.0
+	github.com/mymmrac/telego v0.30.1
+	github.com/valyala/fasthttp v1.54.0
 	golang.ngrok.com/ngrok v1.9.1
 	golang.org/x/oauth2 v0.20.0
 	google.golang.org/api v0.179.0
@@ -20,9 +20,12 @@ require (
 	cloud.google.com/go/compute v1.25.1 // indirect
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
-	github.com/bytedance/sonic v1.11.3 // indirect
+	github.com/bytedance/sonic v1.11.7 // indirect
+	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.1 // indirect
+	github.com/cloudwego/base64x v0.1.4 // indirect
+	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
