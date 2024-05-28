@@ -3,10 +3,10 @@ module github.com/ikigaikintore/ikigaikintore/proxybot
 go 1.22.2
 
 require (
-	github.com/fasthttp/router v1.5.0
+	github.com/fasthttp/router v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/mymmrac/telego v0.29.2
-	github.com/valyala/fasthttp v1.52.0
+	github.com/valyala/fasthttp v1.54.0
 	golang.ngrok.com/ngrok v1.9.1
 	golang.org/x/oauth2 v0.20.0
 	google.golang.org/api v0.179.0
