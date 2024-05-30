@@ -3,7 +3,7 @@ module github.com/ikigaikintore/ikigaikintore/proxy
 go 1.22.2
 
 require (
-	firebase.google.com/go/v4 v4.14.0
+	firebase.google.com/go/v4 v4.14.1
 	github.com/ikigaikintore/ikigaikintore/libs/cors v0.1.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	golang.org/x/oauth2 v0.20.0
