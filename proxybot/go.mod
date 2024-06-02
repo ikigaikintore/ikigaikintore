@@ -5,7 +5,7 @@ go 1.22.3
 require (
 	github.com/fasthttp/router v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/mymmrac/telego v0.30.1
+	github.com/mymmrac/telego v0.30.2
 	github.com/valyala/fasthttp v1.54.0
 	golang.ngrok.com/ngrok v1.9.1
 	golang.org/x/oauth2 v0.20.0
@@ -20,7 +20,7 @@ require (
 	cloud.google.com/go/compute v1.25.1 // indirect
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
-	github.com/bytedance/sonic v1.11.7 // indirect
+	github.com/bytedance/sonic v1.11.8 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.1 // indirect
