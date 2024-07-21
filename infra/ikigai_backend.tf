@@ -18,6 +18,7 @@ locals {
   backend_apis = [
     "run.googleapis.com",
     "secretmanager.googleapis.com",
+    "gmail.googleapis.com",
   ]
 
   backend_secrets = [
