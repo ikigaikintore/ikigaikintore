@@ -5,13 +5,15 @@ option go_package = "./proto";
 package endpoints.v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 service Weather {
   rpc GetWeather(WeatherRequest) returns (WeatherReply);
 }
 
-message Location {
-
+service Mail {
+  rpc ListSpam(FilterSpam) returns (Spam)
+  rpc Reply(MailRequest) returns google.protobuf.empty
 }
 
 message WeatherFilter {
@@ -82,4 +84,9 @@ message Spam {
   string content = 2;
   google.protobuf.Timestamp date = 3;
   string id = 4;
+}
+
+message MailRequest {
+  string threadId = 1;
+  Spam message = 2;
 }
