@@ -4,7 +4,7 @@ option go_package = "./proto";
 
 package endpoints.v1;
 
-import "google/protobuf/timestamp.proto"
+import "google/protobuf/timestamp.proto";
 
 service Weather {
   rpc GetWeather(WeatherRequest) returns (WeatherReply);
