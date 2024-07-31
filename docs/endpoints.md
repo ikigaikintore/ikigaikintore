@@ -6,3 +6,5 @@ Weather endpoint
   - Parameters: get weather of location
   
   - Returns 200, 404, 400 or 500
+
+- Resend to spam

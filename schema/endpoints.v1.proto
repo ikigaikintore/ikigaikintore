@@ -4,6 +4,8 @@ option go_package = "./proto";
 
 package endpoints.v1;
 
+import "google/protobuf/timestamp.proto"
+
 service Weather {
   rpc GetWeather(WeatherRequest) returns (WeatherReply);
 }
@@ -67,4 +69,17 @@ message WeatherDailyPoint {
 message WeatherReply {
   repeated WeatherDailyPoint weatherPoint = 1;
   WeatherCurrent weatherCurrent = 2;
+}
+
+message FilterSpam {
+ string sender = 1;
+ optional google.protobuf.Timestamp before = 2;
+ optional google.protobuf.Timestamp after = 3;
+}
+
+message Spam {
+  string sender = 1;
+  string content = 2;
+  google.protobuf.Timestamp date = 3;
+  string id = 4;
 }
