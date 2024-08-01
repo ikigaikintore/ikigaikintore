@@ -7,13 +7,14 @@ help: ## Show this help
 generate: ## Generate automated code
 	docker build --target backend -t backend-twirp-compiler:latest . && \
 	docker run -v `pwd`:/app backend-twirp-compiler:latest && \
-	rm -rf ../backend/pkg/proto && \
-	mv proto ../backend/pkg/ && \
+	rm -rf ../backend/internal/input/grpc/*.pb.go && \
+	rm -rf ../proxybot/pkg/service/proto/* && \
+	mv proto/* ../backend/internal/input/grpc/  && \
 	docker build --target frontend -t frontend-twirp-compiler:latest . && \
 	docker run -v `pwd`:/app frontend-twirp-compiler:latest && \
 	rm -rf ../frontend/src/api/* && \
 	mv *.pb.ts ../frontend/src/api/ && \
 	docker run -v `pwd`:/defs namely/protoc-all -f ./*.proto -l go && \
-	cp gen/pb-go/proto/*_grpc.pb.go ../backend/pkg/proto/ && \
-	cp gen/pb-go/proto/*.pb.go ../proxybot/pkg/service/ && \
-	rm -rf gen
+	cp gen/pb-go/proto/*_grpc.pb.go ../backend/internal/input/grpc/ && \
+	cp gen/pb-go/proto/*.pb.go ../proxybot/pkg/service/proto/ && \
+	rm -rf gen proto

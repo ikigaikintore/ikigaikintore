@@ -12,8 +12,8 @@ service Weather {
 }
 
 service Mail {
-  rpc ListSpam(FilterSpam) returns (Spam)
-  rpc Reply(MailRequest) returns google.protobuf.empty
+  rpc ListSpam(FilterSpam) returns (Spam);
+  rpc Reply(MailRequest) returns (google.protobuf.Empty);
 }
 
 message WeatherFilter {

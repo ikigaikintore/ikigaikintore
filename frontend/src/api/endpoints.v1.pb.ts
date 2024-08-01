@@ -33,8 +33,6 @@ export type WeatherType =
   | "CLEAR"
   | "CLOUDS";
 
-export interface Location {}
-
 export interface WeatherFilter {
   locationCityName?: string | null | undefined;
   latitude: number;
@@ -73,6 +71,24 @@ export interface WeatherReply {
   weatherCurrent: WeatherCurrent;
 }
 
+export interface FilterSpam {
+  sender: string;
+  before?: protoscript.Timestamp | null | undefined;
+  after?: protoscript.Timestamp | null | undefined;
+}
+
+export interface Spam {
+  sender: string;
+  content: string;
+  date: protoscript.Timestamp;
+  id: string;
+}
+
+export interface MailRequest {
+  threadId: string;
+  message: Spam;
+}
+
 //========================================//
 //        Weather Protobuf Client         //
 //========================================//
@@ -90,6 +106,34 @@ export async function GetWeather(
 }
 
 //========================================//
+//          Mail Protobuf Client          //
+//========================================//
+
+export async function ListSpam(
+  filterSpam: FilterSpam,
+  config?: ClientConfiguration,
+): Promise<Spam> {
+  const response = await PBrequest(
+    "/endpoints.v1.Mail/ListSpam",
+    FilterSpam.encode(filterSpam),
+    config,
+  );
+  return Spam.decode(response);
+}
+
+export async function Reply(
+  mailRequest: MailRequest,
+  config?: ClientConfiguration,
+): Promise<protoscript.Empty> {
+  const response = await PBrequest(
+    "/endpoints.v1.Mail/Reply",
+    MailRequest.encode(mailRequest),
+    config,
+  );
+  return protoscript.Empty.decode(response);
+}
+
+//========================================//
 //          Weather JSON Client           //
 //========================================//
 
@@ -103,6 +147,34 @@ export async function GetWeatherJSON(
     config,
   );
   return WeatherReplyJSON.decode(response);
+}
+
+//========================================//
+//            Mail JSON Client            //
+//========================================//
+
+export async function ListSpamJSON(
+  filterSpam: FilterSpam,
+  config?: ClientConfiguration,
+): Promise<Spam> {
+  const response = await JSONrequest(
+    "/endpoints.v1.Mail/ListSpam",
+    FilterSpamJSON.encode(filterSpam),
+    config,
+  );
+  return SpamJSON.decode(response);
+}
+
+export async function ReplyJSON(
+  mailRequest: MailRequest,
+  config?: ClientConfiguration,
+): Promise<protoscript.Empty> {
+  const response = await JSONrequest(
+    "/endpoints.v1.Mail/Reply",
+    MailRequestJSON.encode(mailRequest),
+    config,
+  );
+  return protoscript.EmptyJSON.decode(response);
 }
 
 //========================================//
@@ -125,6 +197,38 @@ export function createWeather<Context>(service: Weather<Context>) {
         handler: service.GetWeather,
         input: { protobuf: WeatherRequest, json: WeatherRequestJSON },
         output: { protobuf: WeatherReply, json: WeatherReplyJSON },
+      },
+    },
+  } as const;
+}
+
+//========================================//
+//                  Mail                  //
+//========================================//
+
+export interface Mail<Context = unknown> {
+  ListSpam: (filterSpam: FilterSpam, context: Context) => Promise<Spam> | Spam;
+  Reply: (
+    mailRequest: MailRequest,
+    context: Context,
+  ) => Promise<protoscript.Empty> | protoscript.Empty;
+}
+
+export function createMail<Context>(service: Mail<Context>) {
+  return {
+    name: "endpoints.v1.Mail",
+    methods: {
+      ListSpam: {
+        name: "ListSpam",
+        handler: service.ListSpam,
+        input: { protobuf: FilterSpam, json: FilterSpamJSON },
+        output: { protobuf: Spam, json: SpamJSON },
+      },
+      Reply: {
+        name: "Reply",
+        handler: service.Reply,
+        input: { protobuf: MailRequest, json: MailRequestJSON },
+        output: { protobuf: protoscript.Empty, json: protoscript.EmptyJSON },
       },
     },
   } as const;
@@ -270,51 +374,6 @@ export const WeatherType = {
     }
   },
 } as const;
-
-export const Location = {
-  /**
-   * Serializes Location to protobuf.
-   */
-  encode: function (_msg?: PartialDeep<Location>): Uint8Array {
-    return new Uint8Array();
-  },
-
-  /**
-   * Deserializes Location from protobuf.
-   */
-  decode: function (_bytes?: ByteSource): Location {
-    return {};
-  },
-
-  /**
-   * Initializes Location with all fields set to their default value.
-   */
-  initialize: function (msg?: Partial<Location>): Location {
-    return {
-      ...msg,
-    };
-  },
-
-  /**
-   * @private
-   */
-  _writeMessage: function (
-    _msg: PartialDeep<Location>,
-    writer: protoscript.BinaryWriter,
-  ): protoscript.BinaryWriter {
-    return writer;
-  },
-
-  /**
-   * @private
-   */
-  _readMessage: function (
-    _msg: Location,
-    _reader: protoscript.BinaryReader,
-  ): Location {
-    return _msg;
-  },
-};
 
 export const WeatherFilter = {
   /**
@@ -850,6 +909,257 @@ export const WeatherReply = {
   },
 };
 
+export const FilterSpam = {
+  /**
+   * Serializes FilterSpam to protobuf.
+   */
+  encode: function (msg: PartialDeep<FilterSpam>): Uint8Array {
+    return FilterSpam._writeMessage(
+      msg,
+      new protoscript.BinaryWriter(),
+    ).getResultBuffer();
+  },
+
+  /**
+   * Deserializes FilterSpam from protobuf.
+   */
+  decode: function (bytes: ByteSource): FilterSpam {
+    return FilterSpam._readMessage(
+      FilterSpam.initialize(),
+      new protoscript.BinaryReader(bytes),
+    );
+  },
+
+  /**
+   * Initializes FilterSpam with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<FilterSpam>): FilterSpam {
+    return {
+      sender: "",
+      before: undefined,
+      after: undefined,
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    msg: PartialDeep<FilterSpam>,
+    writer: protoscript.BinaryWriter,
+  ): protoscript.BinaryWriter {
+    if (msg.sender) {
+      writer.writeString(1, msg.sender);
+    }
+    if (msg.before != undefined) {
+      writer.writeMessage(2, msg.before, protoscript.Timestamp._writeMessage);
+    }
+    if (msg.after != undefined) {
+      writer.writeMessage(3, msg.after, protoscript.Timestamp._writeMessage);
+    }
+    return writer;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (
+    msg: FilterSpam,
+    reader: protoscript.BinaryReader,
+  ): FilterSpam {
+    while (reader.nextField()) {
+      const field = reader.getFieldNumber();
+      switch (field) {
+        case 1: {
+          msg.sender = reader.readString();
+          break;
+        }
+        case 2: {
+          msg.before = protoscript.Timestamp.initialize();
+          reader.readMessage(msg.before, protoscript.Timestamp._readMessage);
+          break;
+        }
+        case 3: {
+          msg.after = protoscript.Timestamp.initialize();
+          reader.readMessage(msg.after, protoscript.Timestamp._readMessage);
+          break;
+        }
+        default: {
+          reader.skipField();
+          break;
+        }
+      }
+    }
+    return msg;
+  },
+};
+
+export const Spam = {
+  /**
+   * Serializes Spam to protobuf.
+   */
+  encode: function (msg: PartialDeep<Spam>): Uint8Array {
+    return Spam._writeMessage(
+      msg,
+      new protoscript.BinaryWriter(),
+    ).getResultBuffer();
+  },
+
+  /**
+   * Deserializes Spam from protobuf.
+   */
+  decode: function (bytes: ByteSource): Spam {
+    return Spam._readMessage(
+      Spam.initialize(),
+      new protoscript.BinaryReader(bytes),
+    );
+  },
+
+  /**
+   * Initializes Spam with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<Spam>): Spam {
+    return {
+      sender: "",
+      content: "",
+      date: protoscript.Timestamp.initialize(),
+      id: "",
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    msg: PartialDeep<Spam>,
+    writer: protoscript.BinaryWriter,
+  ): protoscript.BinaryWriter {
+    if (msg.sender) {
+      writer.writeString(1, msg.sender);
+    }
+    if (msg.content) {
+      writer.writeString(2, msg.content);
+    }
+    if (msg.date) {
+      writer.writeMessage(3, msg.date, protoscript.Timestamp._writeMessage);
+    }
+    if (msg.id) {
+      writer.writeString(4, msg.id);
+    }
+    return writer;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (msg: Spam, reader: protoscript.BinaryReader): Spam {
+    while (reader.nextField()) {
+      const field = reader.getFieldNumber();
+      switch (field) {
+        case 1: {
+          msg.sender = reader.readString();
+          break;
+        }
+        case 2: {
+          msg.content = reader.readString();
+          break;
+        }
+        case 3: {
+          reader.readMessage(msg.date, protoscript.Timestamp._readMessage);
+          break;
+        }
+        case 4: {
+          msg.id = reader.readString();
+          break;
+        }
+        default: {
+          reader.skipField();
+          break;
+        }
+      }
+    }
+    return msg;
+  },
+};
+
+export const MailRequest = {
+  /**
+   * Serializes MailRequest to protobuf.
+   */
+  encode: function (msg: PartialDeep<MailRequest>): Uint8Array {
+    return MailRequest._writeMessage(
+      msg,
+      new protoscript.BinaryWriter(),
+    ).getResultBuffer();
+  },
+
+  /**
+   * Deserializes MailRequest from protobuf.
+   */
+  decode: function (bytes: ByteSource): MailRequest {
+    return MailRequest._readMessage(
+      MailRequest.initialize(),
+      new protoscript.BinaryReader(bytes),
+    );
+  },
+
+  /**
+   * Initializes MailRequest with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<MailRequest>): MailRequest {
+    return {
+      threadId: "",
+      message: Spam.initialize(),
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    msg: PartialDeep<MailRequest>,
+    writer: protoscript.BinaryWriter,
+  ): protoscript.BinaryWriter {
+    if (msg.threadId) {
+      writer.writeString(1, msg.threadId);
+    }
+    if (msg.message) {
+      writer.writeMessage(2, msg.message, Spam._writeMessage);
+    }
+    return writer;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (
+    msg: MailRequest,
+    reader: protoscript.BinaryReader,
+  ): MailRequest {
+    while (reader.nextField()) {
+      const field = reader.getFieldNumber();
+      switch (field) {
+        case 1: {
+          msg.threadId = reader.readString();
+          break;
+        }
+        case 2: {
+          reader.readMessage(msg.message, Spam._readMessage);
+          break;
+        }
+        default: {
+          reader.skipField();
+          break;
+        }
+      }
+    }
+    return msg;
+  },
+};
+
 //========================================//
 //          JSON Encode / Decode          //
 //========================================//
@@ -990,47 +1300,6 @@ export const WeatherTypeJSON = {
     }
   },
 } as const;
-
-export const LocationJSON = {
-  /**
-   * Serializes Location to JSON.
-   */
-  encode: function (_msg?: PartialDeep<Location>): string {
-    return "{}";
-  },
-
-  /**
-   * Deserializes Location from JSON.
-   */
-  decode: function (_json?: string): Location {
-    return {};
-  },
-
-  /**
-   * Initializes Location with all fields set to their default value.
-   */
-  initialize: function (msg?: Partial<Location>): Location {
-    return {
-      ...msg,
-    };
-  },
-
-  /**
-   * @private
-   */
-  _writeMessage: function (
-    _msg: PartialDeep<Location>,
-  ): Record<string, unknown> {
-    return {};
-  },
-
-  /**
-   * @private
-   */
-  _readMessage: function (msg: Location, _json: any): Location {
-    return msg;
-  },
-};
 
 export const WeatherFilterJSON = {
   /**
@@ -1483,6 +1752,211 @@ export const WeatherReplyJSON = {
     const _weatherCurrent_ = json["weatherCurrent"];
     if (_weatherCurrent_) {
       WeatherCurrentJSON._readMessage(msg.weatherCurrent, _weatherCurrent_);
+    }
+    return msg;
+  },
+};
+
+export const FilterSpamJSON = {
+  /**
+   * Serializes FilterSpam to JSON.
+   */
+  encode: function (msg: PartialDeep<FilterSpam>): string {
+    return JSON.stringify(FilterSpamJSON._writeMessage(msg));
+  },
+
+  /**
+   * Deserializes FilterSpam from JSON.
+   */
+  decode: function (json: string): FilterSpam {
+    return FilterSpamJSON._readMessage(
+      FilterSpamJSON.initialize(),
+      JSON.parse(json),
+    );
+  },
+
+  /**
+   * Initializes FilterSpam with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<FilterSpam>): FilterSpam {
+    return {
+      sender: "",
+      before: undefined,
+      after: undefined,
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    msg: PartialDeep<FilterSpam>,
+  ): Record<string, unknown> {
+    const json: Record<string, unknown> = {};
+    if (msg.sender) {
+      json["sender"] = msg.sender;
+    }
+    if (msg.before != undefined) {
+      json["before"] = protoscript.serializeTimestamp(msg.before);
+    }
+    if (msg.after != undefined) {
+      json["after"] = protoscript.serializeTimestamp(msg.after);
+    }
+    return json;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (msg: FilterSpam, json: any): FilterSpam {
+    const _sender_ = json["sender"];
+    if (_sender_) {
+      msg.sender = _sender_;
+    }
+    const _before_ = json["before"];
+    if (_before_) {
+      msg.before = protoscript.parseTimestamp(_before_);
+    }
+    const _after_ = json["after"];
+    if (_after_) {
+      msg.after = protoscript.parseTimestamp(_after_);
+    }
+    return msg;
+  },
+};
+
+export const SpamJSON = {
+  /**
+   * Serializes Spam to JSON.
+   */
+  encode: function (msg: PartialDeep<Spam>): string {
+    return JSON.stringify(SpamJSON._writeMessage(msg));
+  },
+
+  /**
+   * Deserializes Spam from JSON.
+   */
+  decode: function (json: string): Spam {
+    return SpamJSON._readMessage(SpamJSON.initialize(), JSON.parse(json));
+  },
+
+  /**
+   * Initializes Spam with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<Spam>): Spam {
+    return {
+      sender: "",
+      content: "",
+      date: protoscript.TimestampJSON.initialize(),
+      id: "",
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (msg: PartialDeep<Spam>): Record<string, unknown> {
+    const json: Record<string, unknown> = {};
+    if (msg.sender) {
+      json["sender"] = msg.sender;
+    }
+    if (msg.content) {
+      json["content"] = msg.content;
+    }
+    if (msg.date && msg.date.seconds && msg.date.nanos) {
+      json["date"] = protoscript.serializeTimestamp(msg.date);
+    }
+    if (msg.id) {
+      json["id"] = msg.id;
+    }
+    return json;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (msg: Spam, json: any): Spam {
+    const _sender_ = json["sender"];
+    if (_sender_) {
+      msg.sender = _sender_;
+    }
+    const _content_ = json["content"];
+    if (_content_) {
+      msg.content = _content_;
+    }
+    const _date_ = json["date"];
+    if (_date_) {
+      msg.date = protoscript.parseTimestamp(_date_);
+    }
+    const _id_ = json["id"];
+    if (_id_) {
+      msg.id = _id_;
+    }
+    return msg;
+  },
+};
+
+export const MailRequestJSON = {
+  /**
+   * Serializes MailRequest to JSON.
+   */
+  encode: function (msg: PartialDeep<MailRequest>): string {
+    return JSON.stringify(MailRequestJSON._writeMessage(msg));
+  },
+
+  /**
+   * Deserializes MailRequest from JSON.
+   */
+  decode: function (json: string): MailRequest {
+    return MailRequestJSON._readMessage(
+      MailRequestJSON.initialize(),
+      JSON.parse(json),
+    );
+  },
+
+  /**
+   * Initializes MailRequest with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<MailRequest>): MailRequest {
+    return {
+      threadId: "",
+      message: SpamJSON.initialize(),
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    msg: PartialDeep<MailRequest>,
+  ): Record<string, unknown> {
+    const json: Record<string, unknown> = {};
+    if (msg.threadId) {
+      json["threadId"] = msg.threadId;
+    }
+    if (msg.message) {
+      const _message_ = SpamJSON._writeMessage(msg.message);
+      if (Object.keys(_message_).length > 0) {
+        json["message"] = _message_;
+      }
+    }
+    return json;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (msg: MailRequest, json: any): MailRequest {
+    const _threadId_ = json["threadId"];
+    if (_threadId_) {
+      msg.threadId = _threadId_;
+    }
+    const _message_ = json["message"];
+    if (_message_) {
+      SpamJSON._readMessage(msg.message, _message_);
     }
     return msg;
   },
