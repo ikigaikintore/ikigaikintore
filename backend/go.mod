@@ -8,7 +8,7 @@ require (
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	google.golang.org/grpc v1.64.0
-	google.golang.org/protobuf v1.34.1
+	google.golang.org/protobuf v1.35.1
 )
 
 require (
