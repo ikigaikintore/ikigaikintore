@@ -3,7 +3,7 @@ module github.com/ikigaikintore/ikigaikintore/backend
 go 1.22.2
 
 require (
-	github.com/deepmap/oapi-codegen/v2 v2.1.0
+	github.com/deepmap/oapi-codegen/v2 v2.4.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/twitchtv/twirp v8.1.3+incompatible
